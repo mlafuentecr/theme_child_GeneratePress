@@ -1,0 +1,60 @@
+.block-editor-block-list__block.logo-strip>div,
+.logo-strip>div {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: var(--width1280);
+  margin: auto;
+  overflow: hidden;
+}
+
+.block-editor-block-list__block.logo-strip figure,
+.logo-strip figure {
+  min-width: 310px;
+}
+
+.block-editor-block-list__block.logo-strip,
+.logo-strip {
+  overflow: hidden;
+  width: 100%;
+}
+
+.block-editor-block-list__block.logo-strip .logo-strip-track,
+.logo-strip-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  animation: logo-scroll 30s linear infinite;
+}
+
+.block-editor-block-list__block.logo-strip figure,
+.logo-strip figure {
+  min-width: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pause animation on hover */
+.block-editor-block-list__block.logo-strip:hover .logo-strip-track,
+.logo-strip:hover .logo-strip-track {
+  animation-play-state: paused;
+}
+
+.block-editor-block-list__block.logo-strip .logo-strip-track,
+.logo-strip-track {
+  --speed: 30s;
+  animation: logo-scroll var(--speed) linear infinite;
+}
+
+@keyframes logo-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}

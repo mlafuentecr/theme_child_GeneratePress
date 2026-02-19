@@ -1,0 +1,101 @@
+
+/* ============================================================
+   two-section (Simple)
+============================================================ */
+.block-editor-block-list__block.two-section .container{
+  display: flex;
+}
+
+ .block-editor-block-list__block.hero-two-section.industry .wrap,
+  .hero-two-section.industry .wrap{
+    display: flex;
+  }
+.block-editor-block-list__block.two-section .container > div:first-child {
+  width: 60%;
+}
+
+/* ============================================================
+   HERO two-section
+============================================================ */
+/* contanedor */
+.block-editor-block-list__block.hero-two-section,
+.hero-two-section {
+  padding-top: var(--section-padding);
+  padding-bottom: var(--section-padding);
+  margin: auto;
+  max-height: 650px;
+  overflow: hidden;
+ position: relative;
+}
+
+
+.block-editor-block-list__block.hero-two-section .wp-block-post-title,
+.hero-two-section .wp-block-post-title,
+.hero-two-section h2 {
+  font-family: var(--font-family-barlow);
+  font-weight: bold;
+  color: black;
+  font-size: var(--font-subtitle);
+  line-height: 0.9;
+}
+
+
+/* ============================================================
+   Industry 2 section
+============================================================ */
+
+.block-editor-block-list__block.hero-two-section.industry,
+.hero-two-section.industry {
+  background-size: contain!important;
+  background-position: right center!important;
+  background-repeat: no-repeat!important;
+}
+
+
+
+div:not(.block-editor-block-list__block).col-2 {
+  display: none;
+}
+
+/* Huge */
+ 
+@media only screen and (max-width: 1410px) {
+  .block-editor-block-list__block.hero-two-section.industry .wrap,
+  .hero-two-section.industry .wrap{
+    padding-left: var(--section-padding);
+    padding-right: var(--section-padding);
+  }
+}
+/* Desktop */
+@media only screen and (max-width: 1130px) {
+  .block-editor-block-list__block.hero-two-section.industry,
+  .hero-two-section.industry{
+  background-size: 50%!important;
+  background-position: right bottom!important;
+  background-repeat: no-repeat;
+}
+}
+
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+.block-editor-block-list__block.hero-two-section,
+.hero-two-section {
+  max-height: fit-content;
+}
+.block-editor-block-list__block.hero-two-section.industry,
+.hero-two-section.industry{
+  background-image: none!important;
+}
+.block-editor-block-list__block.hero-two-section.industry .col-2,
+.hero-two-section.industry .col-2{
+  display: block;
+}
+
+
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+  
+}

@@ -1,0 +1,102 @@
+
+.block-editor-block-list__block.video-and-text .card,
+.video-and-text .card{
+  align-items: flex-start;
+  max-width: 100%;
+  gap: 30px;
+}
+
+.block-editor-block-list__block.video-and-text .wrap,
+.video-and-text .wrap{
+  max-width: 100%;
+}
+
+.block-editor-block-list__block.video-and-text .video,
+.video-and-text .video {
+  min-width: 630px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+}
+.block-editor-block-list__block.video-and-text .cardcolor,
+.video-and-text .cardcolor{
+  max-height:initial;
+      display: flex;
+    flex-direction: row;
+}
+/* Overlay */
+
+.block-editor-block-list__block.video-and-text .video::before{
+ display: none!important;
+}
+.video-and-text .video::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+  width: 100%;
+    border-radius: 30px;
+    overflow: hidden;
+
+  
+}
+
+/* Play hint (opcional) */
+.block-editor-block-list__block.video-and-text .video::after,
+.video-and-text .video::after {
+    content: "▶";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 34px;
+    color: #ffffff;
+    z-index: 3;
+    pointer-events: none;
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: calc(50% - 35px);
+    top: calc(50% - 35px);
+    padding-left: 5px;
+    background-color: red;
+}
+
+/* Cuando ya fue clickeado */
+
+.video-and-text .video.is-playing::before,
+.video-and-text .video.is-playing::after {
+  opacity: 0!important;
+  pointer-events: none!important;
+}
+
+/* Huge */
+@media only screen and (max-width: 1030px) {
+  .video-and-text .card{
+    display: flex!important;
+    flex-direction: column;
+    align-items: center;
+}
+}
+
+/* Desktop */
+@media only screen and (max-width: 992px) {
+  
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+  
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+  
+}

@@ -1,0 +1,303 @@
+/* ============================================================
+   ROOT VARIABLES
+   Layout helpers for filters and cards
+============================================================ */
+
+:root {
+   /* Site width: 1440px */
+   /* Container width: 1280px */
+   /* Section padding: 80px */
+
+   --height: 50px;
+   --cal: calc(100% / 3 - 20px);
+}
+
+/* ============================================================
+   FILTERS – LAYOUT
+   Main horizontal filter bar
+============================================================ */
+
+.use-cases-filters {
+   display: flex !important;
+   justify-content: space-between !important;
+   align-items: center;
+   gap: 20px !important;
+   padding: 0 !important;
+   margin-bottom: 56px !important;
+   position: relative;
+   flex-wrap: nowrap;
+}
+
+/* ============================================================
+   FILTER INPUTS – BASE STYLE
+   Shared styles for select, input and textarea
+============================================================ */
+
+.use-cases-filters select,
+.use-cases-filters input,
+.use-cases-filters textarea {
+   max-width: 100% !important;
+   padding: 10px 15px !important;
+
+   background-color: #fff !important;
+   border: 1px solid rgb(152, 152, 152) !important;
+
+   font-size: 1rem !important;
+   font-weight: bold !important;
+   text-transform: uppercase !important;
+   line-height: normal !important;
+
+   outline: none !important;
+
+   appearance: auto !important;
+   -webkit-appearance: menulist !important;
+   -moz-appearance: menulist !important;
+
+   transform: none !important;
+   filter: none !important;
+   backdrop-filter: none !important;
+}
+
+/* ============================================================
+   FILTER INPUTS – WIDTH RULES
+============================================================ */
+
+.use-cases-filters input,
+.use-cases-filters textarea {
+   width: var(--cal) !important;
+}
+
+/* ============================================================
+   SELECT – VISUAL STYLE (CARD-LIKE)
+============================================================ */
+
+.use-cases-filters select {
+   width: var(--cal) !important;
+   max-width: 580px;
+   min-height: var(--height);
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   border: none !important;
+   border-radius: var(--border-radius);
+
+   background: linear-gradient(
+      135deg,
+      rgba(252, 250, 250, 0.71) 0%,
+      rgba(255, 255, 255, 0.55) 100%
+   );
+
+   backdrop-filter: blur(10px);
+   box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   SEARCH INPUT – CUSTOM STYLE
+============================================================ */
+
+#filter-search {
+   min-width: 411px !important;
+   height: var(--height) !important;
+   padding: 0 56px 0 20px !important;
+
+   border-radius: var(--border-radius);
+   border: 1px solid #1f2f5c !important;
+   background-color: #fff !important;
+
+   font-size: 16px;
+   font-weight: 600;
+   text-transform: uppercase;
+
+   /* Search icon */
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f2f5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+   background-repeat: no-repeat;
+   background-position: right 18px center;
+   background-size: 20px;
+
+   box-shadow: var(--shadow);
+   outline: none !important;
+}
+
+/* ============================================================
+   CLEAR BUTTON
+============================================================ */
+
+.use-cases-clear {
+   position: absolute;
+   top: -30px;
+   right: 0;
+
+   background: none;
+   border: none;
+   padding: 0 10px;
+
+   font-size: 17px;
+   color: #5085f0;
+   cursor: pointer;
+
+   border-radius: 999px;
+}
+
+.use-cases-clear:hover {
+   background: #5085f0;
+   color: #fff;
+}
+
+.d-none {
+   display: none !important;
+}
+
+/* ============================================================
+   FOCUS STATES – REMOVE DEFAULT BLUE GLOW
+============================================================ */
+
+.use-cases-filters select:focus,
+.use-cases-filters select:active,
+.use-cases-filters select:focus-visible,
+.use-cases-filters input:focus,
+.use-cases-filters textarea:focus {
+   border-color: rgb(152, 152, 152) !important;
+   outline: none !important;
+   box-shadow: none !important;
+}
+
+/* ============================================================
+   RESULTS GRID WRAPPER
+============================================================ */
+
+.use-cases-wrap {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 24px;
+}
+
+.gb-element-331b1737 {
+   width: 100% !important;
+}
+
+#use-cases-results .use-cases-cta {
+   display: none !important;
+}
+
+/* ============================================================
+   CARD – BASE STRUCTURE
+============================================================ */
+
+.use-cases-section .card {
+   width: 100% !important;
+   height: 500px;
+
+   margin-bottom: 30px;
+   padding: 0 !important;
+
+   border-radius: var(--border-radius);
+   border: 2px solid #fff;
+
+   background: linear-gradient(
+      90deg,
+      rgba(250, 250, 250, 1) 0%,
+      rgba(255, 255, 255, 1) 100%
+   );
+
+   color: #000;
+   font-size: 14px;
+   font-weight: 300;
+   letter-spacing: 1.5px;
+   text-transform: uppercase;
+
+   overflow: hidden;
+   box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   CARD TYPOGRAPHY
+============================================================ */
+
+.use-cases-section .card p,
+.use-cases-section p.use-case-excerpt {
+   font-size: 14px;
+   line-height: normal;
+   text-align: left;
+   text-transform: none;
+}
+
+.use-cases-section .card .use-case-title {
+   margin: 0 0 10px;
+   font-size: 20px;
+   font-weight: bold;
+}
+
+.use-cases-section .card .cta {
+   display: none !important;
+}
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.use-cases-section .use-cases-empty {
+   grid-column: 1 / -1 !important;
+   margin: 4rem auto !important;
+   text-align: center !important;
+   font-size: 1.5rem !important;
+}
+
+/* ============================================================
+   CTA (BOTTOM BUTTON)
+============================================================ */
+
+.use-cases-section .use-cases-cta {
+   height: 50px !important;
+   display: inline-flex !important;
+   align-items: center !important;
+   justify-content: center !important;
+   width: 100% !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 1440px) {
+   section.use-cases-section {
+      margin-left: var(--section-padding);
+      margin-right: var(--section-padding);
+   }
+}
+
+@media (max-width: 1220px) {
+
+   .use-cases-filters {
+      flex-wrap: wrap;
+   }
+
+   .use-cases-filters select,
+   #filter-search {
+      min-width: 200px !important;
+      width: calc(100% / 2 - 30px) !important;
+   }
+
+   .use-cases-wrap {
+      grid-template-columns: repeat(2, 1fr);
+   }
+}
+
+@media (max-width: 767px) {
+
+   .use-cases-wrap {
+      grid-template-columns: 1fr;
+   }
+
+   .use-cases-filters select,
+   #filter-search {
+      min-width: 100% !important;
+      width: 100% !important;
+   }
+
+   section.use-cases-section {
+      margin-left: 0;
+      margin-right: 0;
+   }
+}

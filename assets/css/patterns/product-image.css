@@ -1,0 +1,129 @@
+.wp-block.product-image .gb-loop-item  {
+  margin: 0;
+  padding: -var(--section-padding);
+
+}
+
+.wp-block.product-image > div ,
+.product-image > div {
+  max-width: var(--width1280);
+  margin: auto;
+}
+
+
+.wp-block.product-image .gb-loop-item,
+.product-image .gb-loop-item {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+.wp-block.product-image .gb-loop-item .card,
+.product-image .gb-loop-item .card {
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  padding: 0px;
+}
+
+.wp-block.product-image .gb-loop-item .card .wrap,
+.product-image .gb-loop-item .card .wrap {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+}
+.wp-block.product-image .gb-loop-item .card .wrap p {
+  padding: 0px;
+  margin: 0px;
+}
+.wp-block.product-image .gb-loop-item .card .wrap .wp-block-buttons {
+  padding: 0px;
+  margin: 0px;
+}
+
+
+/* Every second card: image on the right */
+.wp-block.product-image .gb-loop-item:nth-of-type(even) .card,
+.product-image .gb-loop-item:nth-of-type(even) .card {
+    flex-direction: row-reverse!important;
+}
+
+
+.wp-block.product-image.product-left .gb-loop-item ,
+.product-image.product-left .gb-loop-item  {
+  flex-direction: row!important;
+}
+.wp-block.product-image.product-right  .gb-loop-item.card,
+.product-image.product-right .gb-loop-item .card {
+  flex-direction: row-reverse!important;
+}
+
+.product-image .gb-loop-item .card .wrap h3,
+.wp-block.product-image h3{
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: var(--font-size-xl);
+   font-weight: bold;
+       display: inline-flex;
+    line-height: normal;
+}
+
+.wp-block.product-image .gb-loop-item .card .img,
+.product-image .gb-loop-item .card .img{
+  margin-bottom: 0px;
+  height: 325px;
+  max-width: 470px;
+  gap: 20px;
+}
+.wp-block.product-image .gb-loop-item .card img,
+.product-image .gb-loop-item .card img{
+  margin-bottom: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Huge */
+@media only screen and (min-width: 992px) {
+  
+}
+
+/* Desktop */
+@media only screen and (max-width: 992px) {
+  
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+  .wp-block.product-image .gb-loop-item .card,
+  .product-image .gb-loop-item .card {
+  flex-direction: column;
+  }
+  .wp-block.product-image .gb-loop-item .card .img, 
+  .product-image .gb-loop-item .card .img {
+    max-width: 100%;
+    gap: 20px;
+  }
+  /* Every second card: image on the right */
+  .wp-block.product-image .gb-loop-item:nth-of-type(even) .card,
+  .product-image .gb-loop-item:nth-of-type(even) .card {
+    flex-direction: column;
+  }
+  .wp-block.product-image.product-left .gb-loop-item .card,
+.product-image.product-left .gb-loop-item .card {
+  flex-direction: column!important;
+}
+.wp-block.product-image.product-right .gb-loop-item .card,
+.product-image.product-right .gb-loop-item .card {
+  flex-direction: column!important;
+}
+
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+  
+}

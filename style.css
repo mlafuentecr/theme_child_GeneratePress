@@ -1,0 +1,125 @@
+/*
+ Theme Name: GeneratePress Child
+ Template: generatepress
+ Version: 1.0.0
+*/
+
+.ui-copyright > div {
+  padding: var(--section-padding) 0px !important;
+}
+
+.ui-copyright a {
+  color: black;
+  text-decoration: none;
+}
+
+.ui-copyright a:hover {
+  color: rgb(99, 99, 99);
+  text-decoration: none;
+}
+
+.d-none {
+  display: none !important;
+}
+
+.site-branding {
+  display: none;
+}
+
+/*  headline */
+.headline .hero-tag p {
+  font-family: 'Raleway', sans-serif;
+  margin-bottom: 20px;
+}
+
+.headline .hero-title,
+.headline .hero-title p {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: var(--line-height);
+  margin-bottom: 15px;
+}
+
+.single:not(.full-width-content) main {
+  width: 100%;
+  margin: auto;
+}
+.block-editor-block-list__block main,
+.single.full-width-content main {
+  padding: 0px;
+  width: 100%;
+  margin: auto;
+}
+/* ============================================================
+   margin top for pages
+============================================================ */
+.block-editor-block-list__block #primary,
+.single.full-width-content #primary,
+.product-template-default #page {
+  margin-top: var(--top-marging-page);
+}
+
+.single.full-width-content main .wrap {
+  max-width: var(--width1280);
+  padding: 0px;
+  width: 100%;
+  margin: auto;
+}
+.block-editor-block-list__block .single main.headline-enabled,
+.single main.headline-enabled {
+  width: 100%;
+  margin: auto;
+}
+
+/* ============================================================
+ * Full width pages (override GeneratePress containers)
+ * ============================================================ */
+
+body.page .site-content,
+body.page .content-area,
+body.page .site-main,
+body.page .inside-article,
+body.page .entry-content {
+  max-width: 100%;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+body.page .grid-container,
+body.single .grid-container {
+  max-width: 100%;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+.separate-containers .site-main {
+  margin: 0px;
+}
+
+/* =========================================================
+   10. RESPONSIVE
+   ========================================================= */
+
+/* Huge */
+@media only screen and (max-width: 1420px) {
+  .single.full-width-content main .wrap {
+    margin-right: var(--section-padding);
+    margin-left: var(--section-padding);
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+}
+
+/* Desktop */
+@media only screen and (max-width: 992px) {
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+}

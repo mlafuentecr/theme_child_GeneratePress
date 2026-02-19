@@ -1,0 +1,101 @@
+/* Editor only */
+.block-editor-block-list__block.benefit-stack .wp-block-media-text {
+  grid-template-columns: 150px 1fr!important;
+}
+
+.benefit-stack
+.block-editor-block-list__block.benefit-stack{
+  padding: var(--section-padding) 0px;
+}
+.benefit-stack .card,
+.block-editor-block-list__block.benefit-stack .card{
+  max-width: 100%;
+  min-height: 150px;
+}
+
+.benefit-stack .wp-block-heading,
+.block-editor-block-list__block.benefit-stack .wp-block-heading{
+  display: block;
+  font-family: var(--font-family-barlow-condensed) !important;
+  font-weight: bold;
+}
+
+.benefit-stack h2.wp-block-heading,
+.block-editor-block-list__block.benefit-stack h2.wp-block-heading{
+  font-size: var(--font-subtitle);
+  margin-bottom: 20px;
+}
+.benefit-stack h3.wp-block-heading,
+.block-editor-block-list__block.benefit-stack h3.wp-block-heading{
+  font-size: var(--font-size-sm);
+  margin-bottom: 20px;
+}
+
+.benefit-stack .card .wrap p:nth-of-type(1),
+.block-editor-block-list__block.benefit-stack p:nth-of-type(1){
+  margin-bottom: 0px;
+}
+.benefit-stack .card .wrap p:not(p:nth-of-type(1)),
+.block-editor-block-list__block.benefit-stack p:not(p:nth-of-type(1)){
+  margin-top: 15px;
+}
+
+.benefit-stack .card >div,
+.block-editor-block-list__block.benefit-stack>div{
+  grid-template-columns: 135px auto!important;
+}
+.benefit-stack .card figure,
+.block-editor-block-list__block.benefit-stack figure{
+  width: 120px;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.benefit-stack .card figure img,
+.block-editor-block-list__block.benefit-stack figure img{
+  width: 100%;
+  height: 100%;
+  max-width: 60px;
+  max-height: fit-content;
+}
+.benefit-stack .card  .wp-block-media-text__content,
+.block-editor-block-list__block.benefit-stack .wp-block-media-text__content{
+  padding: 0px;
+}
+
+
+
+/* Huge */
+@media only screen and (min-width: 992px) {
+  
+}
+
+/* Desktop */
+@media only screen and (max-width: 992px) {
+  
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+
+  .benefit-stack .card figure{
+  margin: auto;
+  }
+
+  .benefit-stack .card .wp-block-media-text{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    gap: 16px;
+  }
+  .cardcolor {
+    max-height: fit-content;
+  }
+ 
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+
+}

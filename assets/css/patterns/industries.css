@@ -1,0 +1,206 @@
+/* wrapper max width */
+.block-editor-block-list__block.pattern-industry>div,
+.pattern-industry>div {
+  padding: var(--section-padding) 0px !important;
+  margin: 0px var(--section-padding);
+}
+
+.block-editor-block-list__block.pattern-industry>div .gb-looper-a80c6e70,
+.pattern-industry .gb-looper-a80c6e70 {
+  gap: var(--gap);
+}
+
+
+/* container */
+.block-editor-block-list__block.pattern-industry .container>div,
+.pattern-industry .container>div {
+  max-width: var(--width1280);
+  margin: auto;
+}
+
+/* grid */
+.block-editor-block-list__block.pattern-industry .wp-block-generate.blocks-looper,
+.pattern-industry .gb-looper-a80c6e70 {
+  display: flex;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ==============================
+   Industry Card – Glass UI
+============================== */
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item,
+.pattern-industry .gb-loop-item {
+  position: relative;
+  height: 330px;
+  margin: clamp(12px, 2vw, 24px) clamp(10px, 1vw, 32px);
+  width: clamp(340px, 100%, calc(90% / 3));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-radius: 24px;
+  margin: 0px !important;
+  max-width: 370px;
+  background: linear-gradient(135deg, rgba(252, 250, 250, 0.92) 0%, rgba(255, 255, 255, 0.55) 100%) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.04),
+    0 20px 40px rgba(0, 0, 0, 0.05) !important;
+
+  overflow: hidden;
+  border: 2px solid white;
+}
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item img,
+.pattern-industry .gb-loop-item img {
+  max-width: 56px;
+  margin: auto;
+}
+
+/* ==============================
+   Gradient Border (Stroke)
+============================== */
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item::before,
+.pattern-industry .gb-loop-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+
+  border-radius: 24px;
+
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.25) 45%,
+      rgba(255, 255, 255, 0.85) 100%);
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  border: 1px solid white;
+}
+
+/* just visual for editor */
+.block-editor-block-list__block.pattern-industry  {
+align-items: center;
+    column-gap: 20px;
+    display: flex;
+    justify-content: space-between;
+    row-gap: 20px;
+    
+}
+
+/* ==============================
+   Editor
+============================== */
+.block-editor-block-list__block.pattern-industry .container>div {
+  max-width: 1280px!important;
+  margin: auto;
+    align-items: center;
+column-gap: 20px;
+display: flex;
+justify-content: space-between;
+row-gap: 20px;
+}
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item {
+    width: 100%!important;
+    max-width: calc(100% / 3 - 100px)!important;
+}
+.block-editor-block-list__block.pattern-industry>div
+ {
+  margin: auto!important;
+  justify-content: center!important;
+}
+
+/* ==============================
+   Inner Highlight (Glass Effect)
+============================== */
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item::after,
+.pattern-industry .gb-loop-item::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05));
+  pointer-events: none;
+}
+
+/* ==============================
+   Hover Enhancement (Optional)
+============================== */
+
+.gb-loop-item:hover::before {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0.35),
+      rgba(255, 255, 255, 0.95));
+}
+
+/* title */
+.block-editor-block-list__block h2,
+.pattern-industry h2 {
+ 
+  font-family: var(--font-family-barlow);
+  font-weight: bold;
+  color: black;
+  font-size: 78px;
+  margin: auto;
+}
+
+.block-editor-block-list__block p.gb-text,
+.pattern-industry p.gb-text {
+  font-family: var(--font-family-barlow);
+  color: black;
+  margin: auto;
+  margin-bottom: 20px;
+ 
+}
+
+.block-editor-block-list__block .wp-block-buttons,
+.pattern-industry .wp-block-buttons {
+  margin: auto;
+}
+
+.block-editor-block-list__block.pattern-industry .gb-loop-item h2,
+.pattern-industry .gb-loop-item h2 {
+  font-family: var(--font-family-barlow);
+  color: black;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  margin: auto;
+}
+
+/* text */
+.block-editor-block-list__block.pattern-industry .gb-loop-item h2 a,
+.pattern-industry .gb-loop-item h2 a {
+  color: black;
+  font-size: 20px;
+  text-decoration: none;
+  margin: auto;
+}
+
+
+@media (max-width: 767px) {
+
+  .block-editor-block-list__block.pattern-industry .gb-loop-item,
+  .pattern-industry .gb-loop-item {
+    height: 365px;
+  }
+
+  .block-editor-block-list__block h2,
+  .pattern-industry h2 {
+    line-height: var(--line-height);
+    font-size: 60px !important;
+  }
+}
