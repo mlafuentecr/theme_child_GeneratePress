@@ -1,0 +1,25 @@
+:root {
+  --gp-child-space: 1rem;
+  --gp-child-radius: 0.5rem;
+}
+
+.site-main {
+  padding-block: calc(var(--gp-child-space) * 2);
+}
+
+.gp-child-card {
+  padding: var(--gp-child-space);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--gp-child-radius);
+  background: #fff;
+}
+
+.gp-child-muted {
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .site-main {
+    padding-block: var(--gp-child-space);
+  }
+}
