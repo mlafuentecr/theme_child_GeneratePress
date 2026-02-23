@@ -1,0 +1,83 @@
+/* =============================================================================
+   LAYOUT
+   Site-level structure: container, grid helpers, main content area.
+   =========================================================================== */
+
+/* ── Container ──────────────────────────────────────────────────────────────── */
+
+.container,
+.gp-container {
+  width:         100%;
+  max-width:     var(--container-xl);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+.container--sm  { max-width: var(--container-sm); }
+.container--md  { max-width: var(--container-md); }
+.container--lg  { max-width: var(--container-lg); }
+.container--2xl { max-width: var(--container-2xl); }
+
+/* ── Main content area ──────────────────────────────────────────────────────── */
+
+.site-main {
+  padding-block: var(--space-12);
+}
+
+/* ── Two-column: content + sidebar ─────────────────────────────────────────── */
+/* GeneratePress handles this via its own grid; these are override hooks only.  */
+
+.content-area { min-width: 0; }
+.widget-area  { min-width: 0; }
+
+/* ── Section spacing ────────────────────────────────────────────────────────── */
+
+.section {
+  padding-block: var(--space-16);
+}
+
+.section--sm { padding-block: var(--space-8); }
+.section--lg { padding-block: var(--space-20); }
+
+/* ── Simple CSS grid helpers ────────────────────────────────────────────────── */
+
+.grid {
+  display: grid;
+  gap:     var(--space-6);
+}
+
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Auto-fill responsive grid — no media queries needed */
+.grid--auto-sm { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.grid--auto-md { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.grid--auto-lg { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+
+/* ── Flex helpers ───────────────────────────────────────────────────────────── */
+
+.flex         { display: flex; }
+.flex--center { display: flex; align-items: center; justify-content: center; }
+.flex--between{ display: flex; align-items: center; justify-content: space-between; }
+.flex--wrap   { flex-wrap: wrap; }
+.flex--col    { flex-direction: column; }
+.flex-1       { flex: 1 1 0%; }
+.shrink-0     { flex-shrink: 0; }
+
+/* ── Responsive breakdowns ──────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .site-main       { padding-block: var(--space-8); }
+  .section         { padding-block: var(--space-10); }
+  .section--lg     { padding-block: var(--space-12); }
+  .container,
+  .gp-container    { padding-inline: var(--space-4); }
+  .grid--2,
+  .grid--3,
+  .grid--4         { grid-template-columns: 1fr; }
+}

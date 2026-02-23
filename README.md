@@ -16,3 +16,4 @@ Tema hijo básico para **GeneratePress** con estructura mínima y genérica.
 1. Activa el tema hijo en WordPress.
 2. Edita `assets/css/theme.css` para tu diseño.
 3. Edita `assets/js/theme.js` para interacciones personalizadas.
+   git push blueflamingo main
