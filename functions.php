@@ -23,6 +23,11 @@ if (! defined('GP_CHILD_URI')) {
 $includes = [
     '/inc/setup.php',
     '/inc/enqueue.php',
+    '/inc/admin-settings.php',
+    '/inc/animations.php',
+    '/inc/parallax.php',
+    '/inc/search.php',
+    '/inc/modal.php',
 ];
 
 foreach ($includes as $file) {

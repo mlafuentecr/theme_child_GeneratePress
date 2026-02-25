@@ -1,0 +1,458 @@
+.toplevel_page_blueflamingo_settings.wp-has-current-submenu .wp-menu-image img {
+    -webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+}
+.post-type-blue-flamingo-notes table.wp-list-table th#title {
+    width: 239px;
+}
+td.bf_note.column-bf_note{
+	padding-right: 18px;
+}
+.toplevel_page_blueflamingo input[type=text]{
+	width: 50%;
+}
+.toplevel_page_blueflamingo i{
+	float: left;
+    padding-top: 3px;
+    font-size: 13px;
+}
+.toplevel_page_blueflamingo .nav-tabs{
+	float: left;
+	width:100%;
+	margin: 0;
+	list-style-type:none;
+	border-bottom: 1px solid #dddddd;
+}
+.toplevel_page_blueflamingo .nav-tabs > li{
+	float: left;
+	margin-bottom: -1px;
+}
+.toplevel_page_blueflamingo .nav-tabs > li{
+	cursor: pointer;
+    line-height: 1.5px;
+    margin-right: 7px;
+    padding: 15px;
+    border-radius: 0px 0px 0 0;
+    float: left;
+    text-decoration: none;
+    border: 1px solid #f1f1f1;
+    border-bottom: 1px solid #dcdcdc;
+}
+.toplevel_page_blueflamingo .nav-tabs > li:hover{
+    border-bottom: 1px solid transparent;
+    background: #fff;
+    color: #555;
+    cursor: default;
+    border: 1px solid #ddd;
+    border-bottom-color: #fff;
+    cursor: pointer;
+}
+.toplevel_page_blueflamingo .nav-tabs > li.active,
+.toplevel_page_blueflamingo .nav-tabs > li.active:hover,
+.toplevel_page_blueflamingo .nav-tabs > li.active:focus{
+	color: #555;
+	background-color: #fff;
+	cursor: default;
+	border:1px solid #ddd;
+	border-bottom-color: transparent;
+}
+.toplevel_page_blueflamingo .tab-content > .tab-pane{
+    position: relative;
+    top: 33px;
+    border: 1px solid #dddddd;
+    border-top: 0px solid #dddddd;
+}
+.toplevel_page_blueflamingo .tab-content > .tab-pane.active{
+	display:block;
+	padding: 10px 15px;
+	background-color: #fff;
+	box-shadow: 0 1px 4px -2px rgba(0,0,0,0.15)
+}
+.toplevel_page_blueflamingo .tab-content > .tab-pane{
+	display:none;
+}
+.toplevel_page_blueflamingo .toplevel_page_blueflamingo h1{
+	padding-bottom: 15px;
+}
+.plugin-log, .premium-plugin-log {
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.plugin-log span, .premium-plugin-log span {
+	padding: 10px;
+    background: #ecf4fb;
+    margin-right: 0px;
+    margin: 5px;
+    margin-left: 0;
+    margin-top: 0;
+}
+.commonly_used_plugins_list label, .premium_plugins_list label {
+    display: flex;
+    align-items: center;
+	margin-bottom: 4px;
+}
+.commonly_used_plugins_list div, .premium_plugins_list div {
+	margin-bottom: 2px;
+}
+td.commonly_used_plugins_list input, td.premium_plugins_list input {
+    position: relative;
+    top: 1.5px;
+    border-color: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.45);
+    outline: 2px solid transparent;
+    margin-right: 9px;
+}
+td.commonly_used_plugins_list .dashicons, .premium_plugins_list .dashicons  {
+    /*position: relative;
+    top: 0.5px;
+    color: #2aa932;
+    right: 4px;
+    z-index: 1;*/
+	position: relative;
+    color: #2aa932;
+    z-index: 1;
+    background: white;
+    width: 16px;
+    height: 16px;
+    margin-right: 9px;
+}
+td.commonly_used_plugins_list .dashicons:before,  .premium_plugins_list .dashicons:before {
+    position: relative;
+    left: -3px;
+    top: -1.6px;
+}
+select[name="blueflamingo_plugin_error_page_settings[custom_404_page]"] {
+    width: 38%;
+}
+/*
+td.commonly_used_plugins_list .dashicons {
+    position: relative;
+    top: 2px;
+    color: #2aa932;
+    right: 0px;
+    z-index: 1;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #2aa932;
+}
+.dashicons-yes:before {
+    content: "\f147";
+    position: relative;
+    right: 4px;
+    bottom: 3px;
+}*/
+span.commonly-used-plugins-title {
+    position: relative;
+    top: 1.8px;
+}
+span.add_loader_gif, span.add_loader_gif_two {
+	vertical-align: middle;
+    margin-left: 5px;
+    position: relative;
+    top: 0px;
+}
+pre.feature-info {
+    background: #b4b9be;
+    font-size: 12px;
+    padding: 6px 7px 6px;
+    font-family: inherit;
+    width: fit-content;
+    display: block;
+    margin-top: 6px;
+    color: #fff;
+}
+textarea[name="blueflamingo_plugin_google_analytics_settings[google_analytics_metatag]"] {
+    width: 50%;
+}
+.tab-pane.tab-9.active .form-table td{
+    word-break: break-all;
+}
+
+/* Tooltip styles for info icons */
+.bf-info-icon {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.bf-info-icon .bf-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: 280px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -140px;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.4;
+    transition: opacity 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.bf-info-icon .bf-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.bf-info-icon:hover .bf-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Health Check Tab Styling */
+.tab-7 .form-table th {
+    font-weight: 600;
+    color: #333;
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tab-7 .form-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+}
+
+.tab-7 .form-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tab-7 .form-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Health status indicators */
+.health-status-good {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.health-status-warning {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.health-status-error {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* WP Options Table styling within Health Check */
+.tab-7 table table {
+    margin-top: 10px;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+}
+
+.tab-7 table table th,
+.tab-7 table table td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    font-size: 12px;
+}
+
+.tab-7 table table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.tab-7 table table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Plugin Updates Table styling within Health Check */
+.tab-7 .latest-plugin-updates {
+    max-width: 800px;
+    margin-top: 10px;
+}
+
+.tab-7 .latest-plugin-updates th,
+.tab-7 .latest-plugin-updates td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    font-size: 12px;
+    text-align: left;
+}
+
+.tab-7 .latest-plugin-updates th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Enhanced WP Options Table Analysis Styling */
+.wp-options-analysis {
+    max-width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.wp-options-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.wp-options-table thead th {
+    background: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+    font-size: 13px;
+}
+
+.wp-options-table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.wp-options-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.wp-options-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Summary row styling */
+.wp-options-table .summary-row {
+    background: #f9f9f9;
+}
+
+.wp-options-table .summary-row td {
+    border-bottom: 1px solid #ddd;
+    font-weight: 500;
+}
+
+/* Large options table specific styling */
+.wp-options-table.large-options td:first-child {
+    font-family: Monaco, Consolas, "Courier New", monospace;
+    font-size: 11px;
+    max-width: 200px;
+    word-break: break-all;
+}
+
+.wp-options-table.large-options code {
+    background: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-size: 11px;
+}
+
+/* Status indicators for WP Options */
+.wp-options-table .health-status-good {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.wp-options-table .health-status-warning {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.wp-options-table .health-status-error {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Help section styling */
+.wp-options-help {
+    border-radius: 4px;
+    line-height: 1.4;
+}
+
+.wp-options-help ul {
+    list-style-type: disc;
+}
+
+.wp-options-help li {
+    margin-bottom: 3px;
+}
+
+/* Responsive design for WP Options tables */
+@media (max-width: 768px) {
+    .wp-options-table {
+        font-size: 11px;
+    }
+    
+    .wp-options-table thead th,
+    .wp-options-table tbody td {
+        padding: 8px 6px;
+    }
+    
+    .wp-options-table.large-options td:first-child {
+        max-width: 120px;
+    }
+}
+
+/* Health Check Loading Styles */
+.health-check-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+
+.health-check-loader {
+    text-align: center;
+    padding: 40px;
+}
+
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.health-check-loader p {
+    margin: 10px 0;
+    color: #555;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Fade-in animation for loaded content */
+#health-check-content {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

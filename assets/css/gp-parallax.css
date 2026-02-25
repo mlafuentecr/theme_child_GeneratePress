@@ -1,0 +1,24 @@
+/*
+ * GP Parallax — helper styles for parallax scroll effects.
+ * Attach data-parallax to any element. Wrap in .parallax-container
+ * when the element should be clipped (e.g. a background image).
+ */
+
+[data-parallax] {
+  will-change: transform;
+  /* GPU-accelerated layer hint */
+  backface-visibility: hidden;
+}
+
+/* Parent container: clips overflowing parallax content */
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Disable parallax for reduced-motion users — JS also checks this */
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax] {
+    transform: none !important;
+  }
+}

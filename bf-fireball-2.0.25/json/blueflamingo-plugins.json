@@ -1,0 +1,24 @@
+{
+    "core": [
+        { "slug": "duplicate-page", "name": "Duplicate Page", "basename": "duplicate-page/duplicatepage.php", "type": "free" },
+        { "slug": "imsanity", "name": "Imsanity", "basename": "imsanity/imsanity.php", "type": "free" },
+        { "slug": "ninja-forms", "name": "Ninja Forms", "basename": "ninja-forms/ninja-forms.php", "type": "licensed-display" },
+        { "slug": "wp-seopress", "name": "SEOPress", "basename": "wp-seopress/seopress.php", "type": "free" },
+        { "slug": "uk-cookie-consent", "name": "Termly", "basename": "uk-cookie-consent/uk-cookie-consent.php", "type": "licensed-display" },
+        { "slug": "post-smtp", "name": "Post SMTP", "basename": "post-smtp/postman-smtp.php", "type": "free" }
+    ],
+    "common": [
+        { "slug": "wp-asset-clean-up", "name": "Asset CleanUp: Page Speed Booster", "basename": "wp-asset-clean-up/wpacu.php", "type": "common" },
+        { "slug": "contact-form-cfdb7", "name": "Contact Form 7 Database Addon - CFDB7", "basename": "contact-form-cfdb7/contact-form-cfdb-7.php", "type": "common" },
+        { "slug": "svg-support", "name": "SVG Support", "basename": "svg-support/svg-support.php", "type": "common" },
+        { "slug": "contact-form-7", "name": "Contact Form 7", "basename": "contact-form-7/wp-contact-form-7.php", "type": "common" },
+        { "slug": "string-locator", "name": "String locator", "basename": "string-locator/string-locator.php", "type": "common" },
+        { "slug": "email-templates", "name": "Email Templates", "basename": "email-templates/email-templates.php", "type": "common" },
+        { "slug": "simple-history", "name": "Simple History - user activity log, audit tool", "basename": "simple-history/index.php", "type": "common" },
+        { "slug": "sucuri-scanner", "name": "Sucuri Security - Auditing, Malware Scanner and Security Hardening", "basename": "sucuri-scanner/sucuri.php", "type": "common" },
+        { "slug": "wpcf7-redirect", "name": "Redirection for Contact Form 7", "basename": "wpcf7-redirect/wpcf7-redirect.php", "type": "common" },
+        { "slug": "admin-taxonomy-filter", "name": "Admin Taxonomy Filter", "basename": "admin-taxonomy-filter/admin-taxonomy-filter.php", "type": "common" },
+        { "slug": "simple-page-ordering", "name": "Simple Page Ordering", "basename": "simple-page-ordering/simple-page-ordering.php", "type": "common" },
+        { "slug": "user-switching", "name": "User Switching", "basename": "user-switching/user-switching.php", "type": "common" }
+    ]
+}
