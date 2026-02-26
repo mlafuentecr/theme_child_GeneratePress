@@ -29,15 +29,29 @@ if (! defined('GP_CHILD_BRAND')) {
 }
 
 $includes = [
-    '/inc/setup.php',
+
+    //Core Theme Setup
+    '/inc/supported.php',
     '/inc/enqueue.php',
+    '/inc/helpers.php',
+
+
+    //Admin / Back Office
     '/inc/admin-settings.php',
+
+
+    //Frontend Features
+    '/inc/404.php',
     '/inc/animations.php',
     '/inc/parallax.php',
+    '/inc/webp-converter.php',
     '/inc/search_result/index.php',
-    '/inc/modal.php',
-    '/inc/helpers.php',
+
+
+    //Gutenberg / Patterns / blocks
     '/inc/patterns.php',
+    //(Modal & Popup) work Together
+    '/inc/modal.php',
     '/inc/popup-block.php',
 ];
 
