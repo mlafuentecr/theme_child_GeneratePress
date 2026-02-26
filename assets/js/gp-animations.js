@@ -1,13 +1,20 @@
 /**
  * GP Animations — IntersectionObserver-based scroll entrance animations.
- * Reads data-animate, data-animate-delay (ms), data-animate-duration (ms).
+ * Targets elements with classes: fade-up | fade-down | fade-left | fade-right | zoom-in | zoom-out
+ * Optional: data-animate-delay="200" and data-animate-duration="1000"
  */
 (function () {
   'use strict';
 
+  var SELECTOR = '.fade-up, .fade-down, .fade-left, .fade-right, .zoom-in, .zoom-out';
+
+  var elements = document.querySelectorAll(SELECTOR);
+
+  if (!elements.length) return;
+
+  // Fallback for browsers without IntersectionObserver
   if (typeof IntersectionObserver === 'undefined') {
-    // Fallback: make all elements visible immediately
-    document.querySelectorAll('[data-animate]').forEach(function (el) {
+    elements.forEach(function (el) {
       el.classList.add('is-visible');
     });
     return;
@@ -36,7 +43,7 @@
     { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
   );
 
-  document.querySelectorAll('[data-animate]').forEach(function (el) {
+  elements.forEach(function (el) {
     observer.observe(el);
   });
 })();

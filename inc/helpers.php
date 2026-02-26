@@ -49,20 +49,39 @@ add_filter( 'block_editor_settings_all', function ( $settings ) {
 
 
 /* ============================================================
- * Gutenberg block styles
+ * Gutenberg – Clean Patterns UI (BlueFlamingo only)
  * ============================================================ */
 
-// Register custom block style category
+// Remove all core pattern categories — keep only the brand category
 add_action( 'init', function () {
-    if ( function_exists( 'register_block_style_category' ) ) {
-        register_block_style_category(
-            GP_CHILD_BRAND_SLUG,
-            [
-                'label' => __( GP_CHILD_BRAND, 'generatepress-child' ),
-            ]
-        );
+    if ( ! function_exists( 'unregister_block_pattern_category' ) ) return;
+
+    foreach ( [
+        'about',
+        'banner',
+        'banners',
+        'buttons',
+        'call-to-action',
+        'columns',
+        'contact',
+        'featured',
+        'footer',
+        'gallery',
+        'header',
+        'hero',
+        'media',
+        'portfolio',
+        'posts',
+        'query',
+        'social',
+        'team',
+        'testimonials',
+        'text',
+        'video',
+    ] as $category ) {
+        unregister_block_pattern_category( $category );
     }
-} );
+}, 20 );
 
 /* ============================================================
  * Footer
@@ -118,28 +137,6 @@ add_action( 'init', function () {
 } );
 
 
-/* ============================================================
- * Gutenberg – Clean Patterns UI (BlueFlamingo only)
- * ============================================================ */
-
-// Remove core pattern categories
-add_action( 'init', function () {
-    if ( ! function_exists( 'unregister_block_pattern_category' ) ) return;
-
-    foreach ( [
-        'about',
-        'banners',
-        'call-to-action',
-        'footer',
-        'gallery',
-        'header',
-        'posts',
-        'text',
-        'banner',
-    ] as $category ) {
-        unregister_block_pattern_category( $category );
-    }
-}, 20 );
 
 /* ============================================================
    Add Content to post empty

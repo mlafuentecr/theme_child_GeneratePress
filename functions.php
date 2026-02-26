@@ -20,14 +20,25 @@ if (! defined('GP_CHILD_URI')) {
     define('GP_CHILD_URI', get_stylesheet_directory_uri());
 }
 
+// ── Brand identity (slug used for block/pattern categories) ──────────────────
+if (! defined('GP_CHILD_BRAND_SLUG')) {
+    define('GP_CHILD_BRAND_SLUG', 'blueflamingo');
+}
+if (! defined('GP_CHILD_BRAND')) {
+    define('GP_CHILD_BRAND', 'Blue Flamingo');
+}
+
 $includes = [
     '/inc/setup.php',
     '/inc/enqueue.php',
     '/inc/admin-settings.php',
     '/inc/animations.php',
     '/inc/parallax.php',
-    '/inc/search.php',
+    '/inc/search_result/index.php',
     '/inc/modal.php',
+    '/inc/helpers.php',
+    '/inc/patterns.php',
+    '/inc/popup-block.php',
 ];
 
 foreach ($includes as $file) {

@@ -18,8 +18,8 @@ if (! defined('ABSPATH')) {
 
 add_action('admin_menu', function (): void {
     add_theme_page(
-        __('Child Theme Settings', 'generatepress-child'),
-        __('Child Theme Settings', 'generatepress-child'),
+        GP_CHILD_BRAND . ' ' . __('Settings', 'generatepress-child'),
+        GP_CHILD_BRAND . ' ' . __('Settings', 'generatepress-child'),
         'manage_options',
         'gp-child-settings',
         'gp_child_render_settings_page'
@@ -33,8 +33,15 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
         return;
     }
     wp_enqueue_media();
-    // Use 'jquery' (not 'jquery-core') so the script runs after jQuery is ready
     wp_enqueue_script('jquery');
+    wp_localize_script('jquery', 'gpNotes', [
+        'nonce'   => wp_create_nonce('gp_child_notes'),
+        'ajaxurl' => admin_url('admin-ajax.php'),
+    ]);
+    wp_localize_script('jquery', 'gpDfi', [
+        'title'  => __('Select Default Featured Image', 'generatepress-child'),
+        'button' => __('Use this image', 'generatepress-child'),
+    ]);
     wp_add_inline_script('jquery', gp_child_admin_js());
 });
 
@@ -81,10 +88,10 @@ function gp_child_admin_js(): string
             e.preventDefault();
             if (frame) { frame.open(); return; }
             frame = wp.media({
-                title: 'Select Default Featured Image',
+                title:    (window.gpDfi && gpDfi.title)  || 'Select Default Featured Image',
                 multiple: false,
-                library: { type: 'image' },
-                button: { text: 'Use this image' }
+                library:  { type: 'image' },
+                button:   { text: (window.gpDfi && gpDfi.button) || 'Use this image' }
             });
             frame.on('select', function(){
                 var att = frame.state().get('selection').first().toJSON();
@@ -93,6 +100,13 @@ function gp_child_admin_js(): string
                 $('#gp-dfi-preview').attr('src', src).show();
                 $('#gp-dfi-remove').show();
             });
+            frame.on('open', function(){
+                var id = $('#gp-dfi-id').val();
+                if (!id) { return; }
+                var attachment = wp.media.attachment(id);
+                attachment.fetch();
+                frame.state().get('selection').add(attachment ? [attachment] : []);
+            });
             frame.open();
         });
         $(document).on('click', '#gp-dfi-remove', function(e){
@@ -100,6 +114,82 @@ function gp_child_admin_js(): string
             $('#gp-dfi-id').val('');
             $('#gp-dfi-preview').attr('src', '').hide();
             $(this).hide();
+        });
+
+        // ── Notes ──────────────────────────────────────────────────────────
+        var COLORS = ['yellow','blue','green','pink'];
+
+        function buildCard(note) {
+            var colorsHtml = '';
+            $.each(COLORS, function(_, c){
+                colorsHtml += '<span class="gp-note-color-dot' + (note.color === c ? ' is-selected' : '') +
+                    '" data-color="' + c + '" title="' + c + '"></span>';
+            });
+            return '<div class="gp-note-card" data-id="' + note.id + '" data-color="' + (note.color||'yellow') + '">' +
+                '<div class="gp-note-colors">' + colorsHtml + '</div>' +
+                '<button type="button" class="gp-note-delete" title="Delete note">&#10005;</button>' +
+                '<input type="text" class="gp-note-title" placeholder="Title…" value="' + gpEsc(note.title) + '">' +
+                '<textarea class="gp-note-body" placeholder="Note…" rows="5">' + gpEsc(note.content) + '</textarea>' +
+                '<div class="gp-note-footer">' +
+                    '<span class="gp-note-status"></span>' +
+                    '<button type="button" class="button button-primary gp-note-save">Save</button>' +
+                '</div>' +
+            '</div>';
+        }
+
+        function gpEsc(str) {
+            return $('<div>').text(str||'').html();
+        }
+
+        // Add note
+        $(document).on('click', '#gp-add-note', function(){
+            var $btn = $(this).prop('disabled', true);
+            $.post(gpNotes.ajaxurl, { action: 'gp_child_add_note', nonce: gpNotes.nonce }, function(r){
+                if (r.success) {
+                    $('#gp-notes-grid').prepend(buildCard(r.data));
+                }
+            }).always(function(){ $btn.prop('disabled', false); });
+        });
+
+        // Color picker
+        $(document).on('click', '.gp-note-color-dot', function(){
+            var $card = $(this).closest('.gp-note-card');
+            var color = $(this).data('color');
+            $card.attr('data-color', color);
+            $card.find('.gp-note-color-dot').removeClass('is-selected');
+            $(this).addClass('is-selected');
+        });
+
+        // Save note
+        $(document).on('click', '.gp-note-save', function(){
+            var $btn  = $(this).prop('disabled', true);
+            var $card = $btn.closest('.gp-note-card');
+            var $status = $card.find('.gp-note-status');
+            $status.text('Saving…');
+            $.post(gpNotes.ajaxurl, {
+                action:   'gp_child_save_note',
+                nonce:    gpNotes.nonce,
+                id:       $card.data('id'),
+                title:    $card.find('.gp-note-title').val(),
+                content:  $card.find('.gp-note-body').val(),
+                color:    $card.attr('data-color')
+            }, function(r){
+                $status.text(r.success ? 'Saved ✓' : 'Error');
+                setTimeout(function(){ $status.text(''); }, 2500);
+            }).always(function(){ $btn.prop('disabled', false); });
+        });
+
+        // Delete note
+        $(document).on('click', '.gp-note-delete', function(){
+            if (!window.confirm('Delete this note?')) { return; }
+            var $card = $(this).closest('.gp-note-card');
+            $.post(gpNotes.ajaxurl, {
+                action: 'gp_child_delete_note',
+                nonce:  gpNotes.nonce,
+                id:     $card.data('id')
+            }, function(r){
+                if (r.success) { $card.remove(); }
+            });
         });
     });
 }(jQuery));
@@ -122,8 +212,19 @@ add_action('admin_init', function (): void {
     // Custom 404 (preserves Fireball error page key)
     register_setting('gp_child_404_group',        'blueflamingo_plugin_error_page_settings',       ['sanitize_callback' => 'gp_child_sanitize_404']);
 
-    // Cache buster (new – child theme only)
-    register_setting('gp_child_cache_group',      'gp_child_css_version',                          ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 1]);
+    // Cache buster counter
+    register_setting('gp_child_cache_group', 'gp_child_css_version',    ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 1]);
+    // Image URL versioning (Option A)
+    register_setting('gp_child_cache_group', 'gp_child_version_images', ['type' => 'string',  'sanitize_callback' => 'sanitize_text_field', 'default' => '0']);
+
+    // Notes visibility
+    register_setting('gp_child_notes_group', 'gp_child_notes_role', [
+        'sanitize_callback' => function ($v) {
+            $allowed = ['manage_options', 'edit_others_posts', 'publish_posts', 'edit_posts', 'read'];
+            return in_array($v, $allowed, true) ? $v : 'manage_options';
+        },
+        'default' => 'manage_options',
+    ]);
 });
 
 // ── 4. Sanitize callbacks ─────────────────────────────────────────────────────
@@ -133,11 +234,9 @@ function gp_child_sanitize_general(mixed $input): array
     if (! is_array($input)) {
         $input = [];
     }
-    // Merge with existing so we never wipe Fireball-managed keys
     $existing = (array) get_option('blueflamingo_plugin_general_settings', []);
     $clean    = $existing;
 
-    $clean['move_notes']  = sanitize_textarea_field($input['move_notes']  ?? '');
     $clean['live_url']    = sanitize_text_field($input['live_url']    ?? '');
     $clean['staging_url'] = sanitize_text_field($input['staging_url'] ?? '');
 
@@ -210,12 +309,15 @@ function gp_child_render_settings_page(): void
     $dfi_id  = intval($opts['default_featured_image'] ?? 0);
     $dfi_url = $dfi_id ? wp_get_attachment_image_url($dfi_id, 'thumbnail') : '';
 
+    $notes = gp_child_get_notes();
+
     $tabs = [
         'site-info'  => __('Site Info',    'generatepress-child'),
         'options'    => __('Options',      'generatepress-child'),
         'analytics'  => __('Analytics',    'generatepress-child'),
         '404'        => __('404 Page',     'generatepress-child'),
         'cache'      => __('Cache Buster', 'generatepress-child'),
+        'notes'      => __('Notes',        'generatepress-child'),
     ];
     ?>
     <div class="wrap gp-child-settings">
@@ -231,7 +333,7 @@ function gp_child_render_settings_page(): void
                 display: -ms-flexbox;
                 display: flex;
                 flex-direction: row;
-                flex-wrap: nowrap;
+                flex-wrap: wrap;
                 gap: 0;
                 margin: 18px 0 0;
                 padding: 0;
@@ -288,6 +390,85 @@ function gp_child_render_settings_page(): void
 
             /* ── No-JS fallback: show all panels ────────────────────────── */
             .gp-child-settings.no-js .gp-tab-panel { display: block; margin-bottom: 16px; border-top: 1px solid #c3c4c7; border-radius: 3px; }
+
+            /* ── Cache tab sections ──────────────────────────────────────── */
+            .gp-cache-section {
+                border: 1px solid #c3c4c7;
+                border-radius: 4px;
+                padding: 20px 24px 4px;
+                margin-bottom: 24px;
+                background: #fdfdfd;
+            }
+            .gp-cache-section + .gp-cache-section { margin-top: 0; }
+            .gp-cache-section-title {
+                font-size: 13px; font-weight: 600; color: #1d2327;
+                margin: 0 0 4px; display: flex; align-items: center; gap: 7px;
+            }
+            .gp-cache-section-desc {
+                font-size: 12px; color: #646970; margin: 0 0 14px; line-height: 1.6;
+            }
+            /* ── Notes grid ──────────────────────────────────────────────── */
+            .gp-notes-header { display:flex; align-items:center; margin-bottom:20px; }
+            .gp-notes-header h3 { margin:0; flex:1; font-size:14px; font-weight:600; color:#1d2327; }
+            .gp-notes-grid {
+                display: -ms-grid;
+                display: grid;
+                -ms-grid-columns: 1fr 16px 1fr 16px 1fr;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 16px;
+            }
+            .gp-notes-empty { color:#888; font-size:13px; font-style:italic; }
+
+            /* ── Note card ───────────────────────────────────────────────── */
+            .gp-note-card {
+                border-radius: 6px;
+                padding: 14px 16px 12px;
+                position: relative;
+                box-shadow: 0 1px 3px rgba(0,0,0,.08);
+                display: flex;
+                flex-direction: column;
+            }
+            .gp-note-card[data-color="yellow"] { background:#fffde7; border:1px solid #f0d048; }
+            .gp-note-card[data-color="blue"]   { background:#e3f2fd; border:1px solid #90caf9; }
+            .gp-note-card[data-color="green"]  { background:#e8f5e9; border:1px solid #a5d6a7; }
+            .gp-note-card[data-color="pink"]   { background:#fce4ec; border:1px solid #f48fb1; }
+
+            .gp-note-colors { display:flex; gap:6px; margin-bottom:10px; align-items:center; }
+            .gp-note-color-dot {
+                width: 13px; height: 13px; border-radius: 50%; cursor: pointer;
+                border: 2px solid transparent; flex-shrink: 0; transition: transform .1s;
+            }
+            .gp-note-color-dot[data-color="yellow"] { background:#f9c922; }
+            .gp-note-color-dot[data-color="blue"]   { background:#64b5f6; }
+            .gp-note-color-dot[data-color="green"]  { background:#81c784; }
+            .gp-note-color-dot[data-color="pink"]   { background:#f06292; }
+            .gp-note-color-dot.is-selected { border-color:#555; transform:scale(1.25); }
+            .gp-note-color-dot:hover { transform:scale(1.2); }
+
+            .gp-note-delete {
+                position: absolute; top:10px; right:10px;
+                background: none; border: none; cursor: pointer;
+                color: #bbb; font-size: 15px; line-height:1; padding:2px 4px;
+                border-radius: 3px; transition: color .15s, background .15s;
+            }
+            .gp-note-delete:hover { color:#d63638; background:rgba(214,54,56,.08); }
+
+            .gp-note-title {
+                width: 100%; border: none; background: transparent;
+                font-weight: 600; font-size: 13px; margin-bottom: 8px;
+                padding: 0; color: #1d2327; outline: none;
+                box-shadow: none !important;
+            }
+            .gp-note-title:focus { border-bottom:1px dashed #aaa; }
+            .gp-note-body {
+                width: 100%; min-height: 90px; border: none; background: transparent;
+                resize: vertical; font-size: 12px; line-height:1.6;
+                color: #3c434a; padding: 0; outline: none; flex:1;
+                box-shadow: none !important;
+            }
+            .gp-note-footer { display:flex; align-items:center; margin-top:10px; gap:8px; }
+            .gp-note-status { font-size:11px; color:#5a7a5a; flex:1; }
+            .gp-note-save { flex-shrink:0; }
         </style>
 
         <?php /* ── Tab navigation: <nav> + <button> avoids WP list styles ── */ ?>
@@ -309,14 +490,6 @@ function gp_child_render_settings_page(): void
             <form method="post" action="options.php">
                 <?php settings_fields('gp_child_site_info_group'); ?>
                 <table class="form-table" role="presentation">
-                    <tr>
-                        <th scope="row"><?php esc_html_e('Move Notes', 'generatepress-child'); ?></th>
-                        <td>
-                            <textarea name="blueflamingo_plugin_general_settings[move_notes]"
-                                      rows="5" class="large-text"><?php echo esc_textarea($gen['move_notes'] ?? ''); ?></textarea>
-                            <p class="description"><?php esc_html_e('Internal notes — migration status, site quirks, project history.', 'generatepress-child'); ?></p>
-                        </td>
-                    </tr>
                     <tr>
                         <th scope="row"><?php esc_html_e('Live Site URL', 'generatepress-child'); ?></th>
                         <td>
@@ -406,7 +579,11 @@ function gp_child_render_settings_page(): void
                                    name="blueflamingo_plugin_options_settings[id_whatConverts]"
                                    value="<?php echo esc_attr($opts['id_whatConverts'] ?? ''); ?>"
                                    class="regular-text" placeholder="123456">
-                            <p class="description"><?php esc_html_e('WhatConverts account ID. Leave blank to disable.', 'generatepress-child'); ?></p>
+                            <p class="description">
+                                <?php esc_html_e('WhatConverts account ID. Leave blank to disable.', 'generatepress-child'); ?><br>
+                                <?php esc_html_e('WhatConverts tracks calls, forms and chats and attributes them to a marketing source (Google Ads, SEO, etc.).', 'generatepress-child'); ?><br>
+                                <?php esc_html_e('Find your ID in WhatConverts: Settings → Profiles → your profile → Profile ID.', 'generatepress-child'); ?>
+                            </p>
                         </td>
                     </tr>
                 </table>
@@ -510,32 +687,151 @@ function gp_child_render_settings_page(): void
 
         <?php /* ── Cache Buster ─────────────────────────────────────────── */ ?>
         <div id="gp-tab-cache" class="gp-tab-panel" role="tabpanel">
-            <p><?php
-                printf(
-                    esc_html__('Increment the counter to force browsers to re-download all theme assets. Current version: %s', 'generatepress-child'),
-                    '<strong>' . esc_html(GP_CHILD_VERSION . '.' . $cv) . '</strong>'
-                );
-            ?></p>
-            <form method="post" action="options.php">
-                <?php settings_fields('gp_child_cache_group'); ?>
+
+            <?php
+            $vi = get_option('gp_child_version_images', '0');
+            ?>
+
+            <?php /* ── Section 1: Browser cache ─────────────────────── */ ?>
+            <div class="gp-cache-section">
+                <h3 class="gp-cache-section-title">&#128274; <?php esc_html_e('Client Browser Cache', 'generatepress-child'); ?></h3>
+                <p class="gp-cache-section-desc"><?php esc_html_e(
+                    'Browsers store CSS, JS and images locally so pages load faster on repeat visits. ' .
+                    'When you update a file the browser may keep serving its old cached copy for days. ' .
+                    'Incrementing the version counter appends ?v=X to every asset URL, forcing a fresh download. ' .
+                    'Current asset version: ', 'generatepress-child');
+                ?><strong><?php echo esc_html(GP_CHILD_VERSION . '.' . $cv); ?></strong></p>
+
+                <form method="post" action="options.php">
+                    <?php settings_fields('gp_child_cache_group'); ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><?php esc_html_e('CSS / JS Version Counter', 'generatepress-child'); ?></th>
+                            <td>
+                                <input type="number" name="gp_child_css_version"
+                                       value="<?php echo esc_attr($cv); ?>" min="1" step="1" style="width:80px;">
+                                &nbsp;
+                                <button type="submit" name="gp_child_css_version"
+                                        value="<?php echo esc_attr($cv + 1); ?>"
+                                        class="button button-secondary">
+                                    <?php esc_html_e('Increment +1', 'generatepress-child'); ?>
+                                </button>
+                                <p class="description"><?php esc_html_e('Appended as ?v=X to all theme CSS and JS files.', 'generatepress-child'); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Version Image URLs', 'generatepress-child'); ?></th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="gp_child_version_images" value="1" <?php checked('1', $vi); ?>>
+                                    <?php esc_html_e('Also append ?v=X to media/attachment image URLs.', 'generatepress-child'); ?>
+                                </label>
+                                <p class="description"><?php esc_html_e('Useful after replacing an image file at the same URL. Uses the same counter above.', 'generatepress-child'); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php submit_button(__('Save Browser Cache Settings', 'generatepress-child')); ?>
+                </form>
+            </div>
+
+            <?php /* ── Section 2: Firewall / CDN Cache (info only) ─── */ ?>
+            <div class="gp-cache-section">
+                <h3 class="gp-cache-section-title">&#127760; <?php esc_html_e('Firewall / CDN Cache (Cloudflare, Sucuri, etc.)', 'generatepress-child'); ?></h3>
+                <p class="gp-cache-section-desc"><?php esc_html_e(
+                    'CDN and firewall services (Cloudflare, Sucuri WAF, WP Engine, Kinsta, etc.) cache full HTML pages at edge servers worldwide. ' .
+                    'When you update a page in WordPress the CDN may keep serving a stale copy for hours or days — ' .
+                    'visitors will not see your changes until that cache is cleared.',
+                    'generatepress-child'
+                ); ?></p>
+
+                <p style="font-size:12px;font-weight:600;color:#1d2327;margin:0 0 6px;"><?php esc_html_e('When to purge your CDN cache:', 'generatepress-child'); ?></p>
+                <ul style="margin:0 0 16px 18px;font-size:12px;color:#50575e;list-style:disc;">
+                    <li><?php esc_html_e('After editing a published page, post, or landing page', 'generatepress-child'); ?></li>
+                    <li><?php esc_html_e('After updating the theme, CSS, or global layout', 'generatepress-child'); ?></li>
+                    <li><?php esc_html_e('After changing headers, footers, navigation menus, or sidebars', 'generatepress-child'); ?></li>
+                    <li><?php esc_html_e('After a plugin update that affects front-end output', 'generatepress-child'); ?></li>
+                </ul>
+
+                <p style="font-size:12px;font-weight:600;color:#1d2327;margin:0 0 6px;"><?php esc_html_e('How to purge — go to your provider\'s dashboard:', 'generatepress-child'); ?></p>
+                <ul style="margin:0 0 8px 18px;font-size:12px;color:#50575e;list-style:disc;">
+                    <li><strong>Cloudflare:</strong> <?php esc_html_e('Caching → Configuration → Purge Everything', 'generatepress-child'); ?></li>
+                    <li><strong>Sucuri WAF:</strong> <?php esc_html_e('Firewall → Clear Cache', 'generatepress-child'); ?></li>
+                    <li><strong>WP Rocket:</strong> <?php esc_html_e('Dashboard → Clear cache button (top bar)', 'generatepress-child'); ?></li>
+                    <li><strong>WP Engine / Kinsta:</strong> <?php esc_html_e('Hosting dashboard → Clear all caches', 'generatepress-child'); ?></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <?php /* ── Notes ──────────────────────────────────────────────── */ ?>
+        <div id="gp-tab-notes" class="gp-tab-panel" role="tabpanel">
+
+            <?php
+            $notes_role = get_option('gp_child_notes_role', 'manage_options');
+            $role_options = [
+                'manage_options'    => __('Administrator only',      'generatepress-child'),
+                'edit_others_posts' => __('Editor and above',        'generatepress-child'),
+                'publish_posts'     => __('Author and above',        'generatepress-child'),
+                'edit_posts'        => __('Contributor and above',   'generatepress-child'),
+                'read'              => __('All logged-in users',     'generatepress-child'),
+            ];
+            ?>
+            <form method="post" action="options.php" style="margin-bottom:24px;">
+                <?php settings_fields('gp_child_notes_group'); ?>
                 <table class="form-table" role="presentation">
                     <tr>
-                        <th scope="row"><?php esc_html_e('CSS / JS Version Counter', 'generatepress-child'); ?></th>
+                        <th scope="row"><?php esc_html_e('Show dashboard notices to', 'generatepress-child'); ?></th>
                         <td>
-                            <input type="number" name="gp_child_css_version"
-                                   value="<?php echo esc_attr($cv); ?>" min="1" step="1" style="width:80px;">
-                            &nbsp;
-                            <button type="submit" name="gp_child_css_version"
-                                    value="<?php echo esc_attr($cv + 1); ?>"
-                                    class="button button-secondary">
-                                <?php esc_html_e('Increment +1', 'generatepress-child'); ?>
-                            </button>
-                            <p class="description"><?php esc_html_e('Increase this number to bust caches on all front-end assets.', 'generatepress-child'); ?></p>
+                            <select name="gp_child_notes_role">
+                                <?php foreach ($role_options as $cap => $label) : ?>
+                                    <option value="<?php echo esc_attr($cap); ?>" <?php selected($notes_role, $cap); ?>>
+                                        <?php echo esc_html($label); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description"><?php esc_html_e('Which user roles see these notes as notices on the dashboard.', 'generatepress-child'); ?></p>
                         </td>
                     </tr>
                 </table>
-                <?php submit_button(__('Save Version', 'generatepress-child')); ?>
+                <?php submit_button(__('Save Visibility', 'generatepress-child'), 'secondary'); ?>
             </form>
+
+            <div class="gp-notes-header">
+                <h3><?php esc_html_e('Internal Notes', 'generatepress-child'); ?></h3>
+                <button type="button" id="gp-add-note" class="button button-primary">
+                    + <?php esc_html_e('Add Note', 'generatepress-child'); ?>
+                </button>
+            </div>
+
+            <div id="gp-notes-grid" class="gp-notes-grid">
+                <?php if (empty($notes)) : ?>
+                    <p class="gp-notes-empty"><?php esc_html_e('No notes yet. Click "Add Note" to create one.', 'generatepress-child'); ?></p>
+                <?php else : ?>
+                    <?php foreach ($notes as $note) :
+                        $id      = esc_attr($note['id']      ?? '');
+                        $title   = esc_attr($note['title']   ?? '');
+                        $content = esc_textarea($note['content'] ?? '');
+                        $color   = in_array($note['color'] ?? '', ['yellow','blue','green','pink'], true) ? $note['color'] : 'yellow';
+                    ?>
+                    <div class="gp-note-card" data-id="<?php echo $id; ?>" data-color="<?php echo esc_attr($color); ?>">
+                        <div class="gp-note-colors">
+                            <?php foreach (['yellow','blue','green','pink'] as $c) : ?>
+                                <span class="gp-note-color-dot<?php echo $color === $c ? ' is-selected' : ''; ?>"
+                                      data-color="<?php echo esc_attr($c); ?>" title="<?php echo esc_attr($c); ?>"></span>
+                            <?php endforeach; ?>
+                        </div>
+                        <button type="button" class="gp-note-delete" title="<?php esc_attr_e('Delete note', 'generatepress-child'); ?>">&#10005;</button>
+                        <input type="text" class="gp-note-title" placeholder="<?php esc_attr_e('Title…', 'generatepress-child'); ?>" value="<?php echo $title; ?>">
+                        <textarea class="gp-note-body" placeholder="<?php esc_attr_e('Note…', 'generatepress-child'); ?>" rows="5"><?php echo $content; ?></textarea>
+                        <div class="gp-note-footer">
+                            <span class="gp-note-status"></span>
+                            <button type="button" class="button button-primary gp-note-save"><?php esc_html_e('Save', 'generatepress-child'); ?></button>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
         </div>
 
     </div><!-- .gp-child-settings -->
@@ -645,6 +941,60 @@ add_action('wp_footer', function (): void {
     }
 }, 99);
 
+// ── 8. Dashboard admin notices ────────────────────────────────────────────────
+
+add_action('admin_notices', function (): void {
+    global $pagenow;
+    if ($pagenow !== 'index.php') {
+        return;
+    }
+    $required_cap = get_option('gp_child_notes_role', 'manage_options');
+    if (! current_user_can($required_cap)) {
+        return;
+    }
+    $notes = gp_child_get_notes();
+    if (empty($notes)) {
+        return;
+    }
+
+    // Map note color → WP notice type + custom border color
+    $color_map = [
+        'yellow' => ['type' => 'notice-warning',  'border' => '#f0d048'],
+        'blue'   => ['type' => 'notice-info',      'border' => '#90caf9'],
+        'green'  => ['type' => 'notice-success',   'border' => '#a5d6a7'],
+        'pink'   => ['type' => 'notice-error',     'border' => '#f48fb1'],
+    ];
+
+    $manage_url = admin_url('themes.php?page=gp-child-settings');
+
+    foreach ($notes as $note) {
+        $color   = in_array($note['color'] ?? '', ['yellow','blue','green','pink'], true) ? $note['color'] : 'yellow';
+        $map     = $color_map[$color];
+        $title   = esc_html(trim($note['title']   ?? ''));
+        $content = esc_html(trim($note['content'] ?? ''));
+
+        if ($title === '' && $content === '') {
+            continue;
+        }
+
+        printf(
+            '<div class="notice %s gp-site-note" style="border-left-color:%s;">' .
+                '<p>' .
+                    '%s' .
+                    '%s' .
+                    '<a href="%s" style="margin-left:10px;font-size:11px;opacity:.7;">%s</a>' .
+                '</p>' .
+            '</div>',
+            esc_attr($map['type']),
+            esc_attr($map['border']),
+            $title   !== '' ? '<strong>' . $title . '</strong> ' : '',
+            $content !== '' ? '<span style="color:#50575e;">' . nl2br($content) . '</span>' : '',
+            esc_url($manage_url),
+            esc_html__('Manage notes →', 'generatepress-child')
+        );
+    }
+});
+
 // — Google Analytics / GTM ───────────────────────────────────────────────────
 add_action('init', function (): void {
     $ga = (array) get_option('blueflamingo_plugin_google_analytics_settings', []);
@@ -685,6 +1035,91 @@ function gp_child_output_analytics(): void
         <?php
     }
 }
+
+// ── 7. Cache: image URL versioning (Option A) ────────────────────────────────
+
+// — Image URL versioning ──────────────────────────────────────────────────────
+add_filter('wp_get_attachment_url', function (string $url): string {
+    if (get_option('gp_child_version_images', '0') !== '1') {
+        return $url;
+    }
+    $v = intval(get_option('gp_child_css_version', 1));
+    return add_query_arg('v', $v, $url);
+});
+
+// ── 8. Notes helpers + AJAX ───────────────────────────────────────────────────
+
+function gp_child_get_notes(): array
+{
+    $raw = get_option('gp_child_notes', '[]');
+    $arr = json_decode((string) $raw, true);
+    return is_array($arr) ? $arr : [];
+}
+
+function gp_child_save_notes(array $notes): void
+{
+    update_option('gp_child_notes', wp_json_encode(array_values($notes)));
+}
+
+add_action('wp_ajax_gp_child_add_note', function (): void {
+    check_ajax_referer('gp_child_notes', 'nonce');
+    if (! current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized', 403);
+    }
+    $notes  = gp_child_get_notes();
+    $note   = [
+        'id'      => wp_generate_uuid4(),
+        'title'   => '',
+        'content' => '',
+        'color'   => 'yellow',
+        'created' => gmdate('Y-m-d'),
+    ];
+    array_unshift($notes, $note);
+    gp_child_save_notes($notes);
+    wp_send_json_success($note);
+});
+
+add_action('wp_ajax_gp_child_save_note', function (): void {
+    check_ajax_referer('gp_child_notes', 'nonce');
+    if (! current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized', 403);
+    }
+    $id      = sanitize_text_field(wp_unslash($_POST['id']      ?? ''));
+    $title   = sanitize_text_field(wp_unslash($_POST['title']   ?? ''));
+    $content = sanitize_textarea_field(wp_unslash($_POST['content'] ?? ''));
+    $color   = in_array($_POST['color'] ?? '', ['yellow','blue','green','pink'], true)
+        ? sanitize_text_field($_POST['color'])
+        : 'yellow';
+
+    $notes = gp_child_get_notes();
+    $found = false;
+    foreach ($notes as &$note) {
+        if ($note['id'] === $id) {
+            $note['title']   = $title;
+            $note['content'] = $content;
+            $note['color']   = $color;
+            $found           = true;
+            break;
+        }
+    }
+    unset($note);
+    if (! $found) {
+        wp_send_json_error('Note not found', 404);
+    }
+    gp_child_save_notes($notes);
+    wp_send_json_success();
+});
+
+add_action('wp_ajax_gp_child_delete_note', function (): void {
+    check_ajax_referer('gp_child_notes', 'nonce');
+    if (! current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized', 403);
+    }
+    $id    = sanitize_text_field(wp_unslash($_POST['id'] ?? ''));
+    $notes = array_filter(gp_child_get_notes(), fn($n) => $n['id'] !== $id);
+    gp_child_save_notes(array_values($notes));
+    wp_send_json_success();
+});
 
 // — Custom 404 page ───────────────────────────────────────────────────────────
 add_action('init', function (): void {

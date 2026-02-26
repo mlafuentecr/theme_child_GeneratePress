@@ -82,7 +82,7 @@
   // ── Delegation: open triggers ───────────────────────────────────────────────
 
   document.addEventListener('click', function (e) {
-    // Open
+    // Primary trigger: data-gp-modal-open="popup-id"
     var trigger = e.target.closest('[data-gp-modal-open]');
     if (trigger) {
       e.preventDefault();
@@ -90,6 +90,18 @@
       var modal = document.getElementById(id);
       openModal(modal);
       return;
+    }
+
+    // Fallback trigger: <a href="#popup-id"> pointing to a .gp-modal element
+    var hashLink = e.target.closest('a[href^="#"]');
+    if (hashLink) {
+      var hash   = hashLink.getAttribute('href').slice(1);
+      var target = hash ? document.getElementById(hash) : null;
+      if (target && target.classList.contains('gp-modal')) {
+        e.preventDefault();
+        openModal(target);
+        return;
+      }
     }
 
     // Close button or overlay
