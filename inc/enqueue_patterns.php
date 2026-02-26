@@ -39,6 +39,10 @@ $patterns = [
         'css'   => true,
         'class' => 'title-and-text',
     ],
+    'product-grid' => [
+        'css'   => true,
+        'class' => 'product-grid',
+    ],
 
 
 ];
@@ -150,6 +154,6 @@ add_action( 'wp_enqueue_scripts', function () use ( $patterns ) {
 add_action( 'after_setup_theme', function () use ( $patterns ) {
     add_theme_support( 'editor-styles' );
     foreach ( $patterns as $name => $assets ) {
-        add_editor_style( "/assets/css/patterns/$name.css" );
+        add_editor_style( "assets/css/patterns/$name.css" );
     }
 } );
