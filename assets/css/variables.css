@@ -1,0 +1,167 @@
+/* =============================================================================
+   VARIABLES
+   Global design tokens for the child theme.
+   Override these in a project-specific file or via GeneratePress > Customize.
+   =========================================================================== */
+
+:root {
+
+  /* ── Colors ─────────────────────────────────────────────────────────────── */
+  --color-primary:        #0073aa;
+  --color-primary-dark:   #005a87;
+  --color-primary-light:  #e8f4fb;
+
+  --color-secondary:      #555d6b;
+  --color-accent:         #f0a500;
+
+  --color-text:           #1a1a1a;
+  --color-text-muted:     #6b7280;
+  --color-text-inverse:   #ffffff;
+
+  --color-bg:             #ffffff;
+  --color-bg-alt:         #f9fafb;
+  --color-bg-dark:        #1a1a2e;
+
+  --color-border:         #e5e7eb;
+  --color-border-dark:    #d1d5db;
+
+  --color-error:          #dc2626;
+  --color-success:        #16a34a;
+  --color-warning:        #ca8a04;
+
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  --font-base:            system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-heading:         var(--font-base);
+  --font-mono:            "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --font-size-xs:         0.75rem;   /* 12px */
+  --font-size-sm:         0.875rem;  /* 14px */
+  --font-size-base:       1rem;      /* 16px */
+  --font-size-md:         1.125rem;  /* 18px */
+  --font-size-lg:         1.25rem;   /* 20px */
+  --font-size-xl:         1.5rem;    /* 24px */
+  --font-size-2xl:        1.875rem;  /* 30px */
+  --font-size-3xl:        2.25rem;   /* 36px */
+
+  --line-height-tight:    1.25;
+  --line-height-base:     1.6;
+  --line-height-loose:    1.8;
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* ── Spacing (base-8 scale) ─────────────────────────────────────────────── */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+
+  /* ── Layout ─────────────────────────────────────────────────────────────── */
+  --container-sm:   640px;
+  --container-md:   768px;
+  --container-lg:   1024px;
+  --container-xl:   1280px;
+  --container-2xl:  1536px;
+
+  /* ── Borders & Radius ───────────────────────────────────────────────────── */
+  --radius-sm:    0.25rem;
+  --radius-md:    0.5rem;
+  --radius-lg:    0.75rem;
+  --radius-xl:    1rem;
+  --radius-full:  9999px;
+
+  --border-width:     1px;
+  --border-style:     solid;
+  --border-color:     var(--color-border);
+
+  /* ── Shadows ────────────────────────────────────────────────────────────── */
+  --shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* ── Transitions ────────────────────────────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ── Navigation ─────────────────────────────────────────────────────────── */
+  --nav-height:           64px;
+  --nav-bg:               var(--color-bg);
+  --nav-border:           var(--color-border);
+  --nav-link-color:       var(--color-text);
+  --nav-link-hover:       var(--color-primary);
+  --nav-dropdown-bg:      var(--color-bg);
+  --nav-dropdown-shadow:  var(--shadow-lg);
+
+  /* ── Z-index scale ──────────────────────────────────────────────────────── */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:    10;
+  --z-dropdown:  100;
+  --z-sticky:    200;
+  --z-overlay:   300;
+  --z-modal:     400;
+  --z-toast:     500;
+}
+
+/* =============================================================================
+   RESPONSIVE TOKENS
+   Redefine tokens at each breakpoint — every component that uses these
+   variables scales automatically with zero extra rules.
+
+   Breakpoints (mobile-first):
+     --bp-sm:  640px   (large phones / small tablets)
+     --bp-md:  768px   (tablets)
+     --bp-lg:  1024px  (small laptops)
+     --bp-xl:  1280px  (desktops)
+   =========================================================================== */
+
+/* ── Tablet (≥ 768px) ───────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  :root {
+    /* Font sizes — scale up slightly from mobile base */
+    --font-size-xs:   0.75rem;    /* 12px — unchanged */
+    --font-size-sm:   0.875rem;   /* 14px — unchanged */
+    --font-size-base: 1rem;       /* 16px — unchanged */
+    --font-size-md:   1.125rem;   /* 18px — unchanged */
+    --font-size-lg:   1.375rem;   /* 22px ↑ */
+    --font-size-xl:   1.625rem;   /* 26px ↑ */
+    --font-size-2xl:  2rem;       /* 32px ↑ */
+    --font-size-3xl:  2.5rem;     /* 40px ↑ */
+
+    /* Nav */
+    --nav-height: 68px;
+  }
+}
+
+/* ── Desktop (≥ 1024px) ─────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  :root {
+    /* Font sizes — full desktop scale */
+    --font-size-lg:   1.5rem;     /* 24px ↑ */
+    --font-size-xl:   1.875rem;   /* 30px ↑ */
+    --font-size-2xl:  2.25rem;    /* 36px ↑ */
+    --font-size-3xl:  3rem;       /* 48px ↑ */
+
+    /* Nav */
+    --nav-height: 72px;
+  }
+}
+
+/* ── Wide (≥ 1280px) ────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  :root {
+    /* Headings can go a bit larger on wide screens */
+    --font-size-3xl: 3.5rem;      /* 56px ↑ */
+  }
+}

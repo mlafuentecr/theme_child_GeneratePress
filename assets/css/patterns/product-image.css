@@ -1,0 +1,181 @@
+/* =============================================================================
+   PATTERN: product-image
+   Product showcase with main image, thumbnail gallery and zoom/lightbox.
+   =========================================================================== */
+
+.product-image {
+  display:     grid;
+  grid-template-columns: 1fr 1fr;
+  gap:         var(--space-12);
+  align-items: start;
+  padding-block: var(--space-12);
+}
+
+/* ── Gallery ────────────────────────────────────────────────────────────────── */
+
+.product-image__gallery {
+  position: sticky;
+  top:      calc(var(--nav-height) + var(--space-6));
+}
+
+.product-image__main {
+  position:      relative;
+  border-radius: var(--radius-xl);
+  overflow:      hidden;
+  background:    var(--color-bg-alt);
+  aspect-ratio:  1 / 1;
+  cursor:        zoom-in;
+  margin-bottom: var(--space-3);
+}
+
+.product-image__main img {
+  display:    block;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.product-image__main:hover img {
+  transform: scale(1.03);
+}
+
+/* ── Thumbnails ─────────────────────────────────────────────────────────────── */
+
+.product-image__thumbs {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   var(--space-2);
+}
+
+.product-image__thumb {
+  border-radius: var(--radius-md);
+  overflow:      hidden;
+  cursor:        pointer;
+  border:        2px solid transparent;
+  transition:    border-color var(--transition-fast);
+  aspect-ratio:  1 / 1;
+  background:    var(--color-bg-alt);
+}
+
+.product-image__thumb img {
+  display:    block;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+}
+
+.product-image__thumb:hover,
+.product-image__thumb.is-active {
+  border-color: var(--color-primary);
+}
+
+/* ── Lightbox overlay ───────────────────────────────────────────────────────── */
+
+.product-image__lightbox {
+  position:        fixed;
+  inset:           0;
+  z-index:         var(--z-modal);
+  background:      rgb(0 0 0 / 0.9);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         var(--space-6);
+  opacity:         0;
+  visibility:      hidden;
+  transition:      opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.product-image__lightbox.is-open {
+  opacity:    1;
+  visibility: visible;
+}
+
+.product-image__lightbox img {
+  max-width:     90vw;
+  max-height:    90vh;
+  object-fit:    contain;
+  border-radius: var(--radius-lg);
+}
+
+.product-image__lightbox-close {
+  position:   absolute;
+  top:        var(--space-4);
+  right:      var(--space-4);
+  background: rgb(255 255 255 / 0.15);
+  border:     none;
+  border-radius: var(--radius-full);
+  width:      40px;
+  height:     40px;
+  cursor:     pointer;
+  color:      var(--color-text-inverse);
+  font-size:  var(--font-size-xl);
+  display:    flex;
+  align-items:     center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.product-image__lightbox-close:hover {
+  background: rgb(255 255 255 / 0.3);
+}
+
+/* ── Content side ───────────────────────────────────────────────────────────── */
+
+.product-image__content {}
+
+.product-image__badge {
+  margin-bottom: var(--space-3);
+}
+
+.product-image__title {
+  font-size:     var(--font-size-2xl);
+  font-weight:   var(--font-weight-bold);
+  line-height:   var(--line-height-tight);
+  margin-bottom: var(--space-3);
+}
+
+.product-image__price {
+  font-size:     var(--font-size-xl);
+  font-weight:   var(--font-weight-bold);
+  color:         var(--color-primary);
+  margin-bottom: var(--space-5);
+}
+
+.product-image__description {
+  font-size:     var(--font-size-base);
+  line-height:   var(--line-height-loose);
+  color:         var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.product-image__actions {
+  display:       flex;
+  gap:           var(--space-3);
+  flex-wrap:     wrap;
+  margin-bottom: var(--space-6);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .product-image {
+    gap: var(--space-8);
+  }
+
+  .product-image__gallery {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-image {
+    grid-template-columns: 1fr;
+    padding-block:         var(--space-8);
+    gap:                   var(--space-6);
+  }
+
+  .product-image__thumbs {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
