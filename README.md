@@ -1,6 +1,7 @@
 # GeneratePress Child Theme — Blue Flamingo
 
 Child theme built on GeneratePress. All custom logic lives in `inc/` and is loaded from `functions.php`.
+git push blueflamingo main
 
 ---
 
@@ -32,10 +33,13 @@ generatepress-child/
 ## Core Modules
 
 ### setup.php
+
 Declares theme support (`title-tag`, `post-thumbnails`) and registers two navigation menus: **Primary** and **Footer**.
 
 ### enqueue.php
+
 Enqueues:
+
 - `assets/css/theme.css`
 - `assets/js/theme.js`
 
@@ -49,6 +53,7 @@ Located under:
 **Appearance → Blue Flamingo Settings**
 
 Tabs:
+
 - General (Live / Staging URLs)
 - Analytics (GA4 / GTM)
 - Default Featured Image
@@ -61,7 +66,9 @@ Settings use the same option keys as the `bf-fireball` plugin to preserve data.
 ## Features
 
 ### Scroll Animations
+
 Activated via CSS classes:
+
 - `fade-up`
 - `fade-down`
 - `fade-left`
@@ -70,6 +77,7 @@ Activated via CSS classes:
 - `zoom-out`
 
 Optional attributes:
+
 - `data-animate-delay="200"`
 - `data-animate-duration="1000"`
 
@@ -78,12 +86,15 @@ Respects `prefers-reduced-motion`.
 ---
 
 ### Parallax
+
 Activate with:
+
 ```
 <div data-parallax></div>
 ```
 
 Options:
+
 - `data-parallax-speed`
 - `data-parallax-axis`
 - `data-parallax-direction`
@@ -91,7 +102,9 @@ Options:
 ---
 
 ### Modal System
+
 Shortcodes:
+
 ```
 [gp_modal id="x" size="md"]...[/gp_modal]
 [gp_modal_trigger id="x"]Open[/gp_modal_trigger]
@@ -102,7 +115,9 @@ Supports keyboard navigation and focus trapping.
 ---
 
 ### Search System
+
 Shortcode:
+
 ```
 [post_search_result]
 ```
@@ -113,7 +128,9 @@ Supports AJAX load-more.
 ---
 
 ### Header Search
+
 Shortcode:
+
 ```
 [gp_search_bar]
 ```
