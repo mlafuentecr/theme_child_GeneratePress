@@ -1,137 +1,42 @@
-/* =============================================================================
-   PATTERN: logo-strip
-   Infinite-scroll marquee of client / partner logos.
-   =========================================================================== */
-
 .logo-strip {
-  padding-block:  var(--space-10);
-  overflow:       hidden;
-  border-block:   var(--border-width) var(--border-style) var(--color-border);
-  background:     var(--color-bg);
+  overflow: hidden;
+  width: 100%;
+  max-width: var(--bp-lg);
 }
 
-.logo-strip__label {
-  text-align:     center;
-  font-size:      var(--font-size-xs);
-  font-weight:    var(--font-weight-semibold);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color:          var(--color-text-muted);
-  margin-bottom:  var(--space-6);
-}
-
-/* ── Track wrapper ──────────────────────────────────────────────────────────── */
-
-.logo-strip__track-wrap {
-  position:       relative;
-  overflow:       hidden;
-  /* Fade edges */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
-
-/* ── Scrolling track ────────────────────────────────────────────────────────── */
-
-.logo-strip__track {
-  display:    flex;
-  gap:        var(--space-12);
-  width:      max-content;
-  animation:  gp-logo-scroll var(--logo-strip-duration, 30s) linear infinite;
-}
-
-/* Pause on hover / focus */
-.logo-strip__track-wrap:hover .logo-strip__track,
-.logo-strip__track-wrap:focus-within .logo-strip__track {
-  animation-play-state: paused;
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .logo-strip__track {
-    animation: none;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@keyframes gp-logo-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); } /* second clone aligns perfectly */
-}
-
-/* ── Individual logo ────────────────────────────────────────────────────────── */
-
-.logo-strip__item {
-  flex-shrink: 0;
-  display:     flex;
+.logo-strip>div {
+  height: 100px;
+  display: flex;
   align-items: center;
 }
 
-.logo-strip__item img {
-  display:    block;
-  height:     var(--logo-strip-height, 36px);
-  width:      auto;
-  max-width:  140px;
-  object-fit: contain;
-  /* Greyscale by default, colour on hover */
-  filter:     grayscale(1) opacity(0.55);
-  transition: filter var(--transition-base);
+.logo-strip-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  --speed: 30s;
+  animation: logo-scroll var(--speed) linear infinite;
 }
 
-.logo-strip__item:hover img,
-.logo-strip__item:focus-within img {
-  filter: grayscale(0) opacity(1);
+.logo-strip figure {
+  min-width: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-/* ── Size modifier ──────────────────────────────────────────────────────────── */
-
-.logo-strip--lg .logo-strip__item img {
-  height: 48px;
+/* Pause animation on hover */
+.logo-strip:hover .logo-strip-track {
+  animation-play-state: paused;
 }
 
-.logo-strip--sm .logo-strip__item img {
-  height: 28px;
-}
-
-/* ── On dark background ─────────────────────────────────────────────────────── */
-
-.logo-strip--dark {
-  background: var(--color-bg-dark);
-  border-color: rgb(255 255 255 / 0.1);
-}
-
-.logo-strip--dark .logo-strip__label {
-  color: rgb(255 255 255 / 0.45);
-}
-
-.logo-strip--dark .logo-strip__item img {
-  filter: grayscale(1) brightness(2) opacity(0.5);
-}
-
-.logo-strip--dark .logo-strip__item:hover img {
-  filter: grayscale(0) brightness(1) opacity(1);
-}
-
-/* ── Responsive ─────────────────────────────────────────────────────────────── */
-
-@media (max-width: 768px) {
-  .logo-strip {
-    padding-block: var(--space-8);
+@keyframes logo-scroll {
+  from {
+    transform: translateX(0);
   }
 
-  .logo-strip__item img {
-    height: 28px;
+  to {
+    transform: translateX(-50%);
   }
 }

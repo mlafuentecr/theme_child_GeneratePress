@@ -5,6 +5,12 @@
    =========================================================================== */
 
 :root {
+  /* Breakpoints (mobile-first): */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+
   /* ── Colors ─────────────────────────────────────────────────────────────── */
   --color-primary: #0073aa;
   --color-primary-dark: #005a87;
@@ -35,14 +41,22 @@
   --font-condensed: 'Barlow Condensed', system-ui, -apple-system, sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
-  --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-md: 1.125rem; /* 18px */
-  --font-size-lg: 1.25rem; /* 20px */
-  --font-size-xl: 1.5rem; /* 24px */
-  --font-size-2xl: 1.875rem; /* 30px */
-  --font-size-3xl: 2.25rem; /* 36px */
+  --font-size-xs: 0.75rem;
+  /* 12px */
+  --font-size-sm: 0.875rem;
+  /* 14px */
+  --font-size-base: 1rem;
+  /* 16px */
+  --font-size-md: 1.125rem;
+  /* 18px */
+  --font-size-lg: 1.25rem;
+  /* 20px */
+  --font-size-xl: 1.5rem;
+  /* 24px */
+  --font-size-2xl: 1.875rem;
+  /* 30px */
+  --font-size-3xl: 2.25rem;
+  /* 36px */
 
   --line-height-tight: 1.25;
   --line-height-base: 1.6;
@@ -54,17 +68,28 @@
   --font-weight-bold: 700;
 
   /* ── Spacing (base-8 scale) ─────────────────────────────────────────────── */
-  --space-1: 0.25rem; /*  4px */
-  --space-2: 0.5rem; /*  8px */
-  --space-3: 0.75rem; /* 12px */
-  --space-4: 1rem; /* 16px */
-  --space-5: 1.25rem; /* 20px */
-  --space-6: 1.5rem; /* 24px */
-  --space-8: 2rem; /* 32px */
-  --space-10: 2.5rem; /* 40px */
-  --space-12: 3rem; /* 48px */
-  --space-16: 4rem; /* 64px */
-  --space-20: 5rem; /* 80px */
+  --space-1: 0.25rem;
+  /*  4px */
+  --space-2: 0.5rem;
+  /*  8px */
+  --space-3: 0.75rem;
+  /* 12px */
+  --space-4: 1rem;
+  /* 16px */
+  --space-5: 1.25rem;
+  /* 20px */
+  --space-6: 1.5rem;
+  /* 24px */
+  --space-8: 2rem;
+  /* 32px */
+  --space-10: 2.5rem;
+  /* 40px */
+  --space-12: 3rem;
+  /* 48px */
+  --space-16: 4rem;
+  /* 64px */
+  --space-20: 5rem;
+  /* 80px */
 
   /* ── Layout ─────────────────────────────────────────────────────────────── */
   --container-sm: 640px;
@@ -118,12 +143,27 @@
   --margin: 1rem;
 }
 
+body {
+  font-family: var(--font-family) !important;
+}
+
+body.page .site-content,
+body.page .content-area,
+body.page .site-main,
+body.page .inside-article,
+body.page .entry-content,
+body.single .site-main {
+  max-width: 100%;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
 .cardcolor {
-  background: linear-gradient(
-    135deg,
-    rgba(252, 250, 250, 0.92) 0%,
-    rgba(255, 255, 255, 0.55) 100%
-  ) !important;
+  background: linear-gradient(135deg,
+      rgba(252, 250, 250, 0.92) 0%,
+      rgba(255, 255, 255, 0.55) 100%) !important;
 
   backdrop-filter: blur(10px) !important;
 
@@ -150,14 +190,22 @@
 @media (min-width: 768px) {
   :root {
     /* Font sizes — scale up slightly from mobile base */
-    --font-size-xs: 0.75rem; /* 12px — unchanged */
-    --font-size-sm: 0.875rem; /* 14px — unchanged */
-    --font-size-base: 1rem; /* 16px — unchanged */
-    --font-size-md: 1.125rem; /* 18px — unchanged */
-    --font-size-lg: 1.375rem; /* 22px ↑ */
-    --font-size-xl: 1.625rem; /* 26px ↑ */
-    --font-size-2xl: 2rem; /* 32px ↑ */
-    --font-size-3xl: 2.5rem; /* 40px ↑ */
+    --font-size-xs: 0.75rem;
+    /* 12px — unchanged */
+    --font-size-sm: 0.875rem;
+    /* 14px — unchanged */
+    --font-size-base: 1rem;
+    /* 16px — unchanged */
+    --font-size-md: 1.125rem;
+    /* 18px — unchanged */
+    --font-size-lg: 1.375rem;
+    /* 22px ↑ */
+    --font-size-xl: 1.625rem;
+    /* 26px ↑ */
+    --font-size-2xl: 2rem;
+    /* 32px ↑ */
+    --font-size-3xl: 2.5rem;
+    /* 40px ↑ */
 
     /* Nav */
     --nav-height: 68px;
@@ -168,10 +216,14 @@
 @media (min-width: 1024px) {
   :root {
     /* Font sizes — full desktop scale */
-    --font-size-lg: 1.5rem; /* 24px ↑ */
-    --font-size-xl: 1.875rem; /* 30px ↑ */
-    --font-size-2xl: 2.25rem; /* 36px ↑ */
-    --font-size-3xl: 3rem; /* 48px ↑ */
+    --font-size-lg: 1.5rem;
+    /* 24px ↑ */
+    --font-size-xl: 1.875rem;
+    /* 30px ↑ */
+    --font-size-2xl: 2.25rem;
+    /* 36px ↑ */
+    --font-size-3xl: 3rem;
+    /* 48px ↑ */
 
     /* Nav */
     --nav-height: 72px;
@@ -182,6 +234,7 @@
 @media (min-width: 1280px) {
   :root {
     /* Headings can go a bit larger on wide screens */
-    --font-size-3xl: 3.5rem; /* 56px ↑ */
+    --font-size-3xl: 3.5rem;
+    /* 56px ↑ */
   }
 }

@@ -116,10 +116,10 @@ add_filter( 'comments_array', '__return_empty_array', 10 );
  * GeneratePress – Frontend layout (GLOBAL)
  * ============================================================ */
 
-// Force full-width content container
-add_filter( 'generate_page_container', fn() => 'full' );
-add_filter( 'generate_page_container', fn() => 'full' );
-
+// Force full-width content container — GP3 usa generate_page_class, no generate_page_container
+add_filter( 'generate_page_class', function ( array $classes ): array {
+    return array_diff( $classes, [ 'container' ] );
+} );
 
 // Disable sidebar everywhere
 add_filter( 'generate_sidebar_layout', fn() => 'no-sidebar' );
@@ -131,10 +131,12 @@ add_filter( 'generate_show_title', '__return_false' );
 add_filter( 'generate_show_featured_image', '__return_false' );
 
 // Remove post meta (date, author, categories)
-add_action( 'init', function () {
-    remove_action( 'generate_after_entry_title', 'generate_post_meta' );
+// GP registra generate_post_meta y generate_footer_meta dentro del hook 'wp' (priority 5),
+// por lo que remove_action debe ejecutarse DESPUÉS, en priority > 5.
+add_action( 'wp', function () {
+    remove_action( 'generate_after_entry_title',   'generate_post_meta' );
     remove_action( 'generate_after_entry_content', 'generate_footer_meta' );
-} );
+}, 20 );
 
 
 
