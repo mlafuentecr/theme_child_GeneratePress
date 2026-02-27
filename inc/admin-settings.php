@@ -33,95 +33,117 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
         return;
     }
     wp_enqueue_media();
-    wp_enqueue_script('jquery');
-    wp_localize_script('jquery', 'gpNotes', [
+    wp_register_script('gp-child-admin', false, [], false, true);
+    wp_enqueue_script('gp-child-admin');
+    wp_localize_script('gp-child-admin', 'gpNotes', [
         'nonce'   => wp_create_nonce('gp_child_notes'),
         'ajaxurl' => admin_url('admin-ajax.php'),
     ]);
-    wp_localize_script('jquery', 'gpDfi', [
+    wp_localize_script('gp-child-admin', 'gpDfi', [
         'title'  => __('Select Default Featured Image', 'generatepress-child'),
         'button' => __('Use this image', 'generatepress-child'),
     ]);
-    wp_add_inline_script('jquery', gp_child_admin_js());
+    wp_add_inline_script('gp-child-admin', gp_child_admin_js());
 });
 
 function gp_child_admin_js(): string
 {
     return <<<'JS'
-(function($){
-    $(function(){
+(function(){
+    document.addEventListener('DOMContentLoaded', function(){
         var STORAGE_KEY = 'gp_child_active_tab';
 
         // ── Activate a tab by its data-tab value ───────────────────────────
         function activateTab(tabId) {
-            // Update buttons
-            $('.gp-tab-btn').removeClass('is-active').attr('aria-selected', 'false');
-            var $btn = $('.gp-tab-btn[data-tab="' + tabId + '"]');
-            if (!$btn.length) {
-                $btn = $('.gp-tab-btn').first();
-                tabId = $btn.data('tab');
+            document.querySelectorAll('.gp-tab-btn').forEach(function(btn){
+                btn.classList.remove('is-active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            var btn = document.querySelector('.gp-tab-btn[data-tab="' + tabId + '"]');
+            if (!btn) {
+                btn = document.querySelector('.gp-tab-btn');
+                tabId = btn ? btn.dataset.tab : '';
             }
-            $btn.addClass('is-active').attr('aria-selected', 'true');
-
-            // Update panels
-            $('.gp-tab-panel').removeClass('is-active');
-            $('#gp-tab-' + tabId).addClass('is-active');
-
-            // Remember choice
+            if (btn) {
+                btn.classList.add('is-active');
+                btn.setAttribute('aria-selected', 'true');
+            }
+            document.querySelectorAll('.gp-tab-panel').forEach(function(panel){
+                panel.classList.remove('is-active');
+            });
+            var panel = document.getElementById('gp-tab-' + tabId);
+            if (panel) { panel.classList.add('is-active'); }
             try { sessionStorage.setItem(STORAGE_KEY, tabId); } catch(e) {}
         }
 
         // ── Determine initial tab ──────────────────────────────────────────
         var saved = '';
         try { saved = sessionStorage.getItem(STORAGE_KEY) || ''; } catch(e) {}
-        var initial = saved || $('.gp-tab-btn').first().data('tab');
-        activateTab(initial);
+        var firstBtn = document.querySelector('.gp-tab-btn');
+        activateTab(saved || (firstBtn ? firstBtn.dataset.tab : ''));
 
         // ── Click handler ──────────────────────────────────────────────────
-        $(document).on('click', '.gp-tab-btn', function(){
-            activateTab($(this).data('tab'));
+        document.addEventListener('click', function(e){
+            var btn = e.target.closest('.gp-tab-btn');
+            if (btn) { activateTab(btn.dataset.tab); }
         });
 
         // ── Default Featured Image media picker ────────────────────────────
         var frame;
-        $(document).on('click', '#gp-dfi-select', function(e){
-            e.preventDefault();
-            if (frame) { frame.open(); return; }
-            frame = wp.media({
-                title:    (window.gpDfi && gpDfi.title)  || 'Select Default Featured Image',
-                multiple: false,
-                library:  { type: 'image' },
-                button:   { text: (window.gpDfi && gpDfi.button) || 'Use this image' }
-            });
-            frame.on('select', function(){
-                var att = frame.state().get('selection').first().toJSON();
-                $('#gp-dfi-id').val(att.id);
-                var src = att.sizes && att.sizes.thumbnail ? att.sizes.thumbnail.url : att.url;
-                $('#gp-dfi-preview').attr('src', src).show();
-                $('#gp-dfi-remove').show();
-            });
-            frame.on('open', function(){
-                var id = $('#gp-dfi-id').val();
-                if (!id) { return; }
-                var attachment = wp.media.attachment(id);
-                attachment.fetch();
-                frame.state().get('selection').add(attachment ? [attachment] : []);
-            });
-            frame.open();
+        document.addEventListener('click', function(e){
+            var sel = e.target.closest('#gp-dfi-select');
+            if (sel) {
+                e.preventDefault();
+                if (frame) { frame.open(); return; }
+                frame = wp.media({
+                    title:    (window.gpDfi && gpDfi.title)  || 'Select Default Featured Image',
+                    multiple: false,
+                    library:  { type: 'image' },
+                    button:   { text: (window.gpDfi && gpDfi.button) || 'Use this image' }
+                });
+                frame.on('select', function(){
+                    var att = frame.state().get('selection').first().toJSON();
+                    document.getElementById('gp-dfi-id').value = att.id;
+                    var src = att.sizes && att.sizes.thumbnail ? att.sizes.thumbnail.url : att.url;
+                    var preview = document.getElementById('gp-dfi-preview');
+                    preview.src = src;
+                    preview.style.display = '';
+                    document.getElementById('gp-dfi-remove').style.display = '';
+                });
+                frame.on('open', function(){
+                    var id = document.getElementById('gp-dfi-id').value;
+                    if (!id) { return; }
+                    var attachment = wp.media.attachment(id);
+                    attachment.fetch();
+                    frame.state().get('selection').add(attachment ? [attachment] : []);
+                });
+                frame.open();
+            }
         });
-        $(document).on('click', '#gp-dfi-remove', function(e){
-            e.preventDefault();
-            $('#gp-dfi-id').val('');
-            $('#gp-dfi-preview').attr('src', '').hide();
-            $(this).hide();
+        document.addEventListener('click', function(e){
+            var rem = e.target.closest('#gp-dfi-remove');
+            if (rem) {
+                e.preventDefault();
+                document.getElementById('gp-dfi-id').value = '';
+                var preview = document.getElementById('gp-dfi-preview');
+                preview.src = '';
+                preview.style.display = 'none';
+                rem.style.display = 'none';
+            }
         });
 
         // ── Notes ──────────────────────────────────────────────────────────
         var COLORS = ['yellow','blue','green','pink'];
 
+        function gpEsc(str) {
+            var div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+
         function buildCard(note) {
             var colorsHtml = '';
-            $.each(COLORS, function(_, c){
+            COLORS.forEach(function(c){
                 colorsHtml += '<span class="gp-note-color-dot' + (note.color === c ? ' is-selected' : '') +
                     '" data-color="' + c + '" title="' + c + '"></span>';
             });
@@ -137,62 +159,84 @@ function gp_child_admin_js(): string
             '</div>';
         }
 
-        function gpEsc(str) {
-            return $('<div>').text(str||'').html();
+        function ajaxPost(data, callback) {
+            fetch(gpNotes.ajaxurl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(data).toString()
+            })
+            .then(function(res){ return res.json(); })
+            .then(callback)
+            .catch(function(){ callback({ success: false }); });
         }
 
         // Add note
-        $(document).on('click', '#gp-add-note', function(){
-            var $btn = $(this).prop('disabled', true);
-            $.post(gpNotes.ajaxurl, { action: 'gp_child_add_note', nonce: gpNotes.nonce }, function(r){
-                if (r.success) {
-                    $('#gp-notes-grid').prepend(buildCard(r.data));
-                }
-            }).always(function(){ $btn.prop('disabled', false); });
+        document.addEventListener('click', function(e){
+            var addBtn = e.target.closest('#gp-add-note');
+            if (addBtn) {
+                addBtn.disabled = true;
+                ajaxPost({ action: 'gp_child_add_note', nonce: gpNotes.nonce }, function(r){
+                    if (r.success) {
+                        document.getElementById('gp-notes-grid').insertAdjacentHTML('afterbegin', buildCard(r.data));
+                    }
+                    addBtn.disabled = false;
+                });
+            }
         });
 
         // Color picker
-        $(document).on('click', '.gp-note-color-dot', function(){
-            var $card = $(this).closest('.gp-note-card');
-            var color = $(this).data('color');
-            $card.attr('data-color', color);
-            $card.find('.gp-note-color-dot').removeClass('is-selected');
-            $(this).addClass('is-selected');
+        document.addEventListener('click', function(e){
+            var dot = e.target.closest('.gp-note-color-dot');
+            if (dot) {
+                var card = dot.closest('.gp-note-card');
+                card.setAttribute('data-color', dot.dataset.color);
+                card.querySelectorAll('.gp-note-color-dot').forEach(function(d){
+                    d.classList.remove('is-selected');
+                });
+                dot.classList.add('is-selected');
+            }
         });
 
         // Save note
-        $(document).on('click', '.gp-note-save', function(){
-            var $btn  = $(this).prop('disabled', true);
-            var $card = $btn.closest('.gp-note-card');
-            var $status = $card.find('.gp-note-status');
-            $status.text('Saving…');
-            $.post(gpNotes.ajaxurl, {
-                action:   'gp_child_save_note',
-                nonce:    gpNotes.nonce,
-                id:       $card.data('id'),
-                title:    $card.find('.gp-note-title').val(),
-                content:  $card.find('.gp-note-body').val(),
-                color:    $card.attr('data-color')
-            }, function(r){
-                $status.text(r.success ? 'Saved ✓' : 'Error');
-                setTimeout(function(){ $status.text(''); }, 2500);
-            }).always(function(){ $btn.prop('disabled', false); });
+        document.addEventListener('click', function(e){
+            var saveBtn = e.target.closest('.gp-note-save');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                var card = saveBtn.closest('.gp-note-card');
+                var status = card.querySelector('.gp-note-status');
+                status.textContent = 'Saving…';
+                ajaxPost({
+                    action:  'gp_child_save_note',
+                    nonce:   gpNotes.nonce,
+                    id:      card.dataset.id,
+                    title:   card.querySelector('.gp-note-title').value,
+                    content: card.querySelector('.gp-note-body').value,
+                    color:   card.getAttribute('data-color')
+                }, function(r){
+                    status.textContent = r.success ? 'Saved ✓' : 'Error';
+                    setTimeout(function(){ status.textContent = ''; }, 2500);
+                    saveBtn.disabled = false;
+                });
+            }
         });
 
         // Delete note
-        $(document).on('click', '.gp-note-delete', function(){
-            if (!window.confirm('Delete this note?')) { return; }
-            var $card = $(this).closest('.gp-note-card');
-            $.post(gpNotes.ajaxurl, {
-                action: 'gp_child_delete_note',
-                nonce:  gpNotes.nonce,
-                id:     $card.data('id')
-            }, function(r){
-                if (r.success) { $card.remove(); }
-            });
+        document.addEventListener('click', function(e){
+            var delBtn = e.target.closest('.gp-note-delete');
+            if (delBtn) {
+                if (!window.confirm('Delete this note?')) { return; }
+                var card = delBtn.closest('.gp-note-card');
+                ajaxPost({
+                    action: 'gp_child_delete_note',
+                    nonce:  gpNotes.nonce,
+                    id:     card.dataset.id
+                }, function(r){
+                    if (r.success) { card.remove(); }
+                });
+            }
         });
     });
-}(jQuery));
+}());
 JS;
 }
 
