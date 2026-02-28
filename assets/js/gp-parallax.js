@@ -46,7 +46,7 @@
       var center = rect.top + rect.height / 2;
       var offset = center - vhalf;                          // relativo al viewport
       var speed  = parseFloat(el.dataset.parallaxSpeed || '0.3');
-      el.style.backgroundPositionY = 'calc(50% + ' + (offset * speed * 0.4) + 'px)';
+      el.style.backgroundPosition = 'center calc(50% + ' + (offset * speed * 0.4) + 'px)';
     });
 
     // ── Modo B: translate3d ───────────────────────────────────────────────────
