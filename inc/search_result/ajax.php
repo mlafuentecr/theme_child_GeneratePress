@@ -6,15 +6,16 @@ add_action('wp_ajax_nopriv_load_more_search_results', 'load_more_search_results'
 
 function load_more_search_results() {
 
+    check_ajax_referer('search_nonce', 'nonce');
 
     $search   = sanitize_text_field($_POST['search'] ?? '');
     $page     = max(1, intval($_POST['page'] ?? 1));
     $per_page = max(1, intval($_POST['posts_per_page'] ?? 10));
     $type     = sanitize_key($_POST['post_type'] ?? 'all');
 
-    $post_types = ($type === 'all')
-        ? ['post', 'page', 'solution', 'use_case', 'industry']
-        : [$type];
+    // Use the shared post-types list defined in index.php (loaded before this file).
+    $all_types  = array_keys(signifi_search_post_types());
+    $post_types = ($type === 'all') ? $all_types : [$type];
 
     $query = new WP_Query([
         'post_type'        => $post_types,

@@ -242,6 +242,9 @@ JS;
 
 // ── 3. Register every settings group ─────────────────────────────────────────
 
+// Priority 20 so our registration runs AFTER the bf-fireball plugin's register_stripe_fields()
+// (which fires at admin_init priority 10). This ensures our group names and sanitize callbacks
+// win in $wp_registered_settings for the shared option keys.
 add_action('admin_init', function (): void {
 
     // Site Info (preserves Fireball general settings key)
@@ -269,12 +272,20 @@ add_action('admin_init', function (): void {
         },
         'default' => 'manage_options',
     ]);
-});
+}, 20); // priority 20 — must stay in sync with the add_action call above
 
 // ── 4. Sanitize callbacks ─────────────────────────────────────────────────────
 
 function gp_child_sanitize_general(mixed $input): array
 {
+    // Guard: only apply theme sanitization when the save comes from our own settings form.
+    // When bf-fireball plugin saves this option (option_page = blueflamingo_plugin_general_settings_group),
+    // we return $input unchanged so the plugin's data is not overwritten.
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_site_info_group') {
+        return is_array($input) ? $input : [];
+    }
+
     if (! is_array($input)) {
         $input = [];
     }
@@ -289,6 +300,14 @@ function gp_child_sanitize_general(mixed $input): array
 
 function gp_child_sanitize_options(mixed $input): array
 {
+    // Guard: only apply theme sanitization when the save comes from our own settings form.
+    // When bf-fireball plugin saves this option (option_page = blueflamingo_plugin_options_settings_group),
+    // we return $input unchanged so the plugin's checkboxes/fields are not overwritten.
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_options_group') {
+        return is_array($input) ? $input : [];
+    }
+
     if (! is_array($input)) {
         $input = [];
     }
@@ -306,6 +325,12 @@ function gp_child_sanitize_options(mixed $input): array
 
 function gp_child_sanitize_ga(mixed $input): array
 {
+    // Guard: only apply theme sanitization when the save comes from our own settings form.
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_ga_group') {
+        return is_array($input) ? $input : [];
+    }
+
     if (! is_array($input)) {
         $input = [];
     }
@@ -324,6 +349,12 @@ function gp_child_sanitize_ga(mixed $input): array
 
 function gp_child_sanitize_404(mixed $input): array
 {
+    // Guard: only apply theme sanitization when the save comes from our own settings form.
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_404_group') {
+        return is_array($input) ? $input : [];
+    }
+
     if (! is_array($input)) {
         $input = [];
     }

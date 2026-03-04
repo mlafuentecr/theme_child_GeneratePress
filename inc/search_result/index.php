@@ -20,10 +20,8 @@ function signifi_search_post_types() {
 add_shortcode('post_search_result', 'custom_post_type_search_shortcode');
 
 /* -------------------------------------------------------------------------
- * AJAX
+ * AJAX – registered in ajax.php (required below). Do NOT duplicate here.
  * ------------------------------------------------------------------------- */
-add_action('wp_ajax_load_more_search_results', 'load_more_search_results');
-add_action('wp_ajax_nopriv_load_more_search_results', 'load_more_search_results');
 
 function custom_post_type_search_shortcode($atts)
 {
@@ -134,20 +132,21 @@ add_action('wp_enqueue_scripts', function () {
 
     if (!is_page('search')) return;
 
-    $base = get_stylesheet_directory_uri() . '/inc/search_result/assets';
+    $base     = get_stylesheet_directory_uri() . '/inc/search_result/assets';
+    $base_dir = get_stylesheet_directory() . '/inc/search_result/assets';
 
     wp_enqueue_style(
         'search-results',
         $base . '/search-results.css',
         [],
-        '1.0'
+        gp_child_asset_version($base_dir . '/search-results.css')
     );
 
     wp_enqueue_script(
         'search-results',
         $base . '/search-results.js',
         [],
-        '1.0',
+        gp_child_asset_version($base_dir . '/search-results.js'),
         true
     );
 

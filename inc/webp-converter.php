@@ -18,13 +18,11 @@
  */
 
 /* ============================================================
- * INIT
+ * HOOKS — registered at top-level (no nesting inside 'init').
  * ============================================================ */
-add_action('init', function () {
-    add_action('admin_notices', 'mbwpc_admin_notices');
-    add_action('admin_init', 'mbwpc_register_settings');
-    add_filter('wp_handle_upload', 'mbwpc_handle_upload_convert_to_webp');
-});
+add_action('admin_notices',    'mbwpc_admin_notices');
+add_action('admin_init',       'mbwpc_register_settings');
+add_filter('wp_handle_upload', 'mbwpc_handle_upload_convert_to_webp');
 
 /* ============================================================
  * ADMIN NOTICES

@@ -8,6 +8,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /* ============================================================
+ * Asset versioning helper
+ * ============================================================ */
+
+/**
+ * Return a cache-busting version string for an asset file.
+ *
+ * Uses the file's last-modified timestamp when the file exists on disk,
+ * falling back to GP_CHILD_VERSION so deploys without local files still work.
+ *
+ * Usage:
+ *   wp_enqueue_style( 'handle', $url, [], gp_child_asset_version( $abs_path ) );
+ *
+ * @param  string $abs_path Absolute filesystem path to the asset.
+ * @return string
+ */
+function gp_child_asset_version( string $abs_path ): string {
+    return file_exists( $abs_path ) ? (string) filemtime( $abs_path ) : GP_CHILD_VERSION;
+}
+
+/* ============================================================
  * Body classes
  * ============================================================ */
 

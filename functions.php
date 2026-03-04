@@ -32,6 +32,7 @@ $includes = [
 
     //Core Theme Setup
     '/inc/supported.php',
+    '/inc/menus.php',        // nav menus + .active class filter
     '/inc/enqueue.php',
     '/inc/helpers.php',
 
@@ -41,6 +42,7 @@ $includes = [
 
 
     //Frontend Features
+    '/inc/dfi.php',          // default featured image fallback (when bf-fireball plugin is inactive)
     '/inc/404.php',
     '/inc/animations.php',
     '/inc/parallax.php',
@@ -50,6 +52,7 @@ $includes = [
 
     //Gutenberg / Patterns / blocks
     '/inc/patterns.php',
+    '/inc/animation-block-extension.php', // animation picker panel for every block
     //(Modal & Popup) work Together
     '/inc/modal.php',
     '/inc/popup-block.php',
