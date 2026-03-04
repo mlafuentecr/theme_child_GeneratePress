@@ -21,6 +21,7 @@
     var PanelBody         = components.PanelBody;
     var SelectControl     = components.SelectControl;
     var RangeControl      = components.RangeControl;
+    var ToggleControl     = components.ToggleControl;
 
     // Animation list injected from PHP via wp_localize_script.
     // Falls back to the full list if the localized object is missing.
@@ -51,8 +52,9 @@
                 settings.attributes = {};
             }
             settings.attributes = Object.assign({}, settings.attributes, {
-                gpAnimation:      { type: 'string', default: '' },
-                gpAnimationDelay: { type: 'number', default: 0  },
+                gpAnimation:       { type: 'string',  default: ''    },
+                gpAnimationDelay:  { type: 'number',  default: 0     },
+                gpAnimationRepeat: { type: 'boolean', default: false },
             });
             return settings;
         }
@@ -66,8 +68,9 @@
             var attributes    = props.attributes;
             var setAttributes = props.setAttributes;
 
-            var currentAnim  = attributes.gpAnimation      || '';
-            var currentDelay = attributes.gpAnimationDelay || 0;
+            var currentAnim   = attributes.gpAnimation       || '';
+            var currentDelay  = attributes.gpAnimationDelay  || 0;
+            var currentRepeat = attributes.gpAnimationRepeat || false;
 
             function onChangeAnimation(newAnim) {
                 // Strip any animation class previously typed manually in
@@ -120,6 +123,18 @@
                                     setAttributes({ gpAnimationDelay: v || 0 });
                                 },
                             })
+                            : null,
+
+                        // Repeat toggle — only visible when an animation is chosen.
+                        currentAnim
+                            ? el(ToggleControl, {
+                                label:    __('Replay each time in viewport', 'generatepress-child'),
+                                help:     __('Re-triggers the animation every time the element scrolls into view.', 'generatepress-child'),
+                                checked:  currentRepeat,
+                                onChange: function (v) {
+                                    setAttributes({ gpAnimationRepeat: v });
+                                },
+                            })
                             : null
                     )
                 )
@@ -152,6 +167,11 @@
                 extraProps['data-animate-delay'] = String(attributes.gpAnimationDelay);
             }
 
+            // Write repeat flag (gp-animations.js keeps observing when present).
+            if (attributes.gpAnimationRepeat) {
+                extraProps['data-animate-repeat'] = '1';
+            }
+
             return extraProps;
         }
     );
@@ -163,8 +183,9 @@
      * ==================================================================== */
     var withAnimationEditorClass = createHigherOrderComponent(function (BlockListBlock) {
         return function (props) {
-            var anim  = props.attributes.gpAnimation;
-            var delay = props.attributes.gpAnimationDelay;
+            var anim   = props.attributes.gpAnimation;
+            var delay  = props.attributes.gpAnimationDelay;
+            var repeat = props.attributes.gpAnimationRepeat;
 
             if (!anim) {
                 return el(BlockListBlock, props);
@@ -179,6 +200,10 @@
 
             if (delay > 0) {
                 wrapperProps['data-animate-delay'] = String(delay);
+            }
+
+            if (repeat) {
+                wrapperProps['data-animate-repeat'] = '1';
             }
 
             return el(BlockListBlock, Object.assign({}, props, {

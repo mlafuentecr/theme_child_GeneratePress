@@ -23,21 +23,29 @@
   var observer = new IntersectionObserver(
     function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
+        var el     = entry.target;
+        var repeat = el.hasAttribute('data-animate-repeat');
 
-        var el    = entry.target;
-        var delay = parseInt(el.dataset.animateDelay, 10) || 0;
-        var dur   = el.dataset.animateDuration;
+        if (entry.isIntersecting) {
+          var delay = parseInt(el.dataset.animateDelay, 10) || 0;
+          var dur   = el.dataset.animateDuration;
 
-        if (dur) {
-          el.style.transitionDuration = parseInt(dur, 10) + 'ms';
+          if (dur) {
+            el.style.transitionDuration = parseInt(dur, 10) + 'ms';
+          }
+
+          setTimeout(function () {
+            el.classList.add('is-visible');
+          }, delay);
+
+          // Non-repeat: stop watching after first trigger.
+          if (!repeat) {
+            observer.unobserve(el);
+          }
+        } else if (repeat) {
+          // Element left the viewport — reset so it animates again on re-entry.
+          el.classList.remove('is-visible');
         }
-
-        setTimeout(function () {
-          el.classList.add('is-visible');
-        }, delay);
-
-        observer.unobserve(el);
       });
     },
     { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
