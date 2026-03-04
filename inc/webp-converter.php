@@ -50,12 +50,13 @@ function mbwpc_admin_notices() {
     }
 
     $enabled = get_option('mbwpc_convert_to_webp', false);
+    $bf_url = admin_url('themes.php?page=gp-child-settings');
     $settings_url = admin_url('options-media.php');
 
     echo '<div class="notice notice-info is-dismissible">
         <p><strong>WebP Converter:</strong> ' .
         ( $enabled ? 'Activo' : 'Inactivo' ) .
-        '. Configuración en <a href="' . esc_url($settings_url) . '">Settings → Media</a>.</p>
+        '. Configuración en <a href="' . esc_url($bf_url) . '">Blue Flamingo → WebP</a> o <a href="' . esc_url($settings_url) . '">Settings → Media</a>.</p>
     </div>';
 }
 

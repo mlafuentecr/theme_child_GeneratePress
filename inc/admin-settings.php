@@ -272,6 +272,28 @@ add_action('admin_init', function (): void {
         },
         'default' => 'manage_options',
     ]);
+
+    // WebP Converter settings
+    register_setting('gp_child_webp_group', 'mbwpc_convert_to_webp', [
+        'type'              => 'boolean',
+        'sanitize_callback' => 'rest_sanitize_boolean',
+        'default'           => false,
+    ]);
+    register_setting('gp_child_webp_group', 'mbwpc_max_width', [
+        'type'              => 'integer',
+        'sanitize_callback' => 'absint',
+        'default'           => 1920,
+    ]);
+    register_setting('gp_child_webp_group', 'mbwpc_max_height', [
+        'type'              => 'integer',
+        'sanitize_callback' => 'absint',
+        'default'           => 1080,
+    ]);
+    register_setting('gp_child_webp_group', 'mbwpc_quality', [
+        'type'              => 'integer',
+        'sanitize_callback' => fn($v) => max(1, min(100, absint($v))),
+        'default'           => 80,
+    ]);
 }, 20); // priority 20 — must stay in sync with the add_action call above
 
 // ── 4. Sanitize callbacks ─────────────────────────────────────────────────────
@@ -391,8 +413,9 @@ function gp_child_render_settings_page(): void
         'options'    => __('Options',      'generatepress-child'),
         'analytics'  => __('Analytics',    'generatepress-child'),
         '404'        => __('404 Page',     'generatepress-child'),
-        // 'cache'      => __('Cache Buster', 'generatepress-child'),
-        // 'notes'      => __('Notes',        'generatepress-child'),
+        'cache'      => __('Cache Buster', 'generatepress-child'),
+        'notes'      => __('Notes',        'generatepress-child'),
+        'webp'       => __('WebP',         'generatepress-child'),
     ];
     ?>
 <div class="wrap gp-child-settings">
@@ -1053,6 +1076,52 @@ function gp_child_render_settings_page(): void
       <?php endif; ?>
     </div>
 
+  </div>
+
+  <?php /* ── WebP Converter ─────────────────────────────────────────── */ ?>
+  <div id="gp-tab-webp" class="gp-tab-panel" role="tabpanel">
+    <form method="post" action="options.php">
+      <?php settings_fields('gp_child_webp_group'); ?>
+      <table class="form-table" role="presentation">
+        <tr>
+          <th scope="row"><?php esc_html_e('Convert uploaded images to WebP', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="mbwpc_convert_to_webp" value="1"
+                <?php checked(1, get_option('mbwpc_convert_to_webp', false)); ?>>
+              <?php esc_html_e('Enable automatic WebP conversion', 'generatepress-child'); ?>
+            </label>
+            <?php if (!extension_loaded('imagick')) : ?>
+            <p class="description" style="color:#d63638;">
+              <?php esc_html_e('Imagick no está instalado. La conversión WebP está deshabilitada.', 'generatepress-child'); ?>
+            </p>
+            <?php endif; ?>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Max Width (px)', 'generatepress-child'); ?></th>
+          <td>
+            <input type="number" name="mbwpc_max_width" min="1" style="width:100px;"
+              value="<?php echo esc_attr(get_option('mbwpc_max_width', 1920)); ?>">
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Max Height (px)', 'generatepress-child'); ?></th>
+          <td>
+            <input type="number" name="mbwpc_max_height" min="1" style="width:100px;"
+              value="<?php echo esc_attr(get_option('mbwpc_max_height', 1080)); ?>">
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Quality (1–100)', 'generatepress-child'); ?></th>
+          <td>
+            <input type="number" name="mbwpc_quality" min="1" max="100" style="width:80px;"
+              value="<?php echo esc_attr(get_option('mbwpc_quality', 80)); ?>">
+          </td>
+        </tr>
+      </table>
+      <?php submit_button(__('Save WebP Settings', 'generatepress-child')); ?>
+    </form>
   </div>
 
 </div><!-- .gp-child-settings -->
