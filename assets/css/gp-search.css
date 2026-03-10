@@ -1,0 +1,93 @@
+/*
+ * GP Search — reusable live-search component.
+ */
+
+.gp-search-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.gp-search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.gp-search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ── Results dropdown ──────────────────────────────────────────────────────── */
+
+.gp-search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.10);
+  z-index: 9999;
+  overflow: hidden;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.gp-search-results[hidden] {
+  display: none;
+}
+
+.gp-search-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.gp-search-result:last-child {
+  border-bottom: none;
+}
+
+.gp-search-result:hover,
+.gp-search-result:focus,
+.gp-search-result[aria-selected="true"] {
+  background: #f5f5ff;
+  outline: none;
+}
+
+.gp-search-result__title {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.gp-search-result__type {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.gp-search-status {
+  padding: 12px 14px;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}

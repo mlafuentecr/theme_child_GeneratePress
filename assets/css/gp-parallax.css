@@ -1,0 +1,37 @@
+/*
+ * GP Parallax — helper styles.
+ *
+ * Modo A — .parallax-bg (div con background-image, ej. GenerateBlocks):
+ *   Solo agrega la clase al div. El JS mueve background-position-y automáticamente.
+ *
+ * Modo B — [data-parallax] (img o elemento hijo):
+ *   Envuelve en .parallax-container para clipear el overflow.
+ */
+
+/* Modo A: background-image parallax */
+.parallax-bg {
+  will-change: background-position;
+  background-attachment: scroll; /* evita conflicto con fixed en iOS */
+}
+
+/* Modo B: transform parallax */
+[data-parallax] {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Contenedor para Modo B — clipea el movimiento del hijo */
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Reduced-motion: desactiva ambos modos */
+@media (prefers-reduced-motion: reduce) {
+  .parallax-bg {
+    background-position: center !important;
+  }
+  [data-parallax] {
+    transform: none !important;
+  }
+}

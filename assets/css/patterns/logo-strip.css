@@ -1,0 +1,42 @@
+.logo-strip {
+  overflow: hidden;
+  width: 100%;
+  max-width: var(--bp-lg);
+}
+
+.logo-strip>div {
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-strip-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  --speed: 30s;
+  animation: logo-scroll var(--speed) linear infinite;
+}
+
+.logo-strip figure {
+  min-width: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Pause animation on hover */
+.logo-strip:hover .logo-strip-track {
+  animation-play-state: paused;
+}
+
+@keyframes logo-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}

@@ -1,0 +1,134 @@
+/*
+ * GP Modal — accessible modal popup system.
+ * Uses ease-out-expo for entrance animations.
+ */
+
+:root {
+  --gp-modal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --gp-modal-duration: 0.45s;
+  --gp-modal-overlay-bg: rgba(0, 0, 0, 0.55);
+  --gp-modal-radius: 8px;
+  --gp-modal-z: 99999;
+}
+
+/* ── Base modal (hidden) ───────────────────────────────────────────────────── */
+
+.gp-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--gp-modal-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+
+.gp-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--gp-modal-overlay-bg);
+  opacity: 0;
+  transition: opacity var(--gp-modal-duration) var(--gp-modal-ease);
+  cursor: pointer;
+}
+
+/* ── Container (dialog box) ───────────────────────────────────────────────── */
+
+.gp-modal__container {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: var(--gp-modal-radius);
+  padding: 36px 32px;
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition:
+    opacity  var(--gp-modal-duration) var(--gp-modal-ease),
+    transform var(--gp-modal-duration) var(--gp-modal-ease);
+}
+
+/* ── Sizes ────────────────────────────────────────────────────────────────── */
+
+.gp-modal--sm .gp-modal__container { max-width: 400px; }
+.gp-modal--md .gp-modal__container { max-width: 580px; }
+.gp-modal--lg .gp-modal__container { max-width: 780px; }
+.gp-modal--xl .gp-modal__container { max-width: 1020px; }
+.gp-modal--full .gp-modal__container {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+
+/* ── Open state ───────────────────────────────────────────────────────────── */
+
+.gp-modal.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.gp-modal.is-open .gp-modal__overlay {
+  opacity: 1;
+}
+
+.gp-modal.is-open .gp-modal__container {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Close button ─────────────────────────────────────────────────────────── */
+
+.gp-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 4px;
+  transition: color 0.2s ease, background 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.gp-modal__close:hover,
+.gp-modal__close:focus {
+  color: #111;
+  background: #f3f4f6;
+  outline: none;
+}
+
+/* ── Prevent body scroll when modal is open ───────────────────────────────── */
+
+body.gp-modal-open {
+  overflow: hidden;
+}
+
+/* ── Trigger ──────────────────────────────────────────────────────────────── */
+
+.gp-modal-trigger {
+  cursor: pointer;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-modal__overlay,
+  .gp-modal__container {
+    transition: none !important;
+  }
+}

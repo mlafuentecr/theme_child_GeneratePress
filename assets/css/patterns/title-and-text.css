@@ -1,0 +1,68 @@
+/* =============================================================================
+   PATTERN: title-and-text
+   Two-column layout: title/eyebrow on the left, body copy on the right.
+   =========================================================================== */
+
+.title-and-text {
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           var(--space-12);
+  align-items:   start;
+  padding-block: var(--space-12);
+}
+
+/* ── Left column ────────────────────────────────────────────────────────────── */
+
+.title-and-text__header {
+  position: sticky;
+  top:      var(--space-8);
+}
+
+.title-and-text__eyebrow {
+  display:        inline-block;
+  font-size:      var(--font-size-xs);
+  font-weight:    var(--font-weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:          var(--color-primary);
+  margin-bottom:  var(--space-3);
+}
+
+.title-and-text__title {
+  font-size:     var(--font-size-2xl);
+  font-weight:   var(--font-weight-bold);
+  line-height:   var(--line-height-tight);
+  color:         var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+/* ── Right column ───────────────────────────────────────────────────────────── */
+
+.title-and-text__body {
+  font-size:   var(--font-size-md);
+  line-height: var(--line-height-loose);
+  color:       var(--color-text-muted);
+}
+
+.title-and-text__body p + p {
+  margin-top: var(--space-4);
+}
+
+.title-and-text__body a {
+  color:           var(--color-primary);
+  text-decoration: underline;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .title-and-text {
+    grid-template-columns: 1fr;
+    gap:                   var(--space-6);
+    padding-block:         var(--space-8);
+  }
+
+  .title-and-text__header {
+    position: static;
+  }
+}

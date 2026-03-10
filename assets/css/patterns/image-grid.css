@@ -1,0 +1,90 @@
+/* =============================================================================
+   PATTERN: image-grid
+   Responsive masonry-style image grid.
+   =========================================================================== */
+
+.image-grid {
+  padding-block: var(--space-12);
+}
+
+.image-grid__header {
+  text-align:    center;
+  margin-bottom: var(--space-10);
+}
+
+/* ── Grid ───────────────────────────────────────────────────────────────────── */
+
+.image-grid__items {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   var(--space-4);
+}
+
+/* Span modifiers — add these to individual items for visual variety */
+.image-grid__item--wide  { grid-column: span 2; }
+.image-grid__item--tall  { grid-row:    span 2; }
+
+/* ── Item ───────────────────────────────────────────────────────────────────── */
+
+.image-grid__item {
+  position:      relative;
+  overflow:      hidden;
+  border-radius: var(--radius-lg);
+  background:    var(--color-bg-alt);
+}
+
+.image-grid__item img {
+  display:    block;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.image-grid__item:hover img {
+  transform: scale(1.04);
+}
+
+/* Optional caption overlay */
+.image-grid__caption {
+  position:         absolute;
+  inset-inline:     0;
+  bottom:           0;
+  padding:          var(--space-4);
+  background:       linear-gradient(to top, rgb(0 0 0 / 0.6), transparent);
+  color:            var(--color-text-inverse);
+  font-size:        var(--font-size-sm);
+  font-weight:      var(--font-weight-medium);
+  opacity:          0;
+  transform:        translateY(var(--space-2));
+  transition:       opacity var(--transition-base), transform var(--transition-base);
+}
+
+.image-grid__item:hover .image-grid__caption {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .image-grid__items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .image-grid__item--wide { grid-column: span 2; }
+  .image-grid__item--tall { grid-row: auto; }
+}
+
+@media (max-width: 640px) {
+  .image-grid {
+    padding-block: var(--space-8);
+  }
+
+  .image-grid__items {
+    grid-template-columns: 1fr;
+    gap:                   var(--space-3);
+  }
+
+  .image-grid__item--wide { grid-column: auto; }
+}

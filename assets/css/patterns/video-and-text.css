@@ -1,0 +1,147 @@
+/* =============================================================================
+   PATTERN: video-and-text
+   Side-by-side: video (or media) on one side, copy on the other.
+   Add .video-and-text--reverse to flip the order.
+   =========================================================================== */
+
+.video-and-text {
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           var(--space-12);
+  align-items:   center;
+  padding-block: var(--space-12);
+}
+
+.video-and-text--reverse {
+  direction: rtl; /* flip columns */
+}
+
+.video-and-text--reverse > * {
+  direction: ltr; /* restore text inside */
+}
+
+/* ── Media side ─────────────────────────────────────────────────────────────── */
+
+.video-and-text__media {
+  position:      relative;
+  border-radius: var(--radius-xl);
+  overflow:      hidden;
+  background:    var(--color-bg-alt);
+  aspect-ratio:  16 / 9;
+}
+
+/* Native <video> */
+.video-and-text__media video {
+  display:    block;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+}
+
+/* iframe embed (YouTube / Vimeo) */
+.video-and-text__embed {
+  position: absolute;
+  inset:    0;
+  width:    100%;
+  height:   100%;
+  border:   0;
+}
+
+/* ── Play button overlay ────────────────────────────────────────────────────── */
+
+.video-and-text__play {
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      rgb(0 0 0 / 0.25);
+  cursor:          pointer;
+  border:          none;
+  transition:      background var(--transition-base);
+}
+
+.video-and-text__play:hover {
+  background: rgb(0 0 0 / 0.35);
+}
+
+.video-and-text__play-icon {
+  width:         64px;
+  height:        64px;
+  border-radius: var(--radius-full);
+  background:    var(--color-bg);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  box-shadow:    var(--shadow-lg);
+  transition:    transform var(--transition-base);
+}
+
+.video-and-text__play:hover .video-and-text__play-icon {
+  transform: scale(1.1);
+}
+
+.video-and-text__play-icon svg {
+  width:       28px;
+  height:      28px;
+  fill:        var(--color-primary);
+  margin-left: 4px; /* optical centre for triangle */
+}
+
+/* Hidden state when playing */
+.video-and-text__play.is-hidden {
+  opacity:        0;
+  pointer-events: none;
+}
+
+/* ── Text side ──────────────────────────────────────────────────────────────── */
+
+.video-and-text__content {}
+
+.video-and-text__eyebrow {
+  display:        inline-block;
+  font-size:      var(--font-size-xs);
+  font-weight:    var(--font-weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:          var(--color-primary);
+  margin-bottom:  var(--space-3);
+}
+
+.video-and-text__title {
+  font-size:     var(--font-size-2xl);
+  font-weight:   var(--font-weight-bold);
+  line-height:   var(--line-height-tight);
+  margin-bottom: var(--space-4);
+}
+
+.video-and-text__body {
+  font-size:     var(--font-size-base);
+  line-height:   var(--line-height-loose);
+  color:         var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.video-and-text__actions {
+  display:   flex;
+  gap:       var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .video-and-text {
+    gap: var(--space-8);
+  }
+}
+
+@media (max-width: 768px) {
+  .video-and-text,
+  .video-and-text--reverse {
+    grid-template-columns: 1fr;
+    direction:             ltr;
+    gap:                   var(--space-6);
+    padding-block:         var(--space-8);
+  }
+}

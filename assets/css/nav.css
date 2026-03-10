@@ -1,0 +1,93 @@
+/* =============================================================================
+   NAVIGATION
+   Overrides and enhancements for the GeneratePress primary navigation.
+   Tokens are defined in variables.css.
+   =========================================================================== */
+
+/* ── Primary nav wrapper ────────────────────────────────────────────────────── */
+
+.main-navigation {
+  background-color: var(--nav-bg);
+  border-bottom:    var(--border-width) var(--border-style) var(--nav-border);
+}
+
+/* ── Top-level links ────────────────────────────────────────────────────────── */
+
+.main-navigation .main-nav ul li a {
+  color:           var(--nav-link-color);
+  font-size:       var(--font-size-sm);
+  font-weight:     var(--font-weight-medium);
+  transition:      color var(--transition-fast);
+  padding-block:   var(--space-4);
+  padding-inline:  var(--space-3);
+}
+
+.main-navigation .main-nav ul li a:hover,
+.main-navigation .main-nav ul li a:focus-visible,
+.main-navigation .main-nav ul li.current-menu-item > a,
+.main-navigation .main-nav ul li.current-menu-ancestor > a {
+  color: var(--nav-link-hover);
+}
+
+/* ── Dropdown ───────────────────────────────────────────────────────────────── */
+
+.main-navigation .main-nav ul ul {
+  background-color: var(--nav-dropdown-bg);
+  border:           var(--border-width) var(--border-style) var(--color-border);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--nav-dropdown-shadow);
+  min-width:        200px;
+}
+
+.main-navigation .main-nav ul ul li a {
+  font-size:    var(--font-size-sm);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-4);
+}
+
+.main-navigation .main-nav ul ul li a:hover,
+.main-navigation .main-nav ul ul li.current-menu-item > a {
+  color:            var(--nav-link-hover);
+  background-color: var(--color-primary-light);
+}
+
+/* ── Mobile toggle ──────────────────────────────────────────────────────────── */
+
+.menu-toggle {
+  font-size:   var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color:       var(--nav-link-color);
+  border:      var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-md);
+  padding:     var(--space-2) var(--space-4);
+  transition:  background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.menu-toggle:hover {
+  background-color: var(--color-bg-alt);
+  color:            var(--nav-link-hover);
+}
+
+/* ── Mobile nav open state ──────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .main-navigation .main-nav ul li a {
+    padding-block:  var(--space-3);
+    border-bottom:  var(--border-width) var(--border-style) var(--color-border);
+  }
+
+  .main-navigation .main-nav ul li:last-child a {
+    border-bottom: none;
+  }
+
+  .main-navigation .main-nav ul ul {
+    box-shadow: none;
+    border:     none;
+    border-radius: 0;
+    background-color: var(--color-bg-alt);
+  }
+
+  .main-navigation .main-nav ul ul li a {
+    padding-inline-start: var(--space-8);
+  }
+}

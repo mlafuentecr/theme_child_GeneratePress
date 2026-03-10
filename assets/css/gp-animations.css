@@ -1,0 +1,56 @@
+/*
+ * GP Animations — ease-out-expo scroll-triggered entrance animations.
+ * Add one of these classes to any block via "Additional CSS class" in Gutenberg:
+ *   fade-up | fade-down | fade-left | fade-right | zoom-in | zoom-out
+ *
+ * Optional data attributes for fine-tuning (still supported):
+ *   data-animate-delay="200"      — ms before animating
+ *   data-animate-duration="1000"  — ms override for transition duration
+ */
+
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --gp-anim-duration: 0.75s;
+  --gp-anim-distance: 40px;
+}
+
+/* ── Base state (hidden / pre-animation) ──────────────────────────────────── */
+.fade-up,
+.fade-down,
+.fade-left,
+.fade-right,
+.zoom-in,
+.zoom-out {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity   var(--gp-anim-duration) var(--ease-out-expo),
+    transform var(--gp-anim-duration) var(--ease-out-expo);
+}
+
+.fade-up    { transform: translateY(var(--gp-anim-distance)); }
+.fade-down  { transform: translateY(calc(var(--gp-anim-distance) * -1)); }
+.fade-left  { transform: translateX(var(--gp-anim-distance)); }
+.fade-right { transform: translateX(calc(var(--gp-anim-distance) * -1)); }
+.zoom-in    { transform: scale(0.88); }
+.zoom-out   { transform: scale(1.12); }
+
+/* ── Visible / post-animation ─────────────────────────────────────────────── */
+.fade-up.is-visible,
+.fade-down.is-visible,
+.fade-left.is-visible,
+.fade-right.is-visible,
+.zoom-in.is-visible,
+.zoom-out.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Reduced motion override ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, .fade-down, .fade-left, .fade-right, .zoom-in, .zoom-out {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
