@@ -10,8 +10,18 @@
 
 /* Modo A: background-image parallax */
 .parallax-bg {
+  position: relative; /* necesario para overflow:hidden en modo img-hijo */
   will-change: background-position;
   background-attachment: scroll; /* evita conflicto con fixed en iOS */
+  background-position: center 50% !important; /* posición neutral antes de que el JS tome control */
+}
+
+/* Modo A — variante img-hijo: la figura/img actúan como el elemento animado */
+.parallax-bg > * figure,
+.parallax-bg > figure {
+  will-change: transform;
+  backface-visibility: hidden;
+  display: block;
 }
 
 /* Modo B: transform parallax */

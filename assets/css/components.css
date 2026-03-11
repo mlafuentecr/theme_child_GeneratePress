@@ -14,7 +14,7 @@
   font-size:       var(--font-size-sm);
   font-weight:     var(--font-weight-semibold);
   line-height:     1;
-  border-radius:   var(--radius-md);
+  border-radius:   0;
   border:          var(--border-width) var(--border-style) transparent;
   cursor:          pointer;
   text-decoration: none;
@@ -37,9 +37,9 @@
   color:            var(--color-text-inverse);
 }
 .btn--primary:hover {
-  background-color: var(--color-primary-dark);
-  border-color:     var(--color-primary-dark);
-  color:            var(--color-text-inverse);
+  background-color: var(--color-btn-hover);
+  border-color:     var(--color-btn-hover);
+  color:            var(--color-btn-hover-text);
 }
 
 .btn--secondary {
@@ -48,8 +48,9 @@
   color:            var(--color-primary);
 }
 .btn--secondary:hover {
-  background-color: var(--color-primary);
-  color:            var(--color-text-inverse);
+  background-color: var(--color-btn-hover);
+  border-color:     var(--color-btn-hover);
+  color:            var(--color-btn-hover-text);
 }
 
 .btn--ghost {
@@ -58,8 +59,9 @@
   color:            var(--color-text);
 }
 .btn--ghost:hover {
-  background-color: var(--color-bg-alt);
-  border-color:     var(--color-border-dark);
+  background-color: var(--color-btn-hover);
+  border-color:     var(--color-btn-hover);
+  color:            var(--color-btn-hover-text);
 }
 
 /* Sizes */
@@ -71,7 +73,7 @@
 .card {
   background:    var(--color-bg);
   border:        var(--border-width) var(--border-style) var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   overflow:      hidden;
   transition:    box-shadow var(--transition-base);
 }
@@ -109,7 +111,7 @@
   font-size:     var(--font-size-xs);
   font-weight:   var(--font-weight-semibold);
   line-height:   1;
-  border-radius: var(--radius-full);
+  border-radius: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -179,3 +181,91 @@
 
 /* ── reCAPTCHA (hidden via setting, fallback here) ──────────────────────────── */
 /* .grecaptcha-badge { visibility: collapse !important; } */
+
+/* ── WordPress / GeneratePress default buttons ──────────────────────────────── */
+/*
+   Targets every button selector WordPress and GeneratePress generate:
+   - Gutenberg block editor:  .wp-block-button__link, .wp-element-button
+   - GeneratePress:           .button, .generate-btn
+   - HTML native:             input[type="submit"], input[type="button"], input[type="reset"]
+   All get the same look as the nav "Register Now" button.
+*/
+
+.button,
+.generate-btn,
+.wp-block-button__link,
+.wp-element-button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  display:          inline-flex  !important;
+  align-items:      center       !important;
+  justify-content:  center       !important;
+  padding-top:      0.84rem      !important;
+  padding-bottom:   0.84rem      !important;
+  padding-left:     1.5rem       !important;
+  padding-right:    1.5rem       !important;
+  font-family:      var(--font-base)              !important;
+  font-size:        var(--font-size-sm)            !important;
+  font-weight:      var(--font-weight-semibold)    !important;
+  line-height:      1.25                          !important;
+  color:            var(--color-btn-text)         !important;
+  background-color: var(--color-btn-bg)           !important;
+  border:           none                          !important;
+  border-radius:    0                             !important;
+  cursor:           pointer;
+  text-decoration:  none                          !important;
+  letter-spacing:   0.02em;
+  transition:       background-color var(--transition-fast),
+                    color            var(--transition-fast),
+                    box-shadow       var(--transition-fast);
+  white-space:      nowrap;
+}
+
+/*
+ * Hover — covers:
+ *   - Standard WP / GeneratePress buttons
+ *   - GenerateBlocks text elements used as buttons  [class*="gb-text-"]
+ *   - GenerateBlocks button elements                [class*="gb-button-"]
+ *   GenerateBlocks injects its own hover rules in style-6.css — we override
+ *   them here with !important using the same :is(:hover,:focus) pattern GB uses.
+ */
+.button:hover,
+.generate-btn:hover,
+.wp-block-button__link:hover,
+.wp-element-button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+[class*="gb-text-"]:is(:hover, :focus),
+[class*="gb-button-"]:is(:hover, :focus) {
+  background-color: var(--color-btn-hover)      !important;
+  color:            var(--color-btn-hover-text)  !important;
+  text-decoration:  none                        !important;
+}
+
+.button:focus-visible,
+.generate-btn:focus-visible,
+.wp-block-button__link:focus-visible,
+.wp-element-button:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="button"]:focus-visible,
+input[type="reset"]:focus-visible,
+[class*="gb-text-"]:focus-visible,
+[class*="gb-button-"]:focus-visible {
+  outline:        2px solid var(--color-btn-hover);
+  outline-offset: 3px;
+}
+
+/* Outline / ghost variant — add class "wp-block-button is-style-outline" in Gutenberg */
+.wp-block-button.is-style-outline .wp-block-button__link {
+  background-color: transparent !important;
+  color:            var(--color-primary) !important;
+  border:           2px solid var(--color-primary) !important;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover {
+  background-color: var(--color-btn-hover)     !important;
+  border-color:     var(--color-btn-hover)     !important;
+  color:            var(--color-btn-hover-text) !important;
+}

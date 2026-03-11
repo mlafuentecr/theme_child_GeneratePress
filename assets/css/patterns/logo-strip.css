@@ -12,18 +12,23 @@
 
 .logo-strip-track {
   display: flex;
-  gap: 40px;
   width: max-content;
   --speed: 30s;
   animation: logo-scroll var(--speed) linear infinite;
 }
 
 .logo-strip figure {
-  min-width: 310px;
+  min-width: 210px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-right: 40px;
+}
+
+.logo-strip figure img {
+  height: 66px;
+  max-width: fit-content;
 }
 
 /* Pause animation on hover */

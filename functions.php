@@ -32,7 +32,7 @@ $includes = [
 
     //Core Theme Setup
     '/inc/supported.php',
-    '/inc/menus.php',        // nav menus + .active class filter
+    '/inc/menus.php',      
     '/inc/enqueue.php',
     '/inc/helpers.php',
 
@@ -40,6 +40,8 @@ $includes = [
     //Admin / Back Office
     '/inc/admin-settings.php',
 
+
+    '/inc/footer.php',
 
     //Frontend Features
     '/inc/dfi.php',          // default featured image fallback (when bf-fireball plugin is inactive)
@@ -53,6 +55,7 @@ $includes = [
     //Gutenberg / Patterns / blocks
     '/inc/patterns.php',
     '/inc/animation-block-extension.php', // animation picker panel for every block
+    '/inc/video-hero-block.php',          // video-hero: fallback img + Vimeo bg + InnerBlocks
     //(Modal & Popup) work Together
     '/inc/modal.php',
     '/inc/popup-block.php',

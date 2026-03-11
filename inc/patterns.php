@@ -15,3 +15,4 @@ add_action( 'init', function () {
 } );
 
 // Popup is now a custom Gutenberg block — see inc/popup-block.php
+// Video Hero is now a custom Gutenberg block — see inc/video-hero-block.php

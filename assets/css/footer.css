@@ -1,0 +1,114 @@
+/* =============================================================================
+   FOOTER  —  M-TOUR dark-navy theme
+   =========================================================================== */
+
+.site-footer-custom {
+  background-color: #0d1b3e;
+  color: #ffffff;
+  padding: 75px 1.5rem 1.5rem;
+}
+
+.footer-inner {
+  max-width: var(--container-xl);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Logo ─────────────────────────────────────────────────────────────────── */
+
+
+.footer-logo__img {
+  max-height: 70px;
+  width: auto;
+}
+
+/* Text placeholder until real logo is added */
+.footer-logo__placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+img.footer-logo-img {
+  max-width: 110px;
+}
+
+/* ── Bottom bar: copyright + nav ─────────────────────────────────────────── */
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1.25rem;
+}
+
+.footer-copyright {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ── Footer nav ──────────────────────────────────────────────────────────── */
+
+.footer-nav .footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-nav .footer-menu li a {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.footer-nav .footer-menu li a:hover {
+  color: #ffffff;
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────────────── */
+
+
+@media (max-width: 900px) {
+
+
+  .footer-copyright,
+  .footer-nav {
+    margin: auto;
+  }
+
+  .footer-logo {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-nav .footer-menu {
+    gap: 0.25rem;
+  }
+}

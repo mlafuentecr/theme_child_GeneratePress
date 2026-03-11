@@ -179,6 +179,21 @@ add_filter( 'default_content', function( $content, $post ) {
 }, 10, 2 );
 
 /* ============================================================
+ * GeneratePress – Hide Layout meta box
+ * Defaults are already forced globally via filters above,
+ * so the per-page override box is unnecessary clutter.
+ * ============================================================ */
+
+add_action('add_meta_boxes', function(): void {
+    foreach (get_post_types(['public' => true], 'names') as $post_type) {
+        remove_meta_box('generate_layout_options', $post_type, 'side');
+        remove_meta_box('generate_layout_options', $post_type, 'normal');
+        remove_meta_box('generate_layout_options', $post_type, 'advanced');
+    }
+}, 99);
+
+
+/* ============================================================
    allow_svg_upload
 ============================================================ */
 function allow_svg_upload($mimes) {

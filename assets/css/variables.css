@@ -1,62 +1,74 @@
 /* =============================================================================
    VARIABLES
    Global design tokens for the child theme.
-   Override these in a project-specific file or via GeneratePress > Customize.
+   M-TOUR Design System
    =========================================================================== */
 
 :root {
-  /* Breakpoints (mobile-first): */
+
+  /* Breakpoints (mobile-first) */
   --bp-sm: 640px;
   --bp-md: 768px;
   --bp-lg: 1024px;
   --bp-xl: 1280px;
 
-  /* ── Colors ─────────────────────────────────────────────────────────────── */
-  --color-primary: #0073aa;
-  --color-primary-dark: #005a87;
-  --color-primary-light: #e8f4fb;
+  /* ── Brand Colors ───────────────────────────────────────────────────────── */
 
-  --color-secondary: #555d6b;
-  --color-accent: #f0a500;
+  /* Main brand blue */
+  --color-primary: #0744F7;
 
-  --color-text: #1a1a1a;
-  --color-text-muted: #6b7280;
-  --color-text-inverse: #ffffff;
+  /* Deep navy header */
+  --color-primary-dark: #021C3D;
 
-  --color-bg: #ffffff;
-  --color-bg-alt: #f9fafb;
-  --color-bg-dark: #1a1a2e;
+  /* Light brand tint */
+  --color-primary-light: #EAF0FF;
 
-  --color-border: #e5e7eb;
-  --color-border-dark: #d1d5db;
+  /* Accent */
+  --color-accent: #0744F7;
 
-  --color-error: #dc2626;
-  --color-success: #16a34a;
-  --color-warning: #ca8a04;
+  /* ── Buttons ──────────────────────────────────────────────────────────── */
+  --color-btn-bg:         var(--color-primary); /* base background  */
+  --color-btn-text:       #ffffff;              /* base text        */
+  --color-btn-hover:      #1e408b;              /* hover background */
+  --color-btn-hover-text: #ffffff;              /* hover text       */
 
-  /* ── Typography ─────────────────────────────────────────────────────────── */
-  --font-base: 'Barlow', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-heading:
-    'Raleway', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-condensed: 'Barlow Condensed', system-ui, -apple-system, sans-serif;
+  /* ── Text ─────────────────────────────────────────────────────────────── */
+
+  --color-text: #0F172A;
+  --color-text-muted: #64748B;
+  --color-text-inverse: #FFFFFF;
+
+  /* ── Backgrounds ───────────────────────────────────────────────────────── */
+
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F8FAFF;
+  --color-bg-dark: #021C3D;
+
+  /* ── Borders ───────────────────────────────────────────────────────────── */
+
+  --color-border: #E6EAF2;
+  --color-border-dark: #CBD5E1;
+
+  /* ── States ───────────────────────────────────────────────────────────── */
+
+  --color-error: #DC2626;
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+
+  --font-base: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
   --font-size-xs: 0.75rem;
-  /* 12px */
   --font-size-sm: 0.875rem;
-  /* 14px */
   --font-size-base: 1rem;
-  /* 16px */
   --font-size-md: 1.125rem;
-  /* 18px */
   --font-size-lg: 1.25rem;
-  /* 20px */
   --font-size-xl: 1.5rem;
-  /* 24px */
   --font-size-2xl: 1.875rem;
-  /* 30px */
   --font-size-3xl: 2.25rem;
-  /* 36px */
 
   --line-height-tight: 1.25;
   --line-height-base: 1.6;
@@ -67,69 +79,78 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* ── Spacing (base-8 scale) ─────────────────────────────────────────────── */
-  --space-1: 0.25rem;
-  /*  4px */
-  --space-2: 0.5rem;
-  /*  8px */
-  --space-3: 0.75rem;
-  /* 12px */
-  --space-4: 1rem;
-  /* 16px */
-  --space-5: 1.25rem;
-  /* 20px */
-  --space-6: 1.5rem;
-  /* 24px */
-  --space-8: 2rem;
-  /* 32px */
-  --space-10: 2.5rem;
-  /* 40px */
-  --space-12: 3rem;
-  /* 48px */
-  --space-16: 4rem;
-  /* 64px */
-  --space-20: 5rem;
-  /* 80px */
+  /* ── Spacing (8px scale) ───────────────────────────────────────────── */
 
-  /* ── Layout ─────────────────────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;
   --container-xl: 1280px;
   --container-2xl: 1536px;
 
-  /* ── Borders & Radius ───────────────────────────────────────────────────── */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  /* ── Radius ───────────────────────────────────────────────────────── */
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
+
+  /* ── Borders ───────────────────────────────────────────────────────── */
 
   --border-width: 1px;
   --border-style: solid;
   --border-color: var(--color-border);
 
-  /* ── Shadows ────────────────────────────────────────────────────────────── */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* ── Shadows ───────────────────────────────────────────────────────── */
 
-  /* ── Transitions ────────────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  --shadow-md:
+    0 4px 6px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.06);
+
+  --shadow-lg:
+    0 10px 15px rgba(0, 0, 0, 0.08),
+    0 4px 6px rgba(0, 0, 0, 0.05);
+
+  --shadow-xl:
+    0 20px 25px rgba(0, 0, 0, 0.08),
+    0 10px 10px rgba(0, 0, 0, 0.04);
+
+  /* ── Transitions ───────────────────────────────────────────────────── */
+
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
 
-  /* ── Navigation ─────────────────────────────────────────────────────────── */
-  --nav-height: 64px;
-  --nav-bg: var(--color-bg);
-  --nav-border: var(--color-border);
-  --nav-link-color: var(--color-text);
-  --nav-link-hover: var(--color-primary);
-  --nav-dropdown-bg: var(--color-bg);
+  /* ── Navigation (Hero style like screenshot) ───────────────────────── */
+
+  --nav-height: 72px;
+  --nav-bg: #021C3D;
+  --nav-border: transparent;
+
+  --nav-link-color: rgba(255, 255, 255, 0.85);
+  --nav-link-hover: #ffffff;
+
+  --nav-dropdown-bg: #0744F7;
   --nav-dropdown-shadow: var(--shadow-lg);
 
-  /* ── Z-index scale ──────────────────────────────────────────────────────── */
+  /* ── Z-index scale ─────────────────────────────────────────────────── */
+
   --z-below: -1;
   --z-base: 0;
   --z-raised: 10;
@@ -139,102 +160,89 @@
   --z-modal: 400;
   --z-toast: 500;
 
-  --padding: 1rem;
-  --margin: 1rem;
 }
+
+/* =============================================================================
+   BASE TYPOGRAPHY
+   =========================================================================== */
 
 body {
-  font-family: var(--font-family) !important;
+  font-family: var(--font-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body.page .site-content,
-body.page .content-area,
-body.page .site-main,
-body.page .inside-article,
-body.page .entry-content,
-body.single .site-main {
-  max-width: 100%;
-  width: 100%;
-  padding-left: 0;
-  padding-right: 0;
-}
-
+/* =============================================================================
+   CARD GLASS EFFECT (Hero panel style)
+   =========================================================================== */
 
 .cardcolor {
-  background: linear-gradient(135deg,
-      rgba(252, 250, 250, 0.92) 0%,
-      rgba(255, 255, 255, 0.55) 100%) !important;
 
-  backdrop-filter: blur(10px) !important;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.55) 100%);
+
+  backdrop-filter: blur(10px);
 
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.04),
-    0 20px 40px rgba(0, 0, 0, 0.05) !important;
+    0 20px 40px rgba(0, 0, 0, 0.08);
 
   border: 2px solid #fff;
+
+}
+
+
+
+.resposive img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* =============================================================================
    RESPONSIVE TOKENS
-   Redefine tokens at each breakpoint — every component that uses these
-   variables scales automatically with zero extra rules.
-
-   Breakpoints (mobile-first):
-     --bp-sm:  640px   (large phones / small tablets)
-     --bp-md:  768px   (tablets)
-     --bp-lg:  1024px  (small laptops)
-     --bp-xl:  1280px  (desktops)
    =========================================================================== */
 
-/* ── Tablet (≥ 768px) ───────────────────────────────────────────────────────── */
-@media (min-width: 768px) {
+@media (min-width:768px) {
+
   :root {
-    /* Font sizes — scale up slightly from mobile base */
-    --font-size-xs: 0.75rem;
-    /* 12px — unchanged */
-    --font-size-sm: 0.875rem;
-    /* 14px — unchanged */
-    --font-size-base: 1rem;
-    /* 16px — unchanged */
-    --font-size-md: 1.125rem;
-    /* 18px — unchanged */
+
     --font-size-lg: 1.375rem;
-    /* 22px ↑ */
     --font-size-xl: 1.625rem;
-    /* 26px ↑ */
     --font-size-2xl: 2rem;
-    /* 32px ↑ */
     --font-size-3xl: 2.5rem;
-    /* 40px ↑ */
 
-    /* Nav */
-    --nav-height: 68px;
+    --nav-height: 76px;
+
   }
+
 }
 
-/* ── Desktop (≥ 1024px) ─────────────────────────────────────────────────────── */
-@media (min-width: 1024px) {
+@media (min-width:1024px) {
+
   :root {
-    /* Font sizes — full desktop scale */
+
     --font-size-lg: 1.5rem;
-    /* 24px ↑ */
     --font-size-xl: 1.875rem;
-    /* 30px ↑ */
     --font-size-2xl: 2.25rem;
-    /* 36px ↑ */
     --font-size-3xl: 3rem;
-    /* 48px ↑ */
 
-    /* Nav */
-    --nav-height: 72px;
+    --nav-height: 80px;
+
   }
+
 }
 
-/* ── Wide (≥ 1280px) ────────────────────────────────────────────────────────── */
-@media (min-width: 1280px) {
+@media (min-width:1280px) {
+
   :root {
-    /* Headings can go a bit larger on wide screens */
+
     --font-size-3xl: 3.5rem;
-    /* 56px ↑ */
+
   }
+
 }

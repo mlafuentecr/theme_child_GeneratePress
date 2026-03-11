@@ -109,6 +109,17 @@
   white-space:   nowrap;
 }
 
+/* ── Responsive images ──────────────────────────────────────────────────────── */
+
+img.responsive,
+.responsive img,
+.responsive > img {
+  display:   block;
+  width:     100%;
+  max-width: 100%;
+  height:    auto;
+}
+
 /* ── Responsive visibility ──────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {

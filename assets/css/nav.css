@@ -1,79 +1,303 @@
 /* =============================================================================
-   NAVIGATION
-   Overrides and enhancements for the GeneratePress primary navigation.
-   Tokens are defined in variables.css.
+   NAVIGATION  —  M-TOUR dark-navy theme
+   Design: dark navy header, white links, blue dropdown + register button.
    =========================================================================== */
 
-/* ── Primary nav wrapper ────────────────────────────────────────────────────── */
+/* ── Nav design tokens (override variables.css defaults) ─────────────────── */
 
-.main-navigation {
-  background-color: var(--nav-bg);
-  border-bottom:    var(--border-width) var(--border-style) var(--nav-border);
+:root {
+  --nav-bg: #0d1b3e;
+  --nav-link-color: #ffffffb2;
+  --nav-link-hover: rgba(255, 255, 255, 0.75);
+  --nav-border: transparent;
+  --nav-dropdown-bg: #1a56db;
+  --nav-dropdown-hover: #0d1b3e;
+  --nav-register-bg: #1a56db;
+  --nav-register-hover: var(--color-btn-hover);
+  --nav-height: 120px;
 }
 
-/* ── Top-level links ────────────────────────────────────────────────────────── */
+/* ── Header background & height ───────────────────────────────────────────── */
+
+.site-header {
+  background-color: var(--nav-bg);
+  border-bottom: none;
+  padding: 0px 1.5rem 0rem;
+  max-height: 100px;
+}
+
+.inside-header {
+  min-height: var(--nav-height);
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+}
+
+/* Asegura que el nav interno también respete el alto */
+#site-navigation,
+#site-navigation .inside-navigation {
+  height: 100%;
+  min-width: 80%;
+}
+
+/* ── Primary nav wrapper ──────────────────────────────────────────────────── */
+
+.main-navigation {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.main-navigation .inside-navigation {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Nav takes remaining space */
+.main-navigation .main-nav {
+  flex: 1;
+  display: flex;
+}
+
+.main-navigation .main-nav ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+/* ── Logo ─────────────────────────────────────────────────────────────────── */
+
+.site-branding {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  display: none;
+}
+
+.site-branding .main-title {
+  margin: 0;
+  line-height: 1;
+}
+
+/* Real logo image (set via Customizer → Site Identity → Logo) */
+.site-branding .custom-logo-link {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.site-branding .custom-logo {
+  display: block;
+  max-height: 96px;
+  /* fits inside 120px header with breathing room */
+  width: auto;
+  height: auto;
+}
+
+/* Text placeholder — only shown when no logo image is set */
+.site-branding .main-title a:not(.custom-logo-link) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--nav-register-bg);
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-heading);
+  text-decoration: none;
+  border-radius: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.site-branding .main-title a:not(.custom-logo-link):hover {
+  background-color: var(--nav-register-hover);
+  color: var(--color-btn-hover-text);
+}
+
+.site-logo {
+  position: relative;
+  z-index: 999;
+  top: -50px;
+}
+
+.site-logo a {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+}
+
+/* ── Top-level links ──────────────────────────────────────────────────────── */
 
 .main-navigation .main-nav ul li a {
-  color:           var(--nav-link-color);
-  font-size:       var(--font-size-sm);
-  font-weight:     var(--font-weight-medium);
-  transition:      color var(--transition-fast);
-  padding-block:   var(--space-4);
-  padding-inline:  var(--space-3);
+  color: var(--nav-link-color) !important;
+  font-size: var(--font-size-sm) !important;
+  letter-spacing: 0.01em;
+  text-decoration: none !important;
+
+  line-height: 1.4 !important;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 
 .main-navigation .main-nav ul li a:hover,
 .main-navigation .main-nav ul li a:focus-visible,
-.main-navigation .main-nav ul li.current-menu-item > a,
-.main-navigation .main-nav ul li.current-menu-ancestor > a {
-  color: var(--nav-link-hover);
+.main-navigation .main-nav ul li.current-menu-item>a,
+.main-navigation .main-nav ul li.current-menu-ancestor>a {
+  color: white !important;
+  font-size: var(--font-size-sm);
 }
 
-/* ── Dropdown ───────────────────────────────────────────────────────────────── */
+.main-navigation .main-nav ul li.active a {
+  color: white !important;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium) !important;
+  padding-block: var(--space-3);
+  padding-inline: var(--space-5);
+  letter-spacing: 0.01em;
+}
+
+/* ── Dropdown panel ───────────────────────────────────────────────────────── */
 
 .main-navigation .main-nav ul ul {
   background-color: var(--nav-dropdown-bg);
-  border:           var(--border-width) var(--border-style) var(--color-border);
-  border-radius:    var(--radius-md);
-  box-shadow:       var(--nav-dropdown-shadow);
-  min-width:        200px;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  min-width: 260px;
+  padding-block: var(--space-1);
+  overflow: hidden;
 }
 
 .main-navigation .main-nav ul ul li a {
-  font-size:    var(--font-size-sm);
-  padding-block: var(--space-2);
-  padding-inline: var(--space-4);
+  color: white;
+  font-size: var(--font-size-sm);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-5);
+  letter-spacing: 0.01em;
+
 }
 
-.main-navigation .main-nav ul ul li a:hover,
-.main-navigation .main-nav ul ul li.current-menu-item > a {
-  color:            var(--nav-link-hover);
-  background-color: var(--color-primary-light);
+
+/* Desktop */
+@media only screen and (max-width: 992px) {}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+  .site-logo {
+    top: -20px;
+  }
 }
 
-/* ── Mobile toggle ──────────────────────────────────────────────────────────── */
+/* Mobile */
+@media only screen and (max-width: 480px) {}
+
+
+
+/* First dropdown item gets a subtle top highlight ── */
+
+.main-navigation .main-nav ul ul li:first-child>a {
+  position: relative;
+}
+
+.main-navigation .main-nav ul ul li a:hover::before {
+  position: absolute;
+  content: '';
+  display: flex;
+  /* Aunque 'block' suele ser suficiente aquí, flex está bien */
+  width: 5px;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  background-color: var(--nav-dropdown-hover);
+}
+
+/* ── Register Now button ──────────────────────────────────────────────────── */
+
+.main-navigation .main-nav ul li.register {
+  margin-inline-start: auto;
+  /* empuja el botón al extremo derecho */
+}
+
+.main-navigation .main-nav ul li.register>a {
+  background-color: var(--nav-register-bg);
+  color: #ffffff !important;
+  border-radius: 0;
+  padding-block: 0.84rem;
+  padding-inline: var(--space-5);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  transition: background-color var(--transition-fast);
+  display: inline-block;
+}
+
+.main-navigation .main-nav ul li.register>a:hover,
+.main-navigation .main-nav ul li.register>a:focus-visible {
+  background-color: var(--nav-register-hover);
+  color: var(--color-btn-hover-text) !important;
+}
+
+/* ── Mobile menu control wrapper ─────────────────────────────────────────── */
+
+nav.mobile-menu-control-wrapper {
+  background-color: var(--nav-bg);
+}
+
+nav.mobile-menu-control-wrapper .menu-toggle,
+nav.mobile-menu-control-wrapper .menu-toggle svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* ── Mobile toggle button ─────────────────────────────────────────────────── */
 
 .menu-toggle {
-  font-size:   var(--font-size-sm);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color:       var(--nav-link-color);
-  border:      var(--border-width) var(--border-style) var(--color-border);
-  border-radius: var(--radius-md);
-  padding:     var(--space-2) var(--space-4);
-  transition:  background-color var(--transition-fast), color var(--transition-fast);
+  color: var(--nav-link-color);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  padding: var(--space-2) var(--space-4);
+  transition: background-color var(--transition-fast);
 }
 
 .menu-toggle:hover {
-  background-color: var(--color-bg-alt);
-  color:            var(--nav-link-hover);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--nav-link-color);
 }
 
-/* ── Mobile nav open state ──────────────────────────────────────────────────── */
+.sub-menu {
+  flex-direction: column;
+}
+
+.main-navigation.toggled .main-nav ul ul.toggled-on {
+  background-color: var(--nav-dropdown-bg) !important;
+}
+
+/* ── Mobile (≤ 768px) ─────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
+
+  .main-navigation.toggled .main-nav,
+  .main-navigation.sub-menu-right.toggled {
+    background-color: var(--nav-bg) !important;
+  }
+
+  .main-navigation.toggled .main-nav>ul {
+
+    display: block;
+    width: 100%;
+    margin-top: 5rem;
+  }
+
   .main-navigation .main-nav ul li a {
-    padding-block:  var(--space-3);
-    border-bottom:  var(--border-width) var(--border-style) var(--color-border);
+    padding-block: var(--space-3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .main-navigation .main-nav ul li:last-child a {
@@ -82,12 +306,22 @@
 
   .main-navigation .main-nav ul ul {
     box-shadow: none;
-    border:     none;
     border-radius: 0;
-    background-color: var(--color-bg-alt);
+    background-color: rgba(0, 0, 0, 0.25);
   }
 
-  .main-navigation .main-nav ul ul li a {
-    padding-inline-start: var(--space-8);
+  .main-navigation .main-nav ul ul li:first-child>a {
+    background-color: transparent;
+  }
+
+
+
+  .main-navigation .main-nav ul li.register {
+    margin-inline-start: 0;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .main-navigation .main-nav ul li.register>a {
+    display: inline-block;
   }
 }

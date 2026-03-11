@@ -26,8 +26,17 @@
 
 	allEls.forEach(function (el) {
 		var hasBgImage = window.getComputedStyle(el).backgroundImage !== 'none';
-		if (hasBgImage || el.classList.contains('parallax-bg')) {
+		if (hasBgImage) {
 			bgEls.push(el);
+		} else if (el.classList.contains('parallax-bg')) {
+			// Sin CSS background-image: buscar figura/img hijo y usar modo transform
+			var imgChild = el.querySelector('figure, img');
+			if (imgChild) {
+				imgChild.dataset.parallaxSpeed = el.dataset.parallaxSpeed || '0.3';
+				el.style.overflow = 'hidden';
+				transformEls.push(imgChild);
+			}
+			// Si no hay img hijo tampoco hay nada que animar
 		} else {
 			transformEls.push(el);
 		}
@@ -73,5 +82,8 @@
 
 	window.addEventListener('scroll', onScroll, { passive: true });
 	window.addEventListener('resize', update, { passive: true });
+
+	// Corre al inicio y de nuevo cuando todas las imágenes hayan cargado
 	update();
+	window.addEventListener('load', update, { passive: true });
 })();

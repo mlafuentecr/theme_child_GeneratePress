@@ -10,6 +10,11 @@
  * ============================================================ */
 $patterns = [
 
+    'video-hero' => [
+        'css'   => true,
+        'class' => 'video-hero',
+    ],
+
     'logo-strip' => [
         'css'   => true,
         'js'    => true,

@@ -1,0 +1,129 @@
+/* =============================================================================
+   PATTERN: video-hero
+   Three-layer hero:
+     Layer 1 – fallback <img>  (always visible, shows while video loads)
+     Layer 2 – Vimeo <iframe>  (cover-fill, plays as background video)
+     Layer 3 – .video-hero__content  (WP blocks, fully editable)
+   ============================================================================= */
+
+/* ── Outer wrapper ─────────────────────────────────────────────────────────── */
+
+.video-hero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: var(--hero-min-h, 560px);
+
+  /* Stretch inner content group to full height */
+  display: flex;
+  align-items: stretch;
+}
+
+/* ── Layer 1 + 2 container (image & video) ────────────────────────────────── */
+
+/*
+ * Frontend:  wp:html renders with NO wrapper, so .video-hero__bg is a
+ *            direct child of .video-hero.
+ * Editor:    wp:html is wrapped in .wp-block-html — we position that instead.
+ */
+.video-hero__bg,
+.video-hero>.wp-block-html {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base, 0);
+  pointer-events: none;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/*
+ * Dark gradient overlay — always present so text stays readable whether the
+ * Vimeo video is playing (desktop) or the fallback image shows (tablet/mobile).
+ * Without this, iOS/Android block Vimeo autoplay and the raw fallback image
+ * shows with no tint, making white text unreadable.
+ */
+.video-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+      rgba(2, 28, 61, 0.35) 0%,
+      rgba(2, 28, 61, 0.60) 100%);
+  z-index: 2;
+  /* above fallback img (z:auto) and video-wrap (z:auto), below content */
+  pointer-events: none;
+}
+
+/* ── Layer 1 – fallback image ─────────────────────────────────────────────── */
+
+.video-hero__fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  /* overridden by inline style from focal point picker */
+  display: block;
+}
+
+/* ── Layer 2 – Vimeo cover-fill ───────────────────────────────────────────── */
+
+.video-hero__video-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.video-hero__video-wrap iframe {
+  position: absolute;
+  /* --vfy (video focal Y, 0–100%) controls which part of the video is visible:
+     0% = anchor top  ·  50% = center (default)  ·  100% = anchor bottom    */
+  top: var(--vfy, 50%);
+  left: 50%;
+  /* Cover the container regardless of aspect-ratio:
+     whichever dimension is larger wins. */
+  width: max(100%, calc(100vh * (16 / 9)));
+  height: max(100%, calc(100vw * (9 / 16)));
+  transform: translate(-50%, calc(var(--vfy, 50%) * -1));
+  border: 0;
+  pointer-events: none;
+  /* background video — never intercept clicks */
+}
+
+/* ── Layer 3 – WP block content ───────────────────────────────────────────── */
+
+.video-hero__content {
+  position: relative;
+  z-index: var(--z-raised, 10);
+  width: 100%;
+
+  /* Default padding — override per-use in the block editor */
+  padding-block: var(--space-10, 5rem);
+  padding-inline: var(--space-8, 2rem);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  .video-hero {
+    min-height: var(--hero-min-h-md, 500px);
+  }
+}
+
+@media (max-width: 767px) {
+  .video-hero {
+    min-height: var(--hero-min-h-sm, 420px);
+  }
+
+  /* On mobile Vimeo autoplay is blocked; hide the wrapper so the
+     fallback image shows cleanly. */
+  .video-hero__video-wrap {
+    display: none;
+  }
+
+  .video-hero__content {
+    padding-block: var(--space-10, 4rem);
+    padding-inline: var(--space-6, 1.5rem);
+  }
+}

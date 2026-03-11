@@ -5,10 +5,10 @@
 (function () {
   'use strict';
 
-  document.querySelectorAll('.logo-strip__track').forEach(function (track) {
+  document.querySelectorAll('.logo-strip-track').forEach(function (track) {
     // Clone all items and append — CSS animation moves by –50% so the
     // second copy slots in exactly when the first exits.
-    var items = track.querySelectorAll('.logo-strip__item');
+    var items = track.querySelectorAll('figure');
     if (!items.length) return;
 
     items.forEach(function (item) {
@@ -18,6 +18,6 @@
     // Scale duration by number of logos so speed stays constant.
     // Base: 30s for 6 logos — ~5s per logo.
     var duration = Math.max(10, items.length * 5);
-    track.style.setProperty('--logo-strip-duration', duration + 's');
+    track.style.setProperty('--speed', duration + 's');
   });
 }());
