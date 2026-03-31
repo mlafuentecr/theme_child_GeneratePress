@@ -3,6 +3,7 @@
  * Reusable AJAX search component.
  *
  * Shortcode: [gp_search placeholder="Search..." post_types="post,page" limit="5"]
+ * Alias: [gp_search_bar placeholder="Search..." post_types="post,page" limit="5"]
  *
  * The component outputs an accessible search input that fires a live AJAX
  * search and displays results in a dropdown below the field.
@@ -41,29 +42,62 @@ add_action('wp_enqueue_scripts', function (): void {
     ]);
 });
 
+function gp_child_get_search_settings(): array
+{
+    $settings = (array) get_option('gp_child_search_settings', []);
+
+    return [
+        'mode'            => in_array($settings['mode'] ?? '', ['live_ajax', 'results_page'], true) ? $settings['mode'] : 'live_ajax',
+        'results_page_id' => absint($settings['results_page_id'] ?? 0),
+    ];
+}
+
+function gp_child_get_search_results_page_url(): string
+{
+    $settings = gp_child_get_search_settings();
+
+    if (! empty($settings['results_page_id'])) {
+        $url = get_permalink($settings['results_page_id']);
+        if ($url) {
+            return $url;
+        }
+    }
+
+    return home_url('/');
+}
+
 // ── Shortcode ─────────────────────────────────────────────────────────────────
 
-add_shortcode('gp_search', function (array $atts): string {
+function gp_child_render_search_shortcode(array $atts): string
+{
     $a = shortcode_atts([
         'placeholder' => __('Search…', 'generatepress-child'),
         'post_types'  => 'post,page',
         'limit'       => 5,
         'id'          => 'gp-search-' . wp_unique_id(),
+        'mode'        => '',
     ], $atts, 'gp_search');
 
+    $settings = gp_child_get_search_settings();
     $id    = sanitize_html_class($a['id']);
     $types = implode(',', array_map('sanitize_key', explode(',', $a['post_types'])));
+    $mode  = in_array($a['mode'], ['live_ajax', 'results_page'], true) ? $a['mode'] : $settings['mode'];
+    $action = $mode === 'results_page' ? gp_child_get_search_results_page_url() : home_url('/');
 
     ob_start();
     ?>
-    <div class="gp-search-wrap" id="<?php echo esc_attr($id); ?>"
+    <form class="gp-search-wrap" id="<?php echo esc_attr($id); ?>"
+         action="<?php echo esc_url($action); ?>"
+         method="get"
          data-post-types="<?php echo esc_attr($types); ?>"
          data-limit="<?php echo esc_attr(intval($a['limit'])); ?>"
+         data-mode="<?php echo esc_attr($mode); ?>"
          role="search">
         <label class="screen-reader-text" for="<?php echo esc_attr($id . '-input'); ?>">
             <?php esc_html_e('Search', 'generatepress-child'); ?>
         </label>
         <input type="search"
+               name="<?php echo esc_attr($mode === 'results_page' ? 'q' : 's'); ?>"
                id="<?php echo esc_attr($id . '-input'); ?>"
                class="gp-search-input"
                placeholder="<?php echo esc_attr($a['placeholder']); ?>"
@@ -71,11 +105,19 @@ add_shortcode('gp_search', function (array $atts): string {
                aria-haspopup="listbox"
                aria-expanded="false"
                aria-autocomplete="list">
-        <div class="gp-search-results" role="listbox" aria-label="<?php esc_attr_e('Search results', 'generatepress-child'); ?>" hidden></div>
-    </div>
+        <button type="submit" class="gp-search-submit"><?php esc_html_e('Search', 'generatepress-child'); ?></button>
+        <?php if ($mode === 'results_page') : ?>
+            <input type="hidden" name="post_types" value="<?php echo esc_attr($types); ?>">
+        <?php else : ?>
+            <div class="gp-search-results" role="listbox" aria-label="<?php esc_attr_e('Search results', 'generatepress-child'); ?>" hidden></div>
+        <?php endif; ?>
+    </form>
     <?php
     return ob_get_clean();
-});
+}
+
+add_shortcode('gp_search', 'gp_child_render_search_shortcode');
+add_shortcode('gp_search_bar', 'gp_child_render_search_shortcode');
 
 // ── AJAX handler ─────────────────────────────────────────────────────────────
 

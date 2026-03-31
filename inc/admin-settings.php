@@ -259,6 +259,12 @@ add_action('admin_init', function (): void {
     // Custom 404 (preserves Fireball error page key)
     register_setting('gp_child_404_group',        'blueflamingo_plugin_error_page_settings',       ['sanitize_callback' => 'gp_child_sanitize_404']);
 
+    // Email redirect (preserves Fireball email redirect key)
+    register_setting('gp_child_email_redirect_group', 'blueflamingo_plugin_email_redirect_settings', ['sanitize_callback' => 'gp_child_sanitize_email_redirect']);
+
+    // Search settings
+    register_setting('gp_child_search_group',     'gp_child_search_settings',                      ['sanitize_callback' => 'gp_child_sanitize_search']);
+
     // Cache buster counter
     register_setting('gp_child_cache_group', 'gp_child_css_version',    ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 1]);
     // Image URL versioning (Option A)
@@ -337,10 +343,49 @@ function gp_child_sanitize_options(mixed $input): array
     $clean    = $existing;
 
     $clean['json_basic_authentication']    = ! empty($input['json_basic_authentication'])    ? '1' : '0';
+    $clean['activate_stripe_test_mode']    = ! empty($input['activate_stripe_test_mode']) ? '1' : '0';
+    $clean['activate_wpsimplepay_testmode'] = ! empty($input['activate_wpsimplepay_testmode']) ? '1' : '0';
+    $clean['Show_all_meta_fields']         = ! empty($input['Show_all_meta_fields']) ? '1' : '0';
+    $clean['disable_admin_notifications_of_password_changes'] = ! empty($input['disable_admin_notifications_of_password_changes']) ? '1' : '0';
     $clean['hide_google_recaptcha_logo']   = ! empty($input['hide_google_recaptcha_logo'])   ? '1' : '0';
     $clean['admin_user_registration_date'] = ! empty($input['admin_user_registration_date']) ? '1' : '0';
+    $clean['enable_duplicate_content']     = ! empty($input['enable_duplicate_content']) ? '1' : '0';
+    $clean['disable_emojis']               = ! empty($input['disable_emojis']) ? '1' : '0';
+    $clean['disable_dashicons']            = ! empty($input['disable_dashicons']) ? '1' : '0';
+    $clean['disable_embeds']               = ! empty($input['disable_embeds']) ? '1' : '0';
+    $clean['remove_jquery_migrate']        = ! empty($input['remove_jquery_migrate']) ? '1' : '0';
+    $clean['remove_global_styles']         = ! empty($input['remove_global_styles']) ? '1' : '0';
+    $clean['load_separate_block_styles']   = ! empty($input['load_separate_block_styles']) ? '1' : '0';
+    $clean['disable_xml_rpc']              = ! empty($input['disable_xml_rpc']) ? '1' : '0';
+    $clean['hide_wp_version']              = ! empty($input['hide_wp_version']) ? '1' : '0';
+    $clean['remove_rsd_link']              = ! empty($input['remove_rsd_link']) ? '1' : '0';
+    $clean['remove_shortlink']             = ! empty($input['remove_shortlink']) ? '1' : '0';
+    $clean['disable_rss_feeds']            = ! empty($input['disable_rss_feeds']) ? '1' : '0';
+    $clean['remove_rss_feed_links']        = ! empty($input['remove_rss_feed_links']) ? '1' : '0';
+    $clean['disable_self_pingbacks']       = ! empty($input['disable_self_pingbacks']) ? '1' : '0';
+    $clean['disable_rest_api']             = in_array($input['disable_rest_api'] ?? '', ['', 'non_admins', 'logged_out'], true)
+        ? $input['disable_rest_api']
+        : '';
+    $clean['remove_rest_api_links']        = ! empty($input['remove_rest_api_links']) ? '1' : '0';
+    $clean['remove_generatepress_header']  = ! empty($input['remove_generatepress_header']) ? '1' : '0';
+    $clean['remove_generatepress_footer']  = ! empty($input['remove_generatepress_footer']) ? '1' : '0';
+    $clean['hide_generatepress_layout_box'] = ! empty($input['hide_generatepress_layout_box']) ? '1' : '0';
+    $clean['default_sidebar_layout']       = in_array($input['default_sidebar_layout'] ?? '', ['', 'right-sidebar', 'left-sidebar', 'no-sidebar', 'both-sidebars', 'both-left', 'both-right'], true)
+        ? $input['default_sidebar_layout']
+        : '';
+    $clean['default_footer_widgets']       = in_array((string) ($input['default_footer_widgets'] ?? ''), ['', '0', '1', '2', '3', '4', '5'], true)
+        ? (string) ($input['default_footer_widgets'] ?? '')
+        : '';
+    $clean['default_content_container']    = in_array($input['default_content_container'] ?? '', ['', 'true', 'contained'], true)
+        ? $input['default_content_container']
+        : '';
+    $clean['default_disable_content_title'] = ! empty($input['default_disable_content_title']) ? '1' : '0';
     $clean['default_featured_image']       = absint($input['default_featured_image'] ?? 0);
     $clean['id_whatConverts']              = sanitize_text_field($input['id_whatConverts'] ?? '');
+    $clean['restrict_admin_creation']      = ! empty($input['restrict_admin_creation']) ? '1' : '0';
+    $clean['restrict_plugin_management']   = ! empty($input['restrict_plugin_management']) ? '1' : '0';
+    $clean['auto_delete_standard_theme']   = ! empty($input['auto_delete_standard_theme']) ? '1' : '0';
+    $clean['limit_ability_to_add_new_plugin'] = ! empty($input['limit_ability_to_add_new_plugin']) ? '1' : '0';
 
     return $clean;
 }
@@ -389,6 +434,44 @@ function gp_child_sanitize_404(mixed $input): array
     return $clean;
 }
 
+function gp_child_sanitize_search(mixed $input): array
+{
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_search_group') {
+        return is_array($input) ? $input : [];
+    }
+
+    if (! is_array($input)) {
+        $input = [];
+    }
+
+    return [
+        'mode'            => in_array($input['mode'] ?? '', ['live_ajax', 'results_page'], true) ? $input['mode'] : 'live_ajax',
+        'results_page_id' => absint($input['results_page_id'] ?? 0),
+    ];
+}
+
+function gp_child_sanitize_email_redirect(mixed $input): array
+{
+    $submitted_page = sanitize_text_field(wp_unslash($_POST['option_page'] ?? ''));
+    if ($submitted_page !== 'gp_child_email_redirect_group') {
+        return is_array($input) ? $input : [];
+    }
+
+    if (! is_array($input)) {
+        $input = [];
+    }
+
+    $existing = (array) get_option('blueflamingo_plugin_email_redirect_settings', []);
+    $clean    = $existing;
+
+    $clean['activate_email_redirect_staging_or_development'] = ! empty($input['activate_email_redirect_staging_or_development']) ? '1' : '0';
+    $clean['activate_email_redirect_production']             = ! empty($input['activate_email_redirect_production']) ? '1' : '0';
+    $clean['redirect_email_id']                              = sanitize_email($input['redirect_email_id'] ?? '');
+
+    return $clean;
+}
+
 // ── 5. Settings page renderer ─────────────────────────────────────────────────
 
 function gp_child_render_settings_page(): void
@@ -401,18 +484,34 @@ function gp_child_render_settings_page(): void
     $opts = (array) get_option('blueflamingo_plugin_options_settings', []);
     $ga   = (array) get_option('blueflamingo_plugin_google_analytics_settings', []);
     $ep   = (array) get_option('blueflamingo_plugin_error_page_settings', []);
+    $er   = (array) get_option('blueflamingo_plugin_email_redirect_settings', []);
+    $search_settings = (array) get_option('gp_child_search_settings', []);
     $cv   = intval(get_option('gp_child_css_version', 1));
 
     $dfi_id  = intval($opts['default_featured_image'] ?? 0);
     $dfi_url = $dfi_id ? wp_get_attachment_image_url($dfi_id, 'thumbnail') : '';
 
     $notes = gp_child_get_notes();
+    $environment = function_exists('gp_child_get_environment') ? gp_child_get_environment() : 'unknown';
+    $environment_label = match ($environment) {
+        'live' => __('Live', 'generatepress-child'),
+        'staging' => __('Staging', 'generatepress-child'),
+        default => __('Unknown', 'generatepress-child'),
+    };
+    $environment_color = match ($environment) {
+        'live' => '#0a7a35',
+        'staging' => '#b35c00',
+        default => '#646970',
+    };
 
     $tabs = [
         'site-info'  => __('Site Info',    'generatepress-child'),
+        'core-features' => __('Core Features', 'generatepress-child'),
         'options'    => __('Options',      'generatepress-child'),
+        'email-redirect' => __('Email Redirect', 'generatepress-child'),
         'analytics'  => __('Analytics',    'generatepress-child'),
         '404'        => __('404 Page',     'generatepress-child'),
+        'search'     => __('Search',       'generatepress-child'),
         'cache'      => __('Cache Buster', 'generatepress-child'),
         'notes'      => __('Notes',        'generatepress-child'),
         'webp'       => __('WebP',         'generatepress-child'),
@@ -726,6 +825,15 @@ function gp_child_render_settings_page(): void
   <div id="gp-tab-site-info" class="gp-tab-panel" role="tabpanel">
     <form method="post" action="options.php">
       <?php settings_fields('gp_child_site_info_group'); ?>
+      <div style="margin-bottom:18px;padding:12px 14px;border:1px solid #dcdcde;border-left:4px solid <?php echo esc_attr($environment_color); ?>;background:#fff;">
+        <strong><?php esc_html_e('Current Environment:', 'generatepress-child'); ?></strong>
+        <span style="color:<?php echo esc_attr($environment_color); ?>;font-weight:600;">
+          <?php echo esc_html($environment_label); ?>
+        </span>
+        <p style="margin:6px 0 0;color:#646970;">
+          <?php esc_html_e('Detected by comparing the current site URL with the Live Site URL and Staging Site URL below.', 'generatepress-child'); ?>
+        </p>
+      </div>
       <table class="form-table" role="presentation">
         <tr>
           <th scope="row"><?php esc_html_e('Live Site URL', 'generatepress-child'); ?></th>
@@ -749,18 +857,334 @@ function gp_child_render_settings_page(): void
     </form>
   </div>
 
+  <?php /* ── Core Features ─────────────────────────────────────── */ ?>
+  <div id="gp-tab-core-features" class="gp-tab-panel" role="tabpanel">
+    <form method="post" action="options.php">
+      <?php settings_fields('gp_child_options_group'); ?>
+
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('Scripts & Styles', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Turn off front-end assets and WordPress extras you do not need.', 'generatepress-child'); ?>
+        </p>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable Emojis', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_emojis]" value="1"
+                  <?php checked('1', $opts['disable_emojis'] ?? ''); ?>>
+                <?php esc_html_e('Remove emoji scripts, styles and related filters.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable Dashicons', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_dashicons]" value="1"
+                  <?php checked('1', $opts['disable_dashicons'] ?? ''); ?>>
+                <?php esc_html_e('Stop loading Dashicons for visitors on the front end.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable Embeds', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_embeds]" value="1"
+                  <?php checked('1', $opts['disable_embeds'] ?? ''); ?>>
+                <?php esc_html_e('Disable oEmbed discovery links, host JS and embed rewrite filters.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove jQuery Migrate', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_jquery_migrate]" value="1"
+                  <?php checked('1', $opts['remove_jquery_migrate'] ?? ''); ?>>
+                <?php esc_html_e('Remove jQuery Migrate on the front end for logged-out visitors.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove Global Styles', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_global_styles]" value="1"
+                  <?php checked('1', $opts['remove_global_styles'] ?? ''); ?>>
+                <?php esc_html_e('Disable block global styles and duotone output when not needed.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Load Separate Block Styles', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[load_separate_block_styles]" value="1"
+                  <?php checked('1', $opts['load_separate_block_styles'] ?? ''); ?>>
+                <?php esc_html_e('Load block styles only when a block needs them.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('WordPress Features', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Remove discovery links, feeds and APIs you do not want publicly exposed.', 'generatepress-child'); ?>
+        </p>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable XML-RPC', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_xml_rpc]" value="1"
+                  <?php checked('1', $opts['disable_xml_rpc'] ?? ''); ?>>
+                <?php esc_html_e('Disable the XML-RPC endpoint.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Hide WP Version', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[hide_wp_version]" value="1"
+                  <?php checked('1', $opts['hide_wp_version'] ?? ''); ?>>
+                <?php esc_html_e('Remove WordPress version output from common places.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove RSD Link', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rsd_link]" value="1"
+                  <?php checked('1', $opts['remove_rsd_link'] ?? ''); ?>>
+                <?php esc_html_e('Remove the Really Simple Discovery link from the document head.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove Shortlink', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_shortlink]" value="1"
+                  <?php checked('1', $opts['remove_shortlink'] ?? ''); ?>>
+                <?php esc_html_e('Remove shortlink tags from the document head and headers.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable RSS Feeds', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_rss_feeds]" value="1"
+                  <?php checked('1', $opts['disable_rss_feeds'] ?? ''); ?>>
+                <?php esc_html_e('Block front-end feed endpoints.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove RSS Feed Links', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rss_feed_links]" value="1"
+                  <?php checked('1', $opts['remove_rss_feed_links'] ?? ''); ?>>
+                <?php esc_html_e('Remove feed discovery links from the document head.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable Self Pingbacks', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_self_pingbacks]" value="1"
+                  <?php checked('1', $opts['disable_self_pingbacks'] ?? ''); ?>>
+                <?php esc_html_e('Prevent your own domain links from creating pingbacks.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('REST API', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Control REST API access and authentication from one place.', 'generatepress-child'); ?>
+        </p>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('JSON Basic Authentication', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[json_basic_authentication]" value="1"
+                  <?php checked('1', $opts['json_basic_authentication'] ?? ''); ?>>
+                <?php esc_html_e('Enable JSON Basic Authentication for the REST API.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable REST API', 'generatepress-child'); ?></th>
+            <td>
+              <?php $rest_mode = $opts['disable_rest_api'] ?? ''; ?>
+              <label style="display:block;margin-bottom:6px;">
+                <input type="radio" name="blueflamingo_plugin_options_settings[disable_rest_api]" value=""
+                  <?php checked('', $rest_mode); ?>>
+                <?php esc_html_e('Default (Enabled)', 'generatepress-child'); ?>
+              </label>
+              <label style="display:block;margin-bottom:6px;">
+                <input type="radio" name="blueflamingo_plugin_options_settings[disable_rest_api]" value="non_admins"
+                  <?php checked('non_admins', $rest_mode); ?>>
+                <?php esc_html_e('Disable for Non-Admins', 'generatepress-child'); ?>
+              </label>
+              <label style="display:block;">
+                <input type="radio" name="blueflamingo_plugin_options_settings[disable_rest_api]" value="logged_out"
+                  <?php checked('logged_out', $rest_mode); ?>>
+                <?php esc_html_e('Disable When Logged Out', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove REST API Links', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rest_api_links]" value="1"
+                  <?php checked('1', $opts['remove_rest_api_links'] ?? ''); ?>>
+                <?php esc_html_e('Remove REST API discovery links and headers.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('GeneratePress Layout', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Apply global GeneratePress layout cleanup directly from the child theme.', 'generatepress-child'); ?>
+        </p>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove Header Globally', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_generatepress_header]" value="1"
+                  <?php checked('1', $opts['remove_generatepress_header'] ?? ''); ?>>
+                <?php esc_html_e('Remove the GeneratePress header output on the front end.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Remove Footer Globally', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_generatepress_footer]" value="1"
+                  <?php checked('1', $opts['remove_generatepress_footer'] ?? ''); ?>>
+                <?php esc_html_e('Remove GeneratePress footer widgets, footer bar and back-to-top output.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('Default Page Layout', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Set GeneratePress layout defaults for new and existing posts/pages that do not have custom layout meta yet.', 'generatepress-child'); ?>
+        </p>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('Hide Layout Box in Editor', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[hide_generatepress_layout_box]" value="1"
+                  <?php checked('1', $opts['hide_generatepress_layout_box'] ?? ''); ?>>
+                <?php esc_html_e('Hide the GeneratePress Layout box in the post/page editor using admin CSS.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('All Site Sidebar Layout', 'generatepress-child'); ?></th>
+            <td>
+              <select name="blueflamingo_plugin_options_settings[default_sidebar_layout]">
+                <option value="" <?php selected($opts['default_sidebar_layout'] ?? '', ''); ?>><?php esc_html_e('Default', 'generatepress-child'); ?></option>
+                <option value="right-sidebar" <?php selected($opts['default_sidebar_layout'] ?? '', 'right-sidebar'); ?>><?php esc_html_e('Right Sidebar', 'generatepress-child'); ?></option>
+                <option value="left-sidebar" <?php selected($opts['default_sidebar_layout'] ?? '', 'left-sidebar'); ?>><?php esc_html_e('Left Sidebar', 'generatepress-child'); ?></option>
+                <option value="no-sidebar" <?php selected($opts['default_sidebar_layout'] ?? '', 'no-sidebar'); ?>><?php esc_html_e('No Sidebars', 'generatepress-child'); ?></option>
+                <option value="both-sidebars" <?php selected($opts['default_sidebar_layout'] ?? '', 'both-sidebars'); ?>><?php esc_html_e('Both Sidebars', 'generatepress-child'); ?></option>
+                <option value="both-left" <?php selected($opts['default_sidebar_layout'] ?? '', 'both-left'); ?>><?php esc_html_e('Both Sidebars on Left', 'generatepress-child'); ?></option>
+                <option value="both-right" <?php selected($opts['default_sidebar_layout'] ?? '', 'both-right'); ?>><?php esc_html_e('Both Sidebars on Right', 'generatepress-child'); ?></option>
+              </select>
+              <p class="description">
+                <?php esc_html_e('Example: choose No Sidebars to keep future pages/posts without sidebars by default.', 'generatepress-child'); ?>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Default Footer Widgets', 'generatepress-child'); ?></th>
+            <td>
+              <select name="blueflamingo_plugin_options_settings[default_footer_widgets]">
+                <option value="" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), ''); ?>><?php esc_html_e('Default', 'generatepress-child'); ?></option>
+                <option value="0" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '0'); ?>><?php esc_html_e('0 Widgets', 'generatepress-child'); ?></option>
+                <option value="1" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '1'); ?>><?php esc_html_e('1 Widget', 'generatepress-child'); ?></option>
+                <option value="2" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '2'); ?>><?php esc_html_e('2 Widgets', 'generatepress-child'); ?></option>
+                <option value="3" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '3'); ?>><?php esc_html_e('3 Widgets', 'generatepress-child'); ?></option>
+                <option value="4" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '4'); ?>><?php esc_html_e('4 Widgets', 'generatepress-child'); ?></option>
+                <option value="5" <?php selected((string) ($opts['default_footer_widgets'] ?? ''), '5'); ?>><?php esc_html_e('5 Widgets', 'generatepress-child'); ?></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Default Content Container', 'generatepress-child'); ?></th>
+            <td>
+              <select name="blueflamingo_plugin_options_settings[default_content_container]">
+                <option value="" <?php selected($opts['default_content_container'] ?? '', ''); ?>><?php esc_html_e('Default', 'generatepress-child'); ?></option>
+                <option value="true" <?php selected($opts['default_content_container'] ?? '', 'true'); ?>><?php esc_html_e('Full Width', 'generatepress-child'); ?></option>
+                <option value="contained" <?php selected($opts['default_content_container'] ?? '', 'contained'); ?>><?php esc_html_e('Contained', 'generatepress-child'); ?></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Disable Content Title by Default', 'generatepress-child'); ?></th>
+            <td>
+              <label>
+                <input type="checkbox" name="blueflamingo_plugin_options_settings[default_disable_content_title]" value="1"
+                  <?php checked('1', $opts['default_disable_content_title'] ?? ''); ?>>
+                <?php esc_html_e('Default new pages/posts to hide the content title.', 'generatepress-child'); ?>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <?php submit_button(__('Save Core Features', 'generatepress-child')); ?>
+    </form>
+  </div>
+
   <?php /* ── Options ────────────────────────────────────────────── */ ?>
   <div id="gp-tab-options" class="gp-tab-panel" role="tabpanel">
     <form method="post" action="options.php">
       <?php settings_fields('gp_child_options_group'); ?>
       <table class="form-table" role="presentation">
         <tr>
-          <th scope="row"><?php esc_html_e('JSON Basic Authentication', 'generatepress-child'); ?></th>
+          <th scope="row"><?php esc_html_e('Stripe Test Mode', 'generatepress-child'); ?></th>
           <td>
             <label>
-              <input type="checkbox" name="blueflamingo_plugin_options_settings[json_basic_authentication]" value="1"
-                <?php checked('1', $opts['json_basic_authentication'] ?? ''); ?>>
-              <?php esc_html_e('Enable JSON Basic Authentication for the REST API.', 'generatepress-child'); ?>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[activate_stripe_test_mode]" value="1"
+                <?php checked('1', $opts['activate_stripe_test_mode'] ?? ''); ?>>
+              <?php esc_html_e('On staging sites, force WooCommerce Stripe into test mode.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('WP Simple Pay Test Mode', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[activate_wpsimplepay_testmode]" value="1"
+                <?php checked('1', $opts['activate_wpsimplepay_testmode'] ?? ''); ?>>
+              <?php esc_html_e('On staging sites, force WP Simple Pay into test mode.', 'generatepress-child'); ?>
             </label>
           </td>
         </tr>
@@ -775,12 +1199,42 @@ function gp_child_render_settings_page(): void
           </td>
         </tr>
         <tr>
+          <th scope="row"><?php esc_html_e('Show All Meta Fields', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[Show_all_meta_fields]" value="1"
+                <?php checked('1', $opts['Show_all_meta_fields'] ?? ''); ?>>
+              <?php esc_html_e('Display all post meta in the editor screen for debugging and content audits.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Disable Password Change Emails', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_admin_notifications_of_password_changes]" value="1"
+                <?php checked('1', $opts['disable_admin_notifications_of_password_changes'] ?? ''); ?>>
+              <?php esc_html_e('Stop WordPress from emailing the admin address when a user changes their password.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
           <th scope="row"><?php esc_html_e('User Registration Date', 'generatepress-child'); ?></th>
           <td>
             <label>
               <input type="checkbox" name="blueflamingo_plugin_options_settings[admin_user_registration_date]" value="1"
                 <?php checked('1', $opts['admin_user_registration_date'] ?? ''); ?>>
               <?php esc_html_e('Add a Registration Date column to the Users list table.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Duplicate Pages & Posts', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[enable_duplicate_content]" value="1"
+                <?php checked('1', $opts['enable_duplicate_content'] ?? ''); ?>>
+              <?php esc_html_e('Enable a Duplicate action for pages and posts in the WordPress admin.', 'generatepress-child'); ?>
             </label>
           </td>
         </tr>
@@ -816,8 +1270,91 @@ function gp_child_render_settings_page(): void
             </p>
           </td>
         </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Restrict Administrator Creation', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[restrict_admin_creation]" value="1"
+                <?php checked('1', $opts['restrict_admin_creation'] ?? ''); ?>>
+              <?php esc_html_e('Hide the Administrator role for non-support users when creating or promoting users.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Restrict Plugin Management', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[restrict_plugin_management]" value="1"
+                <?php checked('1', $opts['restrict_plugin_management'] ?? ''); ?>>
+              <?php esc_html_e('Restrict plugin activation, deactivation, updates and deletion for non-support users.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Limit Ability to Add New Plugins', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[limit_ability_to_add_new_plugin]" value="1"
+                <?php checked('1', $opts['limit_ability_to_add_new_plugin'] ?? ''); ?>>
+              <?php esc_html_e('Hide and block the Add New Plugin screens for non-support users.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Auto Delete Standard Themes', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_options_settings[auto_delete_standard_theme]" value="1"
+                <?php checked('1', $opts['auto_delete_standard_theme'] ?? ''); ?>>
+              <?php esc_html_e('Delete unused default WordPress themes authored by the WordPress team.', 'generatepress-child'); ?>
+            </label>
+            <p class="description"><?php esc_html_e('Use carefully: this is destructive and intended for cleanup on maintained sites.', 'generatepress-child'); ?></p>
+          </td>
+        </tr>
       </table>
       <?php submit_button(__('Save Options', 'generatepress-child')); ?>
+    </form>
+  </div>
+
+  <?php /* ── Email Redirect ───────────────────────────────────── */ ?>
+  <div id="gp-tab-email-redirect" class="gp-tab-panel" role="tabpanel">
+    <form method="post" action="options.php">
+      <?php settings_fields('gp_child_email_redirect_group'); ?>
+      <table class="form-table" role="presentation">
+        <tr>
+          <th scope="row"><?php esc_html_e('Redirect on Staging / Development', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_email_redirect_settings[activate_email_redirect_staging_or_development]" value="1"
+                <?php checked('1', $er['activate_email_redirect_staging_or_development'] ?? ''); ?>>
+              <?php esc_html_e('Replace outgoing email recipients when the current site matches the Staging Site URL.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Redirect on Production', 'generatepress-child'); ?></th>
+          <td>
+            <label>
+              <input type="checkbox" name="blueflamingo_plugin_email_redirect_settings[activate_email_redirect_production]" value="1"
+                <?php checked('1', $er['activate_email_redirect_production'] ?? ''); ?>>
+              <?php esc_html_e('Replace outgoing email recipients when the current site matches the Live Site URL.', 'generatepress-child'); ?>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Redirect Email Address', 'generatepress-child'); ?></th>
+          <td>
+            <input type="email" name="blueflamingo_plugin_email_redirect_settings[redirect_email_id]"
+              value="<?php echo esc_attr($er['redirect_email_id'] ?? ''); ?>" class="regular-text"
+              placeholder="test@example.com">
+            <p class="description">
+              <?php esc_html_e('All redirected emails will be sent to this address instead of the original recipient.', 'generatepress-child'); ?><br>
+              <?php esc_html_e('The email subject gets prefixed with [TEST], and the original recipient is added to the message for reference.', 'generatepress-child'); ?>
+            </p>
+          </td>
+        </tr>
+      </table>
+      <?php submit_button(__('Save Email Redirect Settings', 'generatepress-child')); ?>
     </form>
   </div>
 
@@ -909,6 +1446,60 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save 404 Settings', 'generatepress-child')); ?>
     </form>
+  </div>
+
+  <?php /* ── Search ─────────────────────────────────────────────── */ ?>
+  <div id="gp-tab-search" class="gp-tab-panel" role="tabpanel">
+    <form method="post" action="options.php">
+      <?php settings_fields('gp_child_search_group'); ?>
+      <table class="form-table" role="presentation">
+        <tr>
+          <th scope="row"><?php esc_html_e('Search Mode', 'generatepress-child'); ?></th>
+          <td>
+            <label style="display:block;margin-bottom:8px;">
+              <input type="radio" name="gp_child_search_settings[mode]" value="live_ajax"
+                <?php checked($search_settings['mode'] ?? 'live_ajax', 'live_ajax'); ?>>
+              <?php esc_html_e('Live search dropdown', 'generatepress-child'); ?>
+            </label>
+            <label style="display:block;">
+              <input type="radio" name="gp_child_search_settings[mode]" value="results_page"
+                <?php checked($search_settings['mode'] ?? 'live_ajax', 'results_page'); ?>>
+              <?php esc_html_e('Redirect to results page', 'generatepress-child'); ?>
+            </label>
+            <p class="description">
+              <?php esc_html_e('Live search keeps results under the input. Redirect mode sends the visitor to a selected WordPress page that contains the results shortcode.', 'generatepress-child'); ?>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><?php esc_html_e('Results Page', 'generatepress-child'); ?></th>
+          <td>
+            <select name="gp_child_search_settings[results_page_id]">
+              <option value="0"><?php esc_html_e('— Select a page —', 'generatepress-child'); ?></option>
+              <?php foreach (get_pages() as $page) : ?>
+              <option value="<?php echo esc_attr($page->ID); ?>"
+                <?php selected(intval($search_settings['results_page_id'] ?? 0), $page->ID); ?>>
+                <?php echo esc_html($page->post_title); ?>
+              </option>
+              <?php endforeach; ?>
+            </select>
+            <p class="description">
+              <?php esc_html_e('Use this when Search Mode is set to Redirect to results page.', 'generatepress-child'); ?>
+            </p>
+          </td>
+        </tr>
+      </table>
+      <?php submit_button(__('Save Search Settings', 'generatepress-child')); ?>
+    </form>
+
+    <hr style="margin:28px 0;">
+
+    <h2 style="margin-top:0;"><?php esc_html_e('How to use it', 'generatepress-child'); ?></h2>
+    <p><code>[gp_search_bar]</code> <?php esc_html_e('adds the search field anywhere in your content, template or block shortcode area.', 'generatepress-child'); ?></p>
+    <p><code>[post_search_result]</code> <?php esc_html_e('renders the results page layout. If you use Redirect mode, place this shortcode on the page selected above.', 'generatepress-child'); ?></p>
+    <p class="description">
+      <?php esc_html_e('Recommended setup: create a page like "Search", place [post_search_result] on it, then select that page here and enable Redirect to results page.', 'generatepress-child'); ?>
+    </p>
   </div>
 
   <?php /* ── Cache Buster ─────────────────────────────────────────── */ ?>
@@ -1130,338 +1721,3 @@ function gp_child_render_settings_page(): void
 
 // ── 6. Front-end: apply all saved settings ────────────────────────────────────
 
-// — JSON Basic Auth ——————————————————————————————————————————————————————————
-add_action('init', function (): void {
-    $opts = (array) get_option('blueflamingo_plugin_options_settings', []);
-    if (! empty($opts['json_basic_authentication'])) {
-        add_filter('determine_current_user', 'gp_child_json_basic_auth_handler', 20);
-        add_filter('rest_authentication_errors', 'gp_child_json_basic_auth_error');
-    }
-});
-
-function gp_child_json_basic_auth_handler(mixed $user): mixed
-{
-    global $gp_child_json_basic_auth_error;
-    $gp_child_json_basic_auth_error = null;
-
-    if (! empty($user)) {
-        return $user;
-    }
-    if (! isset($_SERVER['PHP_AUTH_USER'])) {
-        return $user;
-    }
-
-    remove_filter('determine_current_user', 'gp_child_json_basic_auth_handler', 20);
-    $auth_user = wp_authenticate(
-        sanitize_user((string) $_SERVER['PHP_AUTH_USER']),
-        (string) ($_SERVER['PHP_AUTH_PW'] ?? '')
-    );
-    add_filter('determine_current_user', 'gp_child_json_basic_auth_handler', 20);
-
-    if (is_wp_error($auth_user)) {
-        $gp_child_json_basic_auth_error = $auth_user;
-        return null;
-    }
-
-    $gp_child_json_basic_auth_error = true;
-    return $auth_user->ID;
-}
-
-function gp_child_json_basic_auth_error(mixed $error): mixed
-{
-    if (! empty($error)) {
-        return $error;
-    }
-    global $gp_child_json_basic_auth_error;
-    return $gp_child_json_basic_auth_error;
-}
-
-// — Hide reCAPTCHA badge ——————————————————————————————————————————————————————
-add_action('wp_head', function (): void {
-    $opts = (array) get_option('blueflamingo_plugin_options_settings', []);
-    if (! empty($opts['hide_google_recaptcha_logo'])) {
-        echo '<style>.grecaptcha-badge{visibility:collapse!important;}</style>' . "\n";
-    }
-}, 99);
-
-// — User registration date column ────────────────────────────────────────────
-add_action('init', function (): void {
-    $opts = (array) get_option('blueflamingo_plugin_options_settings', []);
-    if (empty($opts['admin_user_registration_date'])) {
-        return;
-    }
-    add_filter('manage_users_columns', function (array $cols): array {
-        $cols['registration_date'] = __('Registered', 'generatepress-child');
-        return $cols;
-    });
-    add_filter('manage_users_custom_column', function (string $out, string $col, int $uid): string {
-        if ($col !== 'registration_date') {
-            return $out;
-        }
-        $user = get_userdata($uid);
-        return $user ? esc_html(date_i18n('j M Y', strtotime($user->user_registered))) : '—';
-    }, 10, 3);
-    add_filter('manage_users_sortable_columns', function (array $cols): array {
-        return wp_parse_args(['registration_date' => 'registered'], $cols);
-    });
-});
-
-// — Default featured image fallback ──────────────────────────────────────────
-add_filter('post_thumbnail_html', function (string $html, int $post_id, int $thumbnail_id, mixed $size, mixed $attr): string {
-    if (! empty($html)) {
-        return $html;
-    }
-    $opts       = (array) get_option('blueflamingo_plugin_options_settings', []);
-    $default_id = intval($opts['default_featured_image'] ?? 0);
-    if ($default_id) {
-        $html = wp_get_attachment_image($default_id, $size, false, (array) $attr);
-    }
-    return $html;
-}, 10, 5);
-
-// — WhatConverts ─────────────────────────────────────────────────────────────
-add_action('wp_footer', function (): void {
-    $opts  = (array) get_option('blueflamingo_plugin_options_settings', []);
-    $wc_id = sanitize_text_field($opts['id_whatConverts'] ?? '');
-    if (! empty($wc_id)) {
-        printf(
-            '<script src="//scripts.iconnode.com/%s.js"></script>' . "\n",
-            esc_attr($wc_id)
-        );
-    }
-}, 99);
-
-// ── 8. Dashboard admin notices ────────────────────────────────────────────────
-
-add_action('admin_notices', function (): void {
-    global $pagenow;
-    if ($pagenow !== 'index.php') {
-        return;
-    }
-    $required_cap = get_option('gp_child_notes_role', 'manage_options');
-    if (! current_user_can($required_cap)) {
-        return;
-    }
-    $notes = gp_child_get_notes();
-    if (empty($notes)) {
-        return;
-    }
-
-    // Map note color → WP notice type + custom border color
-    $color_map = [
-        'yellow' => ['type' => 'notice-warning',  'border' => '#f0d048'],
-        'blue'   => ['type' => 'notice-info',      'border' => '#90caf9'],
-        'green'  => ['type' => 'notice-success',   'border' => '#a5d6a7'],
-        'pink'   => ['type' => 'notice-error',     'border' => '#f48fb1'],
-    ];
-
-    $manage_url = admin_url('themes.php?page=gp-child-settings');
-
-    foreach ($notes as $note) {
-        $color   = in_array($note['color'] ?? '', ['yellow','blue','green','pink'], true) ? $note['color'] : 'yellow';
-        $map     = $color_map[$color];
-        $title   = esc_html(trim($note['title']   ?? ''));
-        $content = esc_html(trim($note['content'] ?? ''));
-
-        if ($title === '' && $content === '') {
-            continue;
-        }
-
-        printf(
-            '<div class="notice %s gp-site-note" style="border-left-color:%s;">' .
-                '<p>' .
-                    '%s' .
-                    '%s' .
-                    '<a href="%s" style="margin-left:10px;font-size:11px;opacity:.7;">%s</a>' .
-                '</p>' .
-            '</div>',
-            esc_attr($map['type']),
-            esc_attr($map['border']),
-            $title   !== '' ? '<strong>' . $title . '</strong> ' : '',
-            $content !== '' ? '<span style="color:#50575e;">' . nl2br($content) . '</span>' : '',
-            esc_url($manage_url),
-            esc_html__('Manage notes →', 'generatepress-child')
-        );
-    }
-});
-
-// — Google Analytics / GTM ───────────────────────────────────────────────────
-add_action('init', function (): void {
-    $ga = (array) get_option('blueflamingo_plugin_google_analytics_settings', []);
-    if (empty($ga['activate_google_analytics']) || empty($ga['google_analytics_id'])) {
-        return;
-    }
-    $hook = ($ga['google_analytics_position'] ?? 'Head') === 'Footer' ? 'wp_footer' : 'wp_head';
-    add_action($hook, 'gp_child_output_analytics', 1);
-});
-
-function gp_child_output_analytics(): void
-{
-    $ga = (array) get_option('blueflamingo_plugin_google_analytics_settings', []);
-    $id = sanitize_text_field($ga['google_analytics_id'] ?? '');
-
-    if (empty($id)) {
-        return;
-    }
-    // Skip admins unless "include logged-in" is ticked
-    if (is_user_logged_in() && current_user_can('update_core') && empty($ga['google_analytics_logged_in'])) {
-        return;
-    }
-
-    if (strncmp($id, 'GTM-', 4) === 0) {
-        // Google Tag Manager
-        ?>
-<!-- Google Tag Manager -->
-<script>
-(function(w, d, s, l, i) {
-  w[l] = w[l] || [];
-  w[l].push({
-    'gtm.start': new Date().getTime(),
-    event: 'gtm.js'
-  });
-  var f = d.getElementsByTagName(s)[0],
-    j = d.createElement(s),
-    dl = l != 'dataLayer' ? '&l=' + l : '';
-  j.async = true;
-  j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-  f.parentNode.insertBefore(j, f);
-})(window, document, 'script', 'dataLayer', '<?php echo esc_js($id); ?>');
-</script>
-<!-- End Google Tag Manager -->
-<?php
-    } else {
-        // GA4 (G-…)
-        ?>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr($id); ?>"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-
-function gtag() {
-  dataLayer.push(arguments);
-}
-gtag('js', new Date());
-gtag('config', '<?php echo esc_js($id); ?>');
-</script>
-<!-- End Google tag -->
-<?php
-    }
-}
-
-// ── 7. Cache: image URL versioning (Option A) ────────────────────────────────
-
-// — Image URL versioning ──────────────────────────────────────────────────────
-add_filter('wp_get_attachment_url', function (string $url): string {
-    if (get_option('gp_child_version_images', '0') !== '1') {
-        return $url;
-    }
-    $v = intval(get_option('gp_child_css_version', 1));
-    return add_query_arg('v', $v, $url);
-});
-
-// ── 8. Notes helpers + AJAX ───────────────────────────────────────────────────
-
-function gp_child_get_notes(): array
-{
-    $raw = get_option('gp_child_notes', '[]');
-    $arr = json_decode((string) $raw, true);
-    return is_array($arr) ? $arr : [];
-}
-
-function gp_child_save_notes(array $notes): void
-{
-    update_option('gp_child_notes', wp_json_encode(array_values($notes)));
-}
-
-add_action('wp_ajax_gp_child_add_note', function (): void {
-    check_ajax_referer('gp_child_notes', 'nonce');
-    if (! current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized', 403);
-    }
-    $notes  = gp_child_get_notes();
-    $note   = [
-        'id'      => wp_generate_uuid4(),
-        'title'   => '',
-        'content' => '',
-        'color'   => 'yellow',
-        'created' => gmdate('Y-m-d'),
-    ];
-    array_unshift($notes, $note);
-    gp_child_save_notes($notes);
-    wp_send_json_success($note);
-});
-
-add_action('wp_ajax_gp_child_save_note', function (): void {
-    check_ajax_referer('gp_child_notes', 'nonce');
-    if (! current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized', 403);
-    }
-    $id      = sanitize_text_field(wp_unslash($_POST['id']      ?? ''));
-    $title   = sanitize_text_field(wp_unslash($_POST['title']   ?? ''));
-    $content = sanitize_textarea_field(wp_unslash($_POST['content'] ?? ''));
-    $color   = in_array($_POST['color'] ?? '', ['yellow','blue','green','pink'], true)
-        ? sanitize_text_field($_POST['color'])
-        : 'yellow';
-
-    $notes = gp_child_get_notes();
-    $found = false;
-    foreach ($notes as &$note) {
-        if ($note['id'] === $id) {
-            $note['title']   = $title;
-            $note['content'] = $content;
-            $note['color']   = $color;
-            $found           = true;
-            break;
-        }
-    }
-    unset($note);
-    if (! $found) {
-        wp_send_json_error('Note not found', 404);
-    }
-    gp_child_save_notes($notes);
-    wp_send_json_success();
-});
-
-add_action('wp_ajax_gp_child_delete_note', function (): void {
-    check_ajax_referer('gp_child_notes', 'nonce');
-    if (! current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized', 403);
-    }
-    $id    = sanitize_text_field(wp_unslash($_POST['id'] ?? ''));
-    $notes = array_filter(gp_child_get_notes(), fn($n) => $n['id'] !== $id);
-    gp_child_save_notes(array_values($notes));
-    wp_send_json_success();
-});
-
-// — Custom 404 page ───────────────────────────────────────────────────────────
-add_action('init', function (): void {
-    $ep = (array) get_option('blueflamingo_plugin_error_page_settings', []);
-    if (! empty($ep['activate_404'])) {
-        add_filter('404_template', 'gp_child_custom_404_template');
-    }
-});
-
-function gp_child_custom_404_template(string $template): string
-{
-    global $wp_query, $post;
-
-    $ep          = (array) get_option('blueflamingo_plugin_error_page_settings', []);
-    $custom_page = get_post(intval($ep['custom_404_page'] ?? 0));
-
-    if (! ($custom_page instanceof WP_Post)) {
-        return $template;
-    }
-
-    $post = $custom_page; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
-
-    $wp_query->posts             = [$post];
-    $wp_query->queried_object_id = $post->ID;
-    $wp_query->queried_object    = $post;
-    $wp_query->post_count        = 1;
-    $wp_query->found_posts       = 1;
-    $wp_query->is_404            = false;
-    $wp_query->is_page           = true;
-    $wp_query->is_singular       = true;
-
-    return get_page_template();
-}

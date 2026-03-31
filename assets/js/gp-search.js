@@ -22,10 +22,12 @@
     var results    = wrap.querySelector('.gp-search-results');
     var postTypes  = wrap.dataset.postTypes  || 'post,page';
     var limit      = wrap.dataset.limit       || 5;
+    var mode       = wrap.dataset.mode        || 'live_ajax';
     var activeIdx  = -1;
     var items      = [];
 
-    if (!input || !results) return;
+    if (!input) return;
+    if (mode === 'results_page' || !results) return;
 
     function setExpanded(open) {
       input.setAttribute('aria-expanded', open ? 'true' : 'false');

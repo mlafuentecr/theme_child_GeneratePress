@@ -39,6 +39,15 @@ $includes = [
 
     //Admin / Back Office
     '/inc/admin-settings.php',
+    '/inc/cleanup.php',
+    '/inc/duplicate-content.php',
+    '/inc/layout-defaults.php',
+    '/inc/rest-api.php',
+    '/inc/options-runtime.php',
+    '/inc/email-redirect.php',
+    '/inc/notes.php',
+    '/inc/analytics.php',
+    '/inc/cache-versioning.php',
 
 
     '/inc/footer.php',
@@ -49,6 +58,7 @@ $includes = [
     '/inc/animations.php',
     '/inc/parallax.php',
     '/inc/webp-converter.php',
+    '/inc/search.php',
     '/inc/search_result/index.php',
 
 

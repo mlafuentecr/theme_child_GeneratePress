@@ -1,6 +1,12 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+if (!function_exists('gp_child_get_search_results_page_url')) {
+    function gp_child_get_search_results_page_url() {
+        return home_url('/search/');
+    }
+}
+
 /**
  * Search post types config
  */
@@ -40,9 +46,14 @@ function custom_post_type_search_shortcode($atts)
     }
 
     // Accept both ?q= and ?s=
-    $search_query = sanitize_text_field(
-        $_GET['q'] ?? $_GET['s'] ?? ''
-    );
+    $search_query = sanitize_text_field($_GET['q'] ?? $_GET['s'] ?? '');
+    $requested_types = sanitize_text_field($_GET['post_types'] ?? '');
+    if ($requested_types !== '') {
+        $requested_types = array_filter(array_map('sanitize_key', explode(',', $requested_types)));
+        if (! empty($requested_types)) {
+            $atts['post_type'] = $requested_types;
+        }
+    }
 
     $search_year = sanitize_text_field($_GET['search_year'] ?? '');
     $paged       = 1;
@@ -76,7 +87,7 @@ function custom_post_type_search_shortcode($atts)
             data-current-page="1"
             data-max-pages="<?php echo esc_attr($query->max_num_pages); ?>">
 
-            <form class="search-results__form" action="<?php echo esc_url(home_url('/search/')); ?>" method="get" role="search">
+            <form class="search-results__form" action="<?php echo esc_url(gp_child_get_search_results_page_url()); ?>" method="get" role="search">
                 <div class="search-results__input-wrap">
                     <input type="search"
                            name="q"
@@ -93,6 +104,7 @@ function custom_post_type_search_shortcode($atts)
                             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
                     </button>
+                    <input type="hidden" name="post_types" value="<?php echo esc_attr(implode(',', $atts['post_type'])); ?>">
                 </div>
             </form>
 
@@ -129,8 +141,14 @@ function custom_post_type_search_shortcode($atts)
  * ENQUEUE
  * ------------------------------------------------------------------------- */
 add_action('wp_enqueue_scripts', function () {
-
-    if (!is_page('search')) return;
+    $target_id = absint((gp_child_get_search_settings()['results_page_id'] ?? 0));
+    if ($target_id > 0) {
+        if (!is_page($target_id)) {
+            return;
+        }
+    } elseif (!is_page('search')) {
+        return;
+    }
 
     $base     = get_stylesheet_directory_uri() . '/inc/search_result/assets';
     $base_dir = get_stylesheet_directory() . '/inc/search_result/assets';

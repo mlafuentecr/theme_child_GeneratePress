@@ -28,6 +28,67 @@ function gp_child_asset_version( string $abs_path ): string {
 }
 
 /* ============================================================
+ * Environment detection
+ * ============================================================ */
+
+function gp_child_get_site_info_settings(): array {
+    return (array) get_option( 'blueflamingo_plugin_general_settings', [] );
+}
+
+function gp_child_normalize_site_fragment( string $value ): string {
+    $value = strtolower( trim( $value ) );
+    $value = preg_replace( '#^https?://#', '', $value );
+    $value = preg_replace( '#^www\.#', '', $value );
+    return trim( $value, " \t\n\r\0\x0B/" );
+}
+
+function gp_child_current_site_fragment(): string {
+    return gp_child_normalize_site_fragment( (string) home_url() );
+}
+
+function gp_child_site_matches( string $configured_value ): bool {
+    $configured_value = gp_child_normalize_site_fragment( $configured_value );
+    if ( $configured_value === '' ) {
+        return false;
+    }
+
+    return str_contains( gp_child_current_site_fragment(), $configured_value );
+}
+
+function gp_child_get_environment(): string {
+    $settings = gp_child_get_site_info_settings();
+    $staging  = (string) ( $settings['staging_url'] ?? '' );
+    $live     = (string) ( $settings['live_url'] ?? '' );
+
+    if ( gp_child_site_matches( $staging ) ) {
+        return 'staging';
+    }
+
+    if ( gp_child_site_matches( $live ) ) {
+        return 'live';
+    }
+
+    return 'unknown';
+}
+
+function gp_child_is_staging_environment(): bool {
+    return gp_child_get_environment() === 'staging';
+}
+
+function gp_child_is_live_environment(): bool {
+    return gp_child_get_environment() === 'live';
+}
+
+add_filter( 'body_class', function ( array $classes ): array {
+    $classes[] = 'gp-env-' . gp_child_get_environment();
+    return $classes;
+} );
+
+add_filter( 'admin_body_class', function ( string $classes ): string {
+    return trim( $classes . ' gp-env-' . gp_child_get_environment() );
+} );
+
+/* ============================================================
  * Body classes
  * ============================================================ */
 

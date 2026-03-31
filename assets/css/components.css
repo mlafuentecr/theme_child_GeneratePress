@@ -6,84 +6,96 @@
 /* ── Buttons ────────────────────────────────────────────────────────────────── */
 
 .btn {
-  display:         inline-flex;
-  align-items:     center;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap:             var(--space-2);
-  padding:         var(--space-2) var(--space-5);
-  font-size:       var(--font-size-sm);
-  font-weight:     var(--font-weight-semibold);
-  line-height:     1;
-  border-radius:   0;
-  border:          var(--border-width) var(--border-style) transparent;
-  cursor:          pointer;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  border-radius: 0;
+  border: var(--border-width) var(--border-style) transparent;
+  cursor: pointer;
   text-decoration: none;
-  transition:      background-color var(--transition-fast),
-                   color var(--transition-fast),
-                   border-color var(--transition-fast),
-                   box-shadow var(--transition-fast);
-  white-space:     nowrap;
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  white-space: nowrap;
 }
 
 .btn:focus-visible {
-  outline:        2px solid var(--color-primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 /* Variants */
 .btn--primary {
   background-color: var(--color-primary);
-  border-color:     var(--color-primary);
-  color:            var(--color-text-inverse);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
 }
+
 .btn--primary:hover {
   background-color: var(--color-btn-hover);
-  border-color:     var(--color-btn-hover);
-  color:            var(--color-btn-hover-text);
+  border-color: var(--color-btn-hover);
+  color: var(--color-btn-hover-text);
 }
 
 .btn--secondary {
   background-color: transparent;
-  border-color:     var(--color-primary);
-  color:            var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
+
 .btn--secondary:hover {
   background-color: var(--color-btn-hover);
-  border-color:     var(--color-btn-hover);
-  color:            var(--color-btn-hover-text);
+  border-color: var(--color-btn-hover);
+  color: var(--color-btn-hover-text);
 }
 
 .btn--ghost {
   background-color: transparent;
-  border-color:     var(--color-border);
-  color:            var(--color-text);
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
+
 .btn--ghost:hover {
   background-color: var(--color-btn-hover);
-  border-color:     var(--color-btn-hover);
-  color:            var(--color-btn-hover-text);
+  border-color: var(--color-btn-hover);
+  color: var(--color-btn-hover-text);
 }
 
 /* Sizes */
-.btn--sm { padding: var(--space-1) var(--space-3); font-size: var(--font-size-xs); }
-.btn--lg { padding: var(--space-3) var(--space-8); font-size: var(--font-size-md); }
+.btn--sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+}
+
+.btn--lg {
+  padding: var(--space-3) var(--space-8);
+  font-size: var(--font-size-md);
+}
 
 /* ── Card ───────────────────────────────────────────────────────────────────── */
 
 .card {
-  background:    var(--color-bg);
-  border:        var(--border-width) var(--border-style) var(--color-border);
+  background: var(--color-bg);
+  border: var(--border-width) var(--border-style) var(--color-border);
   border-radius: 0;
-  overflow:      hidden;
-  transition:    box-shadow var(--transition-base);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
 }
 
-.card:hover { box-shadow: var(--shadow-md); }
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
 
 .card__image img {
-  display:    block;
-  width:      100%;
-  height:     auto;
+  display: block;
+  width: 100%;
+  height: auto;
   object-fit: cover;
 }
 
@@ -92,91 +104,129 @@
 }
 
 .card__title {
-  font-size:     var(--font-size-lg);
-  font-weight:   var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-2);
 }
 
 .card__excerpt {
-  color:       var(--color-text-muted);
-  font-size:   var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
 }
 
 /* ── Badge ──────────────────────────────────────────────────────────────────── */
 
 .badge {
-  display:       inline-block;
-  padding:       var(--space-1) var(--space-2);
-  font-size:     var(--font-size-xs);
-  font-weight:   var(--font-weight-semibold);
-  line-height:   1;
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
   border-radius: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.badge--primary  { background: var(--color-primary-light); color: var(--color-primary-dark); }
-.badge--success  { background: #dcfce7; color: #15803d; }
-.badge--warning  { background: #fef9c3; color: #854d0e; }
-.badge--error    { background: #fee2e2; color: #991b1b; }
-.badge--neutral  { background: var(--color-bg-alt); color: var(--color-text-muted); }
+.badge--primary {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.badge--success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge--warning {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.badge--error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge--neutral {
+  background: var(--color-bg-alt);
+  color: var(--color-text-muted);
+}
 
 /* ── Alert / Notice ─────────────────────────────────────────────────────────── */
 
 .alert {
-  display:       flex;
-  gap:           var(--space-3);
-  padding:       var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
   border-radius: var(--radius-md);
-  border-width:  var(--border-width);
-  border-style:  var(--border-style);
-  font-size:     var(--font-size-sm);
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  font-size: var(--font-size-sm);
   margin-bottom: var(--space-4);
 }
 
-.alert--info    { background: var(--color-primary-light); border-color: #93c5fd; color: #1e3a5f; }
-.alert--success { background: #f0fdf4; border-color: #86efac; color: #14532d; }
-.alert--warning { background: #fefce8; border-color: #fde047; color: #713f12; }
-.alert--error   { background: #fef2f2; border-color: #fca5a5; color: #7f1d1d; }
+.alert--info {
+  background: var(--color-primary-light);
+  border-color: #93c5fd;
+  color: #1e3a5f;
+}
+
+.alert--success {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #14532d;
+}
+
+.alert--warning {
+  background: #fefce8;
+  border-color: #fde047;
+  color: #713f12;
+}
+
+.alert--error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #7f1d1d;
+}
 
 /* ── Form elements ──────────────────────────────────────────────────────────── */
 
 .form-group {
-  display:       flex;
+  display: flex;
   flex-direction: column;
-  gap:           var(--space-1);
+  gap: var(--space-1);
   margin-bottom: var(--space-4);
 }
 
 .form-label {
-  font-size:   var(--font-size-sm);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color:       var(--color-text);
+  color: var(--color-text);
 }
 
 .form-control {
-  width:         100%;
-  padding:       var(--space-2) var(--space-3);
-  font-size:     var(--font-size-base);
-  font-family:   var(--font-base);
-  color:         var(--color-text);
-  background:    var(--color-bg);
-  border:        var(--border-width) var(--border-style) var(--color-border);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: var(--border-width) var(--border-style) var(--color-border);
   border-radius: var(--radius-md);
-  transition:    border-color var(--transition-fast), box-shadow var(--transition-fast);
-  appearance:    none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  appearance: none;
 }
 
 .form-control:focus {
-  outline:      none;
+  outline: none;
   border-color: var(--color-primary);
-  box-shadow:   0 0 0 3px rgb(0 115 170 / 0.15);
+  box-shadow: 0 0 0 3px rgb(0 115 170 / 0.15);
 }
 
 .form-hint {
   font-size: var(--font-size-xs);
-  color:     var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* ── reCAPTCHA (hidden via setting, fallback here) ──────────────────────────── */
@@ -198,34 +248,33 @@
 input[type="submit"],
 input[type="button"],
 input[type="reset"] {
-  display:          inline-flex  !important;
-  align-items:      center       !important;
-  justify-content:  center       !important;
-  padding-top:      0.84rem      !important;
-  padding-bottom:   0.84rem      !important;
-  padding-left:     1.5rem       !important;
-  padding-right:    1.5rem       !important;
-  font-family:      var(--font-base)              !important;
-  font-size:        var(--font-size-sm)            !important;
-  font-weight:      var(--font-weight-semibold)    !important;
-  line-height:      1.25                          !important;
-  color:            var(--color-btn-text)         !important;
-  background-color: var(--color-btn-bg)           !important;
-  border:           none                          !important;
-  border-radius:    0                             !important;
-  cursor:           pointer;
-  text-decoration:  none                          !important;
-  letter-spacing:   0.02em;
-  transition:       background-color var(--transition-fast),
-                    color            var(--transition-fast),
-                    box-shadow       var(--transition-fast);
-  white-space:      nowrap;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-top: 0.84rem !important;
+  padding-bottom: 0.84rem !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: 1.25 !important;
+  color: var(--color-btn-text) !important;
+  background-color: var(--color-btn-bg) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+  text-decoration: none !important;
+  letter-spacing: 0.02em;
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  white-space: nowrap;
 }
 
 /*
  * Hover — covers:
  *   - Standard WP / GeneratePress buttons
- *   - GenerateBlocks text elements used as buttons  [class*="gb-text-"]
  *   - GenerateBlocks button elements                [class*="gb-button-"]
  *   GenerateBlocks injects its own hover rules in style-6.css — we override
  *   them here with !important using the same :is(:hover,:focus) pattern GB uses.
@@ -237,11 +286,10 @@ input[type="reset"] {
 input[type="submit"]:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
-[class*="gb-text-"]:is(:hover, :focus),
 [class*="gb-button-"]:is(:hover, :focus) {
-  background-color: var(--color-btn-hover)      !important;
-  color:            var(--color-btn-hover-text)  !important;
-  text-decoration:  none                        !important;
+  background-color: var(--color-btn-hover) !important;
+  color: var(--color-btn-hover-text) !important;
+  text-decoration: none !important;
 }
 
 .button:focus-visible,
@@ -251,21 +299,20 @@ input[type="reset"]:hover,
 input[type="submit"]:focus-visible,
 input[type="button"]:focus-visible,
 input[type="reset"]:focus-visible,
-[class*="gb-text-"]:focus-visible,
 [class*="gb-button-"]:focus-visible {
-  outline:        2px solid var(--color-btn-hover);
+  outline: 2px solid var(--color-btn-hover);
   outline-offset: 3px;
 }
 
 /* Outline / ghost variant — add class "wp-block-button is-style-outline" in Gutenberg */
 .wp-block-button.is-style-outline .wp-block-button__link {
   background-color: transparent !important;
-  color:            var(--color-primary) !important;
-  border:           2px solid var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
 }
 
 .wp-block-button.is-style-outline .wp-block-button__link:hover {
-  background-color: var(--color-btn-hover)     !important;
-  border-color:     var(--color-btn-hover)     !important;
-  color:            var(--color-btn-hover-text) !important;
+  background-color: var(--color-btn-hover) !important;
+  border-color: var(--color-btn-hover) !important;
+  color: var(--color-btn-hover-text) !important;
 }
