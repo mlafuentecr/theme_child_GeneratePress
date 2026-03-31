@@ -472,6 +472,11 @@ function gp_child_sanitize_email_redirect(mixed $input): array
     return $clean;
 }
 
+function gp_child_render_tab_help(string $text): void
+{
+    echo '<p class="description" style="margin-top:18px;padding-top:14px;border-top:1px solid #e0e0e0;">' . esc_html($text) . '</p>';
+}
+
 // ── 5. Settings page renderer ─────────────────────────────────────────────────
 
 function gp_child_render_settings_page(): void
@@ -855,6 +860,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save Site Info', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Define the live and staging URLs here so the theme can detect the current environment and power other features safely.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Core Features ─────────────────────────────────────── */ ?>
@@ -1161,6 +1167,7 @@ function gp_child_render_settings_page(): void
 
       <?php submit_button(__('Save Core Features', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Use this tab for global WordPress and GeneratePress cleanup, REST API controls, and default layout behavior across the site.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Options ────────────────────────────────────────────── */ ?>
@@ -1314,6 +1321,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save Options', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('This tab groups utility tools and operational toggles such as test modes, admin restrictions, default images, and content helpers.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Email Redirect ───────────────────────────────────── */ ?>
@@ -1356,6 +1364,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save Email Redirect Settings', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Redirect outgoing email here when testing so messages go to a safe inbox instead of real recipients.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Google Analytics / GTM ─────────────────────────────── */ ?>
@@ -1412,6 +1421,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save Analytics', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Configure front-end tracking scripts here, including GA4, GTM, and the WhatConverts integration.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Custom 404 Page ──────────────────────────────────────── */ ?>
@@ -1446,6 +1456,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save 404 Settings', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Choose a normal WordPress page to act as the site-wide 404 template.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Search ─────────────────────────────────────────────── */ ?>
@@ -1500,6 +1511,7 @@ function gp_child_render_settings_page(): void
     <p class="description">
       <?php esc_html_e('Recommended setup: create a page like "Search", place [post_search_result] on it, then select that page here and enable Redirect to results page.', 'generatepress-child'); ?>
     </p>
+    <?php gp_child_render_tab_help(__('Use this tab to control how [gp_search_bar] behaves and which page should render [post_search_result] when using redirect mode.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Cache Buster ─────────────────────────────────────────── */ ?>
@@ -1589,6 +1601,8 @@ function gp_child_render_settings_page(): void
       </ul>
     </div>
 
+    <?php gp_child_render_tab_help(__('Use Cache Buster whenever browsers or caching layers keep serving old CSS, JS, or image URLs after updates.', 'generatepress-child')); ?>
+
   </div>
 
   <?php /* ── Notes ──────────────────────────────────────────────── */ ?>
@@ -1667,6 +1681,8 @@ function gp_child_render_settings_page(): void
       <?php endif; ?>
     </div>
 
+    <?php gp_child_render_tab_help(__('Internal Notes are lightweight reminders for the team and can also appear as dashboard notices depending on visibility settings.', 'generatepress-child')); ?>
+
   </div>
 
   <?php /* ── WebP Converter ─────────────────────────────────────────── */ ?>
@@ -1713,6 +1729,7 @@ function gp_child_render_settings_page(): void
       </table>
       <?php submit_button(__('Save WebP Settings', 'generatepress-child')); ?>
     </form>
+    <?php gp_child_render_tab_help(__('Enable automatic WebP conversion here to keep uploaded images lighter and more consistent across the site.', 'generatepress-child')); ?>
   </div>
 
 </div><!-- .gp-child-settings -->

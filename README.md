@@ -1,161 +1,199 @@
 # GeneratePress Child Theme — Blue Flamingo
 
-Child theme built on GeneratePress. All custom logic lives in `inc/` and is loaded from `functions.php`.
-git push blueflamingo main
+Child theme built on GeneratePress. Most custom logic lives in `inc/` and is loaded from `functions.php`.
 
----
+## Admin Panel
 
-## Structure Overview
+Settings live under:
 
-```
-generatepress-child/
-├── assets/
-│   ├── css/
-│   ├── js/
-├── inc/
-│   ├── setup.php
-│   ├── enqueue.php
-│   ├── admin-settings.php
-│   ├── animations.php
-│   ├── parallax.php
-│   ├── modal.php
-│   ├── dfi.php
-│   ├── helpers.php
-│   ├── patterns.php
-│   ├── popup-block.php
-│   ├── search-header.php
-│   └── search_result/
-└── functions.php
-```
+`Appearance > Blue Flamingo Settings`
 
----
+### Site Info
 
-## Core Modules
+Stores:
 
-### setup.php
+- `Live Site URL`
+- `Staging Site URL`
 
-Declares theme support (`title-tag`, `post-thumbnails`) and registers two navigation menus: **Primary** and **Footer**.
+These values are used by the theme to detect the current environment and power features like:
 
-### enqueue.php
+- Stripe test mode
+- WP Simple Pay test mode
+- Email Redirect
 
-Enqueues:
+### Core Features
 
-- `assets/css/theme.css`
-- `assets/js/theme.js`
+This tab is for global cleanup and layout behavior.
 
-Versioning combines `GP_CHILD_VERSION` with a manual cache-buster counter stored in the database.
+Includes:
 
----
+- WordPress cleanup toggles such as emojis, embeds, dashicons, feeds, XML-RPC, and REST API controls
+- GeneratePress header/footer removal toggles
+- Default layout controls for sidebar, content container, footer widgets, and title visibility
 
-## Admin Settings
+Use this tab when you want a site-wide default behavior rather than page-by-page configuration.
 
-Located under:
-**Appearance → Blue Flamingo Settings**
+### Options
 
-Tabs:
+This tab groups operational tools and utility settings.
 
-- General (Live / Staging URLs)
-- Analytics (GA4 / GTM)
+Includes:
+
+- Stripe test mode
+- WP Simple Pay test mode
+- Show all meta fields
+- Disable password-change emails
+- User registration date column
+- Duplicate Pages & Posts
 - Default Featured Image
-- Advanced (Cache Buster)
+- WhatConverts ID
+- Admin and plugin restriction tools
 
-Settings use the same option keys as the `bf-fireball` plugin to preserve data.
+### Email Redirect
 
----
+Redirects outgoing mail to a safe inbox for testing.
 
-## Features
+Available controls:
 
-### Scroll Animations
+- Redirect on staging/development
+- Redirect on production
+- Redirect email address
 
-Activated via CSS classes:
+When active, outgoing mail gets:
 
-- `fade-up`
-- `fade-down`
-- `fade-left`
-- `fade-right`
-- `zoom-in`
-- `zoom-out`
+- recipient replaced with the configured test email
+- `[TEST]` added to the subject
+- original recipient added into the message for reference
 
-Optional attributes:
+### Analytics
 
-- `data-animate-delay="200"`
-- `data-animate-duration="1000"`
+Controls front-end tracking output.
 
-Respects `prefers-reduced-motion`.
+Includes:
 
----
+- GA4 ID
+- GTM container ID
+- script position (`Head` or `Footer`)
+- include logged-in users
+- WhatConverts support via the Options tab
 
-### Parallax
+### 404 Page
 
-Activate with:
+Lets you pick a normal WordPress page to be used as the custom 404 template.
 
-```
-<div data-parallax></div>
-```
+### Search
 
-Options:
-
-- `data-parallax-speed`
-- `data-parallax-axis`
-- `data-parallax-direction`
-
----
-
-### Modal System
+Controls how the theme search shortcodes behave.
 
 Shortcodes:
 
+```text
+[gp_search_bar]
+[post_search_result]
 ```
+
+Modes:
+
+- `Live search dropdown`: AJAX results below the input
+- `Redirect to results page`: sends visitors to a selected page that contains `[post_search_result]`
+
+Recommended setup:
+
+1. Create a page such as `Search`
+2. Add `[post_search_result]` to that page
+3. Select that page in the Search tab
+4. Use `[gp_search_bar]` anywhere you want the search field
+
+### Cache Buster
+
+Use this tab when CSS, JS, or images seem cached.
+
+Includes:
+
+- manual CSS/JS version counter
+- optional image URL versioning
+- documentation notes for clearing CDN/firewall cache
+
+### Notes
+
+Internal note system for the team.
+
+Includes:
+
+- role-based visibility
+- editable color-coded notes
+- dashboard notice output
+
+### WebP
+
+Controls automatic conversion of uploaded images to WebP.
+
+Includes:
+
+- enable/disable conversion
+- max width
+- max height
+- quality
+
+## Important Shortcodes
+
+### Search Bar
+
+```text
+[gp_search_bar]
+```
+
+Optional attributes:
+
+```text
+[gp_search_bar placeholder="Search..." post_types="post,page" limit="5"]
+```
+
+### Search Results
+
+```text
+[post_search_result]
+```
+
+### Modal System
+
+```text
 [gp_modal id="x" size="md"]...[/gp_modal]
 [gp_modal_trigger id="x"]Open[/gp_modal_trigger]
 ```
 
-Supports keyboard navigation and focus trapping.
+## Notable Modules
 
----
-
-### Search System
-
-Shortcode:
-
-```
-[post_search_result]
-```
-
-Searches across Posts, Pages, Solutions, Use Cases, and Industries.
-Supports AJAX load-more.
-
----
-
-### Header Search
-
-Shortcode:
-
-```
-[gp_search_bar]
-```
-
-Adds a clean inline search input anywhere.
-
----
+- `inc/admin-settings.php`: admin UI and settings registration
+- `inc/helpers.php`: environment detection helpers and shared theme helpers
+- `inc/cleanup.php`: WordPress and front-end cleanup toggles
+- `inc/options-runtime.php`: Options tab runtime behavior
+- `inc/email-redirect.php`: outgoing mail redirect logic
+- `inc/analytics.php`: GA4, GTM, and WhatConverts output
+- `inc/search.php`: `[gp_search_bar]`
+- `inc/search_result/index.php`: `[post_search_result]`
+- `inc/layout-defaults.php`: GeneratePress layout defaults
+- `inc/duplicate-content.php`: duplicate posts/pages
+- `inc/notes.php`: internal notes and dashboard notices
+- `inc/rest-api.php`: JSON Basic Auth runtime
 
 ## Development Notes
 
-- All custom logic lives inside `inc/`
-- No duplicated functionality when `bf-fireball` plugin is active
-- SVG uploads enabled
-- Comments disabled globally
-- Full-width layout enforced
-- Custom block pattern category registered
+- Several settings intentionally preserve the same option keys used by the old `bf-fireball` plugin
+- Environment detection is shared across multiple modules
+- Some legacy plugin features are still intentionally deferred because they are higher risk:
+  - custom admin URL
+  - debug runtime controls
+  - image sharpening
 
----
+See also:
+
+- `docs/blue-flamingo-options-parity.md`
 
 ## Requirements
 
 - WordPress 6+
 - GeneratePress Theme
-
----
 
 ## License
 
