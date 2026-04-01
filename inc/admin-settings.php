@@ -235,6 +235,21 @@ function gp_child_admin_js(): string
                 });
             }
         });
+
+        function toggleSearchResultsPageRow() {
+            var selected = document.querySelector('input[name="gp_child_search_settings[mode]"]:checked');
+            var row = document.querySelector('[data-search-results-page-row]');
+            if (!row) { return; }
+            row.style.display = selected && selected.value === 'results_page' ? '' : 'none';
+        }
+
+        document.addEventListener('change', function(e){
+            if (e.target && e.target.name === 'gp_child_search_settings[mode]') {
+                toggleSearchResultsPageRow();
+            }
+        });
+
+        toggleSearchResultsPageRow();
     });
 }());
 JS;
@@ -510,14 +525,12 @@ function gp_child_render_settings_page(): void
     };
 
     $tabs = [
-        'site-info'  => __('Site Info',    'generatepress-child'),
         'core-features' => __('Core Features', 'generatepress-child'),
         'options'    => __('Options',      'generatepress-child'),
         'email-redirect' => __('Email Redirect', 'generatepress-child'),
         'analytics'  => __('Analytics',    'generatepress-child'),
-        '404'        => __('404 Page',     'generatepress-child'),
-        'search'     => __('Search',       'generatepress-child'),
-        'cache'      => __('Cache Buster', 'generatepress-child'),
+        'pages-search' => __('Pages & Search', 'generatepress-child'),
+        'cache'      => __('Cache', 'generatepress-child'),
         'notes'      => __('Notes',        'generatepress-child'),
         'webp'       => __('WebP',         'generatepress-child'),
     ];
@@ -537,7 +550,7 @@ function gp_child_render_settings_page(): void
     display: -ms-flexbox;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0;
     margin: 18px 0 0;
     padding: 0;
@@ -546,9 +559,10 @@ function gp_child_render_settings_page(): void
 
   .gp-tab-btn {
     display: inline-block;
-    padding: 9px 17px;
+    flex: 0 0 auto;
+    padding: 8px 14px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     color: #50575e;
     background: #f1f1f1;
@@ -825,43 +839,6 @@ function gp_child_render_settings_page(): void
     </button>
     <?php endforeach; ?>
   </nav>
-
-  <?php /* ── Site Info ─────────────────────────────────────────── */ ?>
-  <div id="gp-tab-site-info" class="gp-tab-panel" role="tabpanel">
-    <form method="post" action="options.php">
-      <?php settings_fields('gp_child_site_info_group'); ?>
-      <div style="margin-bottom:18px;padding:12px 14px;border:1px solid #dcdcde;border-left:4px solid <?php echo esc_attr($environment_color); ?>;background:#fff;">
-        <strong><?php esc_html_e('Current Environment:', 'generatepress-child'); ?></strong>
-        <span style="color:<?php echo esc_attr($environment_color); ?>;font-weight:600;">
-          <?php echo esc_html($environment_label); ?>
-        </span>
-        <p style="margin:6px 0 0;color:#646970;">
-          <?php esc_html_e('Detected by comparing the current site URL with the Live Site URL and Staging Site URL below.', 'generatepress-child'); ?>
-        </p>
-      </div>
-      <table class="form-table" role="presentation">
-        <tr>
-          <th scope="row"><?php esc_html_e('Live Site URL', 'generatepress-child'); ?></th>
-          <td>
-            <input type="text" name="blueflamingo_plugin_general_settings[live_url]"
-              value="<?php echo esc_attr($gen['live_url'] ?? ''); ?>" class="regular-text" placeholder="example.com">
-            <p class="description"><?php esc_html_e('Excluding https://www.', 'generatepress-child'); ?></p>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row"><?php esc_html_e('Staging Site URL', 'generatepress-child'); ?></th>
-          <td>
-            <input type="text" name="blueflamingo_plugin_general_settings[staging_url]"
-              value="<?php echo esc_attr($gen['staging_url'] ?? ''); ?>" class="regular-text"
-              placeholder="staging.example.com">
-            <p class="description"><?php esc_html_e('Excluding https://www.', 'generatepress-child'); ?></p>
-          </td>
-        </tr>
-      </table>
-      <?php submit_button(__('Save Site Info', 'generatepress-child')); ?>
-    </form>
-    <?php gp_child_render_tab_help(__('Define the live and staging URLs here so the theme can detect the current environment and power other features safely.', 'generatepress-child')); ?>
-  </div>
 
   <?php /* ── Core Features ─────────────────────────────────────── */ ?>
   <div id="gp-tab-core-features" class="gp-tab-panel" role="tabpanel">
@@ -1172,6 +1149,45 @@ function gp_child_render_settings_page(): void
 
   <?php /* ── Options ────────────────────────────────────────────── */ ?>
   <div id="gp-tab-options" class="gp-tab-panel" role="tabpanel">
+    <form method="post" action="options.php" style="margin-bottom:24px;">
+      <?php settings_fields('gp_child_site_info_group'); ?>
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('Environment', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Store the live and staging URLs used by the theme to detect the current environment.', 'generatepress-child'); ?>
+        </p>
+        <div style="margin-bottom:18px;padding:12px 14px;border:1px solid #dcdcde;border-left:4px solid <?php echo esc_attr($environment_color); ?>;background:#fff;">
+          <strong><?php esc_html_e('Current Environment:', 'generatepress-child'); ?></strong>
+          <span style="color:<?php echo esc_attr($environment_color); ?>;font-weight:600;">
+            <?php echo esc_html($environment_label); ?>
+          </span>
+          <p style="margin:6px 0 0;color:#646970;">
+            <?php esc_html_e('Detected by comparing the current site URL with the Live Site URL and Staging Site URL below.', 'generatepress-child'); ?>
+          </p>
+        </div>
+        <table class="form-table" role="presentation">
+          <tr>
+            <th scope="row"><?php esc_html_e('Live Site URL', 'generatepress-child'); ?></th>
+            <td>
+              <input type="text" name="blueflamingo_plugin_general_settings[live_url]"
+                value="<?php echo esc_attr($gen['live_url'] ?? ''); ?>" class="regular-text" placeholder="example.com">
+              <p class="description"><?php esc_html_e('Excluding https://www.', 'generatepress-child'); ?></p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><?php esc_html_e('Staging Site URL', 'generatepress-child'); ?></th>
+            <td>
+              <input type="text" name="blueflamingo_plugin_general_settings[staging_url]"
+                value="<?php echo esc_attr($gen['staging_url'] ?? ''); ?>" class="regular-text"
+                placeholder="staging.example.com">
+              <p class="description"><?php esc_html_e('Excluding https://www.', 'generatepress-child'); ?></p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <?php submit_button(__('Save Environment', 'generatepress-child'), 'secondary'); ?>
+    </form>
+
     <form method="post" action="options.php">
       <?php settings_fields('gp_child_options_group'); ?>
       <table class="form-table" role="presentation">
@@ -1424,10 +1440,15 @@ function gp_child_render_settings_page(): void
     <?php gp_child_render_tab_help(__('Configure front-end tracking scripts here, including GA4, GTM, and the WhatConverts integration.', 'generatepress-child')); ?>
   </div>
 
-  <?php /* ── Custom 404 Page ──────────────────────────────────────── */ ?>
-  <div id="gp-tab-404" class="gp-tab-panel" role="tabpanel">
+  <?php /* ── Pages & Search ─────────────────────────────────────── */ ?>
+  <div id="gp-tab-pages-search" class="gp-tab-panel" role="tabpanel">
     <form method="post" action="options.php">
       <?php settings_fields('gp_child_404_group'); ?>
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('404 Page', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Choose a normal WordPress page to be used as the custom 404 template.', 'generatepress-child'); ?>
+        </p>
       <table class="form-table" role="presentation">
         <tr>
           <th scope="row"><?php esc_html_e('Activate', 'generatepress-child'); ?></th>
@@ -1454,15 +1475,17 @@ function gp_child_render_settings_page(): void
           </td>
         </tr>
       </table>
-      <?php submit_button(__('Save 404 Settings', 'generatepress-child')); ?>
+      </div>
+      <?php submit_button(__('Save 404 Settings', 'generatepress-child'), 'secondary'); ?>
     </form>
-    <?php gp_child_render_tab_help(__('Choose a normal WordPress page to act as the site-wide 404 template.', 'generatepress-child')); ?>
-  </div>
 
-  <?php /* ── Search ─────────────────────────────────────────────── */ ?>
-  <div id="gp-tab-search" class="gp-tab-panel" role="tabpanel">
-    <form method="post" action="options.php">
+    <form method="post" action="options.php" style="margin-top:24px;">
       <?php settings_fields('gp_child_search_group'); ?>
+      <div class="gp-cache-section">
+        <h3 class="gp-cache-section-title"><?php esc_html_e('Search', 'generatepress-child'); ?></h3>
+        <p class="gp-cache-section-desc">
+          <?php esc_html_e('Control how the search bar behaves and which page should render search results.', 'generatepress-child'); ?>
+        </p>
       <table class="form-table" role="presentation">
         <tr>
           <th scope="row"><?php esc_html_e('Search Mode', 'generatepress-child'); ?></th>
@@ -1482,7 +1505,7 @@ function gp_child_render_settings_page(): void
             </p>
           </td>
         </tr>
-        <tr>
+        <tr data-search-results-page-row <?php echo (($search_settings['mode'] ?? 'live_ajax') === 'results_page') ? '' : 'style="display:none;"'; ?>>
           <th scope="row"><?php esc_html_e('Results Page', 'generatepress-child'); ?></th>
           <td>
             <select name="gp_child_search_settings[results_page_id]">
@@ -1500,6 +1523,7 @@ function gp_child_render_settings_page(): void
           </td>
         </tr>
       </table>
+      </div>
       <?php submit_button(__('Save Search Settings', 'generatepress-child')); ?>
     </form>
 
@@ -1511,7 +1535,7 @@ function gp_child_render_settings_page(): void
     <p class="description">
       <?php esc_html_e('Recommended setup: create a page like "Search", place [post_search_result] on it, then select that page here and enable Redirect to results page.', 'generatepress-child'); ?>
     </p>
-    <?php gp_child_render_tab_help(__('Use this tab to control how [gp_search_bar] behaves and which page should render [post_search_result] when using redirect mode.', 'generatepress-child')); ?>
+    <?php gp_child_render_tab_help(__('Keep related page-routing tools together here: 404 handling for missing URLs and search routing for visitors looking for content.', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Cache Buster ─────────────────────────────────────────── */ ?>
