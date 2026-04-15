@@ -492,6 +492,18 @@ function gp_child_render_tab_help(string $text): void
     echo '<p class="description" style="margin-top:18px;padding-top:14px;border-top:1px solid #e0e0e0;">' . esc_html($text) . '</p>';
 }
 
+function gp_child_recommended_row_class(array $opts, string $key): string
+{
+    return empty($opts[$key]) ? 'gp-recommended-row gp-recommended-off' : 'gp-recommended-row';
+}
+
+function gp_child_render_recommended_note(array $opts, string $key): void
+{
+    if (empty($opts[$key])) {
+        echo '<span class="gp-recommended-note">' . esc_html__('Recommended setting is currently off.', 'generatepress-child') . '</span>';
+    }
+}
+
 // ── 5. Settings page renderer ─────────────────────────────────────────────────
 
 function gp_child_render_settings_page(): void
@@ -655,6 +667,28 @@ function gp_child_render_settings_page(): void
     color: #646970;
     margin: 0 0 14px;
     line-height: 1.6;
+  }
+
+  .gp-recommended-row.gp-recommended-off th,
+  .gp-recommended-row.gp-recommended-off td {
+    background: #fff8e1;
+  }
+
+  .gp-recommended-row.gp-recommended-off th {
+    color: #8a5a00;
+  }
+
+  .gp-recommended-note {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #fff1c2;
+    color: #8a5a00;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    vertical-align: middle;
   }
 
   /* ── Notes grid ──────────────────────────────────────────────── */
@@ -851,33 +885,36 @@ function gp_child_render_settings_page(): void
           <?php esc_html_e('Turn off front-end assets and WordPress extras you do not need.', 'generatepress-child'); ?>
         </p>
         <table class="form-table" role="presentation">
-          <tr>
-            <th scope="row"><?php esc_html_e('Disable Emojis', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'disable_emojis')); ?>">
+            <th scope="row"><?php esc_html_e('Disable Emojis (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_emojis]" value="1"
                   <?php checked('1', $opts['disable_emojis'] ?? ''); ?>>
                 <?php esc_html_e('Remove emoji scripts, styles and related filters.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'disable_emojis'); ?>
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Disable Dashicons', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'disable_dashicons')); ?>">
+            <th scope="row"><?php esc_html_e('Disable Dashicons (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_dashicons]" value="1"
                   <?php checked('1', $opts['disable_dashicons'] ?? ''); ?>>
                 <?php esc_html_e('Stop loading Dashicons for visitors on the front end.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'disable_dashicons'); ?>
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Disable Embeds', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'disable_embeds')); ?>">
+            <th scope="row"><?php esc_html_e('Disable Embeds (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_embeds]" value="1"
                   <?php checked('1', $opts['disable_embeds'] ?? ''); ?>>
                 <?php esc_html_e('Disable oEmbed discovery links, host JS and embed rewrite filters.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'disable_embeds'); ?>
               </label>
             </td>
           </tr>
@@ -891,23 +928,25 @@ function gp_child_render_settings_page(): void
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Remove Global Styles', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'remove_global_styles')); ?>">
+            <th scope="row"><?php esc_html_e('Remove Global Styles (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_global_styles]" value="1"
                   <?php checked('1', $opts['remove_global_styles'] ?? ''); ?>>
                 <?php esc_html_e('Disable block global styles and duotone output when not needed.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'remove_global_styles'); ?>
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Load Separate Block Styles', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'load_separate_block_styles')); ?>">
+            <th scope="row"><?php esc_html_e('Load Separate Block Styles (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[load_separate_block_styles]" value="1"
                   <?php checked('1', $opts['load_separate_block_styles'] ?? ''); ?>>
                 <?php esc_html_e('Load block styles only when a block needs them.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'load_separate_block_styles'); ?>
               </label>
             </td>
           </tr>
@@ -920,13 +959,14 @@ function gp_child_render_settings_page(): void
           <?php esc_html_e('Remove discovery links, feeds and APIs you do not want publicly exposed.', 'generatepress-child'); ?>
         </p>
         <table class="form-table" role="presentation">
-          <tr>
-            <th scope="row"><?php esc_html_e('Disable XML-RPC', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'disable_xml_rpc')); ?>">
+            <th scope="row"><?php esc_html_e('Disable XML-RPC (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_xml_rpc]" value="1"
                   <?php checked('1', $opts['disable_xml_rpc'] ?? ''); ?>>
                 <?php esc_html_e('Disable the XML-RPC endpoint.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'disable_xml_rpc'); ?>
               </label>
             </td>
           </tr>
@@ -940,23 +980,25 @@ function gp_child_render_settings_page(): void
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Remove RSD Link', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'remove_rsd_link')); ?>">
+            <th scope="row"><?php esc_html_e('Remove RSD Link (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rsd_link]" value="1"
                   <?php checked('1', $opts['remove_rsd_link'] ?? ''); ?>>
                 <?php esc_html_e('Remove the Really Simple Discovery link from the document head.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'remove_rsd_link'); ?>
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Remove Shortlink', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'remove_shortlink')); ?>">
+            <th scope="row"><?php esc_html_e('Remove Shortlink (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_shortlink]" value="1"
                   <?php checked('1', $opts['remove_shortlink'] ?? ''); ?>>
                 <?php esc_html_e('Remove shortlink tags from the document head and headers.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'remove_shortlink'); ?>
               </label>
             </td>
           </tr>
@@ -970,23 +1012,25 @@ function gp_child_render_settings_page(): void
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Remove RSS Feed Links', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'remove_rss_feed_links')); ?>">
+            <th scope="row"><?php esc_html_e('Remove RSS Feed Links (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rss_feed_links]" value="1"
                   <?php checked('1', $opts['remove_rss_feed_links'] ?? ''); ?>>
                 <?php esc_html_e('Remove feed discovery links from the document head.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'remove_rss_feed_links'); ?>
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Disable Self Pingbacks', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'disable_self_pingbacks')); ?>">
+            <th scope="row"><?php esc_html_e('Disable Self Pingbacks (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[disable_self_pingbacks]" value="1"
                   <?php checked('1', $opts['disable_self_pingbacks'] ?? ''); ?>>
                 <?php esc_html_e('Prevent your own domain links from creating pingbacks.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'disable_self_pingbacks'); ?>
               </label>
             </td>
           </tr>
@@ -1030,13 +1074,14 @@ function gp_child_render_settings_page(): void
               </label>
             </td>
           </tr>
-          <tr>
-            <th scope="row"><?php esc_html_e('Remove REST API Links', 'generatepress-child'); ?></th>
+          <tr class="<?php echo esc_attr(gp_child_recommended_row_class($opts, 'remove_rest_api_links')); ?>">
+            <th scope="row"><?php esc_html_e('Remove REST API Links (Recommended)', 'generatepress-child'); ?></th>
             <td>
               <label>
                 <input type="checkbox" name="blueflamingo_plugin_options_settings[remove_rest_api_links]" value="1"
                   <?php checked('1', $opts['remove_rest_api_links'] ?? ''); ?>>
                 <?php esc_html_e('Remove REST API discovery links and headers.', 'generatepress-child'); ?>
+                <?php gp_child_render_recommended_note($opts, 'remove_rest_api_links'); ?>
               </label>
             </td>
           </tr>
@@ -1761,4 +1806,3 @@ function gp_child_render_settings_page(): void
 }
 
 // ── 6. Front-end: apply all saved settings ────────────────────────────────────
-
