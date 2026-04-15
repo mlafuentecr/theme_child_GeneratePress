@@ -2,6 +2,34 @@
 
 Child theme built on GeneratePress. Most custom logic lives in `inc/` and is loaded from `functions.php`.
 
+## Search Shortcodes Quick Start
+
+Use these two shortcodes together:
+
+```text
+[gp_search_bar]
+[post_search_result]
+```
+
+What each shortcode does:
+
+- `[gp_search_bar]`: renders the search input
+- `[post_search_result]`: renders the results layout
+
+Recommended setup:
+
+1. Create a WordPress page such as `Search`
+2. Add `[post_search_result]` to that page
+3. Go to `Appearance > Blue Flamingo Settings > Pages & Search`
+4. Select `Redirect to results page`
+5. Choose the page you created
+6. Place `[gp_search_bar]` anywhere you want the search field
+
+Available search modes:
+
+- `Live search dropdown`: shows AJAX results directly below the input
+- `Redirect to results page`: sends visitors to a selected page that contains `[post_search_result]`
+
 ## Admin Panel
 
 Settings live under:
@@ -85,24 +113,7 @@ Lets you pick a normal WordPress page to be used as the custom 404 template.
 
 Controls how the theme search shortcodes behave.
 
-Shortcodes:
-
-```text
-[gp_search_bar]
-[post_search_result]
-```
-
-Modes:
-
-- `Live search dropdown`: AJAX results below the input
-- `Redirect to results page`: sends visitors to a selected page that contains `[post_search_result]`
-
-Recommended setup:
-
-1. Create a page such as `Search`
-2. Add `[post_search_result]` to that page
-3. Select that page in the Search tab
-4. Use `[gp_search_bar]` anywhere you want the search field
+See `Search Shortcodes Quick Start` above for the recommended setup and shortcode usage.
 
 ### Cache Buster
 
