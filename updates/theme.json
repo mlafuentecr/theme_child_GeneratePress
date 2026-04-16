@@ -1,8 +1,8 @@
 {
   "theme": "theme_child_generatepress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "details_url": "https://github.com/blueflamingo-solutions/generatepress-child",
-  "download_url": "https://github.com/blueflamingo-solutions/generatepress-child/raw/main/downloads/theme_child_GeneratePress-1.0.0.zip",
+  "download_url": "https://github.com/blueflamingo-solutions/generatepress-child/raw/main/downloads/theme_child_GeneratePress-1.0.1.zip",
   "tested": "6.9",
   "requires_php": "8.1",
   "last_updated": "2026-04-16",
