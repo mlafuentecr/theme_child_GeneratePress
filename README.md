@@ -8,13 +8,17 @@ Use these two shortcodes together:
 
 ```text
 [gp_search_bar]
+[gp_search_bar variant="icon"]
 [post_search_result]
 ```
 
 What each shortcode does:
 
 - `[gp_search_bar]`: renders the search input
+- `[gp_search_bar variant="icon"]`: renders a search icon button that expands into the search field on click
 - `[post_search_result]`: renders the results layout
+
+Use the `icon` variant in headers, nav bars, or compact UI areas where you want to start with only the search icon visible.
 
 Recommended setup:
 
