@@ -1,0 +1,14 @@
+{
+  "theme": "theme_child_generatepress",
+  "version": "1.0.0",
+  "details_url": "https://github.com/blueflamingo-solutions/generatepress-child",
+  "download_url": "https://github.com/blueflamingo-solutions/generatepress-child/raw/main/downloads/theme_child_GeneratePress-1.0.0.zip",
+  "tested": "6.9",
+  "requires_php": "8.1",
+  "last_updated": "2026-04-16",
+  "release_notes": [
+    "New PWA tab in Blue Flamingo Settings",
+    "Theme version badge in the settings header",
+    "Manifest-based updater foundation for future child theme releases"
+  ]
+}

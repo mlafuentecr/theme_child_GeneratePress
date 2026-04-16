@@ -60,6 +60,8 @@ $includes = [
     '/inc/webp-converter.php',
     '/inc/search.php',
     '/inc/search_result/index.php',
+    '/inc/pwa.php',
+    '/inc/updater.php',
 
 
     //Gutenberg / Patterns / blocks

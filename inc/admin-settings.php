@@ -48,7 +48,7 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
 
 function gp_child_admin_js(): string
 {
-    return <<<'JS'
+    $script = <<<'JS'
 (function(){
     document.addEventListener('DOMContentLoaded', function(){
         var STORAGE_KEY = 'gp_child_active_tab';
@@ -253,6 +253,8 @@ function gp_child_admin_js(): string
     });
 }());
 JS;
+
+    return $script . "\n" . apply_filters('gp_child_admin_settings_js', '');
 }
 
 // ── 3. Register every settings group ─────────────────────────────────────────
@@ -530,6 +532,9 @@ function gp_child_render_settings_page(): void
     $dfi_url = $dfi_id ? wp_get_attachment_image_url($dfi_id, 'thumbnail') : '';
 
     $notes = gp_child_get_notes();
+    $theme = wp_get_theme(get_stylesheet());
+    $theme_version = (string) $theme->get('Version');
+    $release_notes = function_exists('gp_child_get_current_release_notes') ? gp_child_get_current_release_notes() : [];
     $environment = function_exists('gp_child_get_environment') ? gp_child_get_environment() : 'unknown';
     $environment_label = match ($environment) {
         'live' => __('Live', 'generatepress-child'),
@@ -552,14 +557,40 @@ function gp_child_render_settings_page(): void
         'notes'      => __('Notes',        'generatepress-child'),
         'webp'       => __('WebP',         'generatepress-child'),
     ];
+    $tabs = apply_filters('gp_child_settings_tabs', $tabs);
     ?>
 <div class="wrap gp-child-settings">
-  <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+  <h1 class="gp-settings-title">
+    <span><?php echo esc_html(get_admin_page_title()); ?></span>
+    <?php if ($theme_version !== '') : ?>
+    <span class="gp-settings-version"><?php echo esc_html('v' . $theme_version); ?></span>
+    <?php endif; ?>
+  </h1>
 
   <style>
   /* ── Wrapper ──────────────────────────────────────────────────── */
   .gp-child-settings {
     max-width: 900px;
+  }
+
+  .gp-settings-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .gp-settings-version {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef4ff;
+    border: 1px solid #c9d8ff;
+    color: #1f4b99;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
   }
 
   /* ── Tab nav: use nav+button so WordPress list CSS can't interfere */
@@ -668,6 +699,7 @@ function gp_child_render_settings_page(): void
     border-radius: 3px;
     border: 1px solid #ddd;
   }
+  <?php echo apply_filters('gp_child_admin_settings_css', ''); ?>
 
   /* ── No-JS fallback: show all panels ────────────────────────── */
   .gp-child-settings.no-js .gp-tab-panel {
@@ -705,6 +737,29 @@ function gp_child_render_settings_page(): void
     color: #646970;
     margin: 0 0 14px;
     line-height: 1.6;
+  }
+
+  .gp-release-box {
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    border: 1px solid #dcdcde;
+    border-left: 4px solid #2271b1;
+    border-radius: 4px;
+    background: #f6fbff;
+  }
+
+  .gp-release-box h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+  }
+
+  .gp-release-box ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .gp-release-box li + li {
+    margin-top: 6px;
   }
 
   /* ── Notes grid ──────────────────────────────────────────────── */
@@ -894,6 +949,24 @@ function gp_child_render_settings_page(): void
   <div id="gp-tab-core-features" class="gp-tab-panel" role="tabpanel">
     <form method="post" action="options.php">
       <?php settings_fields('gp_child_options_group'); ?>
+
+      <?php if (! empty($release_notes)) : ?>
+      <div class="gp-release-box">
+        <h3>
+          <?php
+          printf(
+              esc_html__('What’s New in v%s', 'generatepress-child'),
+              esc_html($theme_version !== '' ? $theme_version : 'current')
+          );
+          ?>
+        </h3>
+        <ul>
+          <?php foreach ($release_notes as $note) : ?>
+          <li><?php echo esc_html($note); ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <?php endif; ?>
 
       <div class="gp-cache-section">
         <h3 class="gp-cache-section-title"><?php esc_html_e('Scripts & Styles', 'generatepress-child'); ?></h3>
@@ -1204,7 +1277,7 @@ function gp_child_render_settings_page(): void
 
       <?php submit_button(__('Save Core Features', 'generatepress-child')); ?>
     </form>
-    <?php gp_child_render_tab_help(__('Use this tab for global WordPress and GeneratePress cleanup, REST API controls, and default layout behavior across the site.', 'generatepress-child')); ?>
+    <?php gp_child_render_tab_help(__('Use this tab for global WordPress and GeneratePress cleanup, REST API controls, and default layout behavior across the site. | ./scripts/build-theme-package.sh (version command)', 'generatepress-child')); ?>
   </div>
 
   <?php /* ── Options ────────────────────────────────────────────── */ ?>
@@ -1591,12 +1664,15 @@ function gp_child_render_settings_page(): void
 
     <h2 style="margin-top:0;"><?php esc_html_e('How to use it', 'generatepress-child'); ?></h2>
     <p><code>[gp_search_bar]</code> <?php esc_html_e('adds the search field anywhere in your content, template or block shortcode area.', 'generatepress-child'); ?></p>
+    <p><code>[gp_search_bar variant="icon"]</code> <?php esc_html_e('shows only the search icon at first, then expands into the search field when clicked.', 'generatepress-child'); ?></p>
     <p><code>[post_search_result]</code> <?php esc_html_e('renders the results page layout. If you use Redirect mode, place this shortcode on the page selected above.', 'generatepress-child'); ?></p>
     <p class="description">
       <?php esc_html_e('Recommended setup: create a page like "Search", place [post_search_result] on it, then select that page here and enable Redirect to results page.', 'generatepress-child'); ?>
     </p>
     <?php gp_child_render_tab_help(__('Keep related page-routing tools together here: 404 handling for missing URLs and search routing for visitors looking for content.', 'generatepress-child')); ?>
   </div>
+
+  <?php do_action('gp_child_render_settings_panels'); ?>
 
   <?php /* ── Cache Buster ─────────────────────────────────────────── */ ?>
   <div id="gp-tab-cache" class="gp-tab-panel" role="tabpanel">

@@ -187,10 +187,26 @@ Optional attributes:
 - `inc/analytics.php`: GA4, GTM, and WhatConverts output
 - `inc/search.php`: `[gp_search_bar]`
 - `inc/search_result/index.php`: `[post_search_result]`
+- `inc/updater.php`: manifest-based theme updates from a public repo
 - `inc/layout-defaults.php`: GeneratePress layout defaults
 - `inc/duplicate-content.php`: duplicate posts/pages
 - `inc/notes.php`: internal notes and dashboard notices
 - `inc/rest-api.php`: JSON Basic Auth runtime
+
+## Theme Update Flow
+
+This theme now includes a simple updater that reads a public manifest file from:
+
+- `updates/theme.json`
+
+With this, you already have a working v1 manual release flow:
+
+1. Update the version in `style.css`
+2. Run `./scripts/build-theme-package.sh`
+3. Update `updates/theme.json`
+4. Push the repo
+
+WordPress then reads the manifest and shows the update in the dashboard without FTP.
 
 ## Development Notes
 
