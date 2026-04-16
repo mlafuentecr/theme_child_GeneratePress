@@ -54,40 +54,67 @@ $patterns = [
 
 
 /* ============================================================
- * Helper – does the current page/post use this pattern?
+ * Helper – does the current request use this pattern?
  * Checks:
- *  1. Post content contains the class string
- *  2. Any GeneratePress Element active on this page contains the class
+ *  1. Queried singular content / posts page content
+ *  2. Reusable blocks referenced from that content
+ *  3. Active GeneratePress Elements on this request
  * ============================================================ */
-function signifi_page_uses_pattern( string $class ): bool {
+function gp_child_content_uses_pattern_class( string $content, string $class, array &$visited_refs = [] ): bool {
 
-    if ( ! is_singular() && ! is_home() && ! is_front_page() && ! is_archive() ) {
+    if ( $content === '' ) {
         return false;
     }
 
-    $post = get_queried_object();
-    if ( ! $post instanceof WP_Post ) {
-        return false;
-    }
+    $quoted_class = preg_quote( $class, '/' );
 
-    $content = $post->post_content ?? '';
-
-    // 1. Direct class match in page content
-    if ( str_contains( $content, $class ) ) {
+    if ( preg_match( '/\b' . $quoted_class . '\b/i', $content ) ) {
         return true;
     }
 
-    // 2. Resolve wp:block refs used in this page and check their content
     if ( preg_match_all( '/wp:block\s+\{"ref":(\d+)\}/', $content, $matches ) ) {
         foreach ( $matches[1] as $ref_id ) {
-            $block_content = get_post_field( 'post_content', (int) $ref_id );
-            if ( $block_content && str_contains( $block_content, $class ) ) {
+            $ref_id = (int) $ref_id;
+
+            if ( isset( $visited_refs[ $ref_id ] ) ) {
+                continue;
+            }
+
+            $visited_refs[ $ref_id ] = true;
+            $block_content = (string) get_post_field( 'post_content', $ref_id );
+
+            if ( gp_child_content_uses_pattern_class( $block_content, $class, $visited_refs ) ) {
                 return true;
             }
         }
     }
 
-    // 3. Check GP Elements (gp_elements) active on this page
+    return false;
+}
+
+function gp_child_get_pattern_scan_contents(): array {
+    static $contents = null;
+
+    if ( is_array( $contents ) ) {
+        return $contents;
+    }
+
+    $contents = [];
+
+    if ( is_singular() ) {
+        $post = get_queried_object();
+
+        if ( $post instanceof WP_Post ) {
+            $contents[] = (string) $post->post_content;
+        }
+    } elseif ( is_home() ) {
+        $posts_page_id = (int) get_option( 'page_for_posts' );
+
+        if ( $posts_page_id > 0 ) {
+            $contents[] = (string) get_post_field( 'post_content', $posts_page_id );
+        }
+    }
+
     $elements = get_posts( [
         'post_type'      => 'gp_elements',
         'posts_per_page' => -1,
@@ -96,22 +123,44 @@ function signifi_page_uses_pattern( string $class ): bool {
     ] );
 
     foreach ( $elements as $el_id ) {
-        $el_content = get_post_field( 'post_content', $el_id );
-        if ( ! str_contains( $el_content, $class ) ) {
-            continue;
-        }
         if ( class_exists( 'GeneratePress_Conditions' ) ) {
             $display = get_post_meta( $el_id, '_generate_element_display_conditions', true ) ?: [];
             $exclude = get_post_meta( $el_id, '_generate_element_exclude_conditions', true ) ?: [];
-            $roles   = get_post_meta( $el_id, '_generate_element_user_conditions',    true ) ?: [];
-            if ( ! empty( $display ) && GeneratePress_Conditions::show_data( $display, $exclude, $roles ) ) {
-                return true;
+            $roles   = get_post_meta( $el_id, '_generate_element_user_conditions', true ) ?: [];
+
+            if ( ! empty( $display ) && ! GeneratePress_Conditions::show_data( $display, $exclude, $roles ) ) {
+                continue;
             }
-        } else {
+        }
+
+        $contents[] = (string) get_post_field( 'post_content', $el_id );
+    }
+
+    return array_values( array_filter( $contents, static fn( $content ) => $content !== '' ) );
+}
+
+function signifi_page_uses_pattern( string $class ): bool {
+
+    if ( ! is_singular() && ! is_home() && ! is_front_page() && ! is_archive() ) {
+        return false;
+    }
+
+    static $class_cache = [];
+
+    if ( array_key_exists( $class, $class_cache ) ) {
+        return $class_cache[ $class ];
+    }
+
+    foreach ( gp_child_get_pattern_scan_contents() as $content ) {
+        $visited_refs = [];
+
+        if ( gp_child_content_uses_pattern_class( $content, $class, $visited_refs ) ) {
+            $class_cache[ $class ] = true;
             return true;
         }
     }
 
+    $class_cache[ $class ] = false;
     return false;
 }
 
@@ -125,26 +174,27 @@ add_action( 'wp_enqueue_scripts', function () use ( $patterns ) {
 
         $class = $assets['class'] ?? false;
 
-        // Always load if class === false, otherwise check content
-        $should_load = ( $class === false ) || signifi_page_uses_pattern( $class );
+        $should_load = $class ? signifi_page_uses_pattern( $class ) : false;
 
         if ( ! $should_load ) continue;
 
         if ( ! empty( $assets['css'] ) ) {
+            $css_path = GP_CHILD_DIR . "/assets/css/patterns/$name.css";
             wp_enqueue_style(
                 "signifi-$name",
                 GP_CHILD_URI . "/assets/css/patterns/$name.css",
                 [],
-                GP_CHILD_VERSION
+                gp_child_asset_version( $css_path )
             );
         }
 
         if ( ! empty( $assets['js'] ) ) {
+            $js_path = GP_CHILD_DIR . "/assets/js/patterns/$name.js";
             wp_enqueue_script(
                 "signifi-$name",
                 GP_CHILD_URI . "/assets/js/patterns/$name.js",
                 [],
-                GP_CHILD_VERSION,
+                gp_child_asset_version( $js_path ),
                 true
             );
         }
