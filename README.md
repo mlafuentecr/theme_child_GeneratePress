@@ -245,6 +245,145 @@ generatepress-child/
 - `shortcodes/`: existing project-specific shortcode implementations carried forward into the theme
 - `docs/`: internal project documentation for deployment notes, content model notes, and client-specific conventions
 
+## Technical Function Reference
+
+This section summarizes the main public or integration-facing functions used across the theme. It is not intended to list every tiny helper, but it does cover the important entry points and runtime functions by module.
+
+### `inc/search.php`
+
+- `gp_child_get_search_settings()`: reads the saved search configuration from the admin settings
+- `gp_child_get_search_results_page_url()`: resolves the configured search results page URL, falling back safely when unset
+- `gp_child_render_search_shortcode(array $atts)`: renders the `[gp_search_bar]` shortcode, including the standard and `icon` variants
+- `gp_child_handle_search()`: processes AJAX live-search requests and returns result markup
+
+### `inc/search_result/index.php`
+
+- `signifi_search_post_types()`: defines the post types included in the results page search
+- `gp_child_search_type_label(string $post_type)`: returns the display label for a post type badge
+- `gp_child_render_search_result_card(WP_Post $post)`: renders a single search result card
+- `custom_post_type_search_shortcode($atts)`: renders the `[post_search_result]` shortcode and full results-page layout
+
+### `inc/search_result/ajax.php`
+
+- `load_more_search_results()`: handles AJAX pagination for the results page "View more" behavior
+
+### `inc/modal.php`
+
+- `gp_modal_trigger(string $modal_id, string $label, array $args = [])`: renders a modal trigger element linked to a theme modal instance
+
+### `inc/admin-settings.php`
+
+- `gp_child_admin_js()`: returns inline admin JavaScript used by the settings screen
+- `gp_child_sanitize_general(mixed $input)`: sanitizes site info and general settings values
+- `gp_child_sanitize_options(mixed $input)`: sanitizes the operational options tab values
+- `gp_child_sanitize_ga(mixed $input)`: sanitizes analytics settings such as GA4 and GTM IDs
+- `gp_child_sanitize_404(mixed $input)`: sanitizes the custom 404 page selection
+- `gp_child_sanitize_search(mixed $input)`: sanitizes search behavior settings
+- `gp_child_sanitize_email_redirect(mixed $input)`: sanitizes mail redirection settings
+- `gp_child_render_tab_help(string $text)`: renders contextual helper text inside settings tabs
+- `gp_child_default_options()`: provides default settings values for the admin framework
+- `gp_child_render_settings_page()`: renders the Blue Flamingo Settings admin page
+
+### `inc/helpers.php`
+
+- `gp_child_asset_version(string $abs_path)`: computes a stable asset version string for CSS and JS cache busting
+- `gp_child_get_site_info_settings()`: reads environment-related URLs from the Site Info tab
+- `gp_child_get_environment()`: returns the current environment label based on configured site URLs
+- `gp_child_is_staging_environment()`: convenience helper for staging detection
+- `gp_child_is_live_environment()`: convenience helper for live-site detection
+- `allow_svg_upload($mimes)`: extends upload mime types to allow SVG uploads
+
+### `inc/email-redirect.php`
+
+- `gp_child_get_email_redirect_settings()`: reads email redirect settings from the admin panel
+- `gp_child_override_mail_recipient(array $args)`: rewrites outgoing mail recipients when the redirect feature is active
+
+### `inc/options-runtime.php`
+
+- `gp_child_get_options_settings()`: reads the Options tab settings
+- `gp_child_get_support_email()`: returns the support email used by permission and operational checks
+- `gp_child_is_support_user(?WP_User $user = null)`: determines whether a user should bypass support-only restrictions
+
+### `inc/cleanup.php`
+
+- `gp_child_cleanup_options()`: returns the available cleanup option keys
+- `gp_child_cleanup_is_enabled(string $key)`: resolves whether a specific cleanup toggle is active
+
+### `inc/layout-defaults.php`
+
+- `gp_child_layout_defaults_options()`: defines the supported GeneratePress layout-default options
+- `gp_child_layout_default_value(string $key)`: returns the configured default value for a layout key
+- `gp_child_layout_default_enabled(string $key)`: returns whether a layout default is enabled
+- `gp_child_layout_default_applies_to_post(int $post_id)`: checks whether layout defaults should affect a given post
+
+### `inc/updater.php`
+
+- `gp_child_normalize_update_manifest(array $manifest)`: normalizes raw manifest data into the shape expected by the updater
+- `gp_child_get_update_uri()`: returns the theme update URI
+- `gp_child_get_update_manifest()`: fetches and caches the remote update manifest
+- `gp_child_get_local_update_manifest()`: reads the local manifest from `downloads/theme.json`
+- `gp_child_get_current_release_notes()`: returns current release notes from the manifest
+
+### `inc/analytics.php`
+
+- `gp_child_output_analytics()`: outputs the configured analytics scripts on the front end
+- `gtag()`: compatibility wrapper that prints the GA dataLayer bootstrap when needed
+
+### `inc/footer.php`
+
+- `gp_child_render_custom_footer()`: renders the custom footer output used by the child theme
+
+### `inc/rest-api.php`
+
+- `gp_child_json_basic_auth_handler(mixed $user)`: handles JSON Basic Auth authentication for REST requests
+- `gp_child_json_basic_auth_error(mixed $error)`: returns structured auth errors for failed REST authentication
+
+### `inc/duplicate-content.php`
+
+- `gp_child_duplicate_content_enabled()`: checks whether duplicate post/page functionality is enabled
+- `gp_child_get_duplicate_link(int $post_id)`: builds the duplicate action URL for a post
+
+### `inc/notes.php`
+
+- `gp_child_get_notes()`: loads internal notes from the stored options
+- `gp_child_save_notes(array $notes)`: persists internal team notes back to storage
+
+### `inc/404.php`
+
+- `gp_child_custom_404_template(string $template)`: swaps the default 404 template for the configured page-based template
+
+### `inc/pwa.php`
+
+- `gp_child_default_pwa_settings()`: defines default Progressive Web App settings
+- `gp_child_get_pwa_settings()`: loads stored PWA settings
+- `gp_child_is_pwa_enabled()`: returns whether PWA output is enabled
+- `gp_child_sanitize_pwa(mixed $input)`: sanitizes PWA settings saved from the admin UI
+- `gp_child_get_pwa_icon_url(?int $icon_id = null, string $size = 'full')`: resolves the configured app icon URL
+- `gp_child_get_pwa_manifest_icons()`: builds the icon list for the manifest
+- `gp_child_get_pwa_manifest_data()`: assembles the manifest payload
+- `gp_child_get_pwa_scope_path()`: resolves the site scope path for the PWA
+- `gp_child_get_pwa_admin_settings_js()`: returns inline admin JavaScript for the PWA settings panel
+- `gp_child_get_pwa_admin_settings_css()`: returns inline admin CSS for the PWA settings panel
+- `gp_child_render_pwa_settings_panel()`: renders the PWA admin settings UI
+- `gp_child_get_pwa_sw_script()`: returns the service worker script content
+
+### `inc/video-hero-block.php`
+
+- `gp_render_video_hero_block(array $attrs, string $content)`: renders the dynamic video hero block on the front end
+
+### `inc/enqueue_patterns.php`
+
+- `gp_child_content_uses_pattern_class(string $content, string $class, array &$visited_refs = [])`: scans nested content for pattern classes
+- `gp_child_get_pattern_scan_contents()`: collects content sources that should be scanned for pattern usage
+- `signifi_page_uses_pattern(string $class)`: answers whether the current page uses a given pattern class
+
+### `inc/webp-converter.php`
+
+- `mbwpc_admin_notices()`: renders admin notices for the WebP conversion settings
+- `mbwpc_register_settings()`: registers the WebP converter settings
+- `mbwpc_image_settings_callback()`: renders the WebP settings fields
+- `mbwpc_handle_upload_convert_to_webp($upload)`: converts uploaded images to WebP when enabled
+
 ## Theme Update Flow
 
 This theme now includes a simple updater that reads a public manifest file from:
