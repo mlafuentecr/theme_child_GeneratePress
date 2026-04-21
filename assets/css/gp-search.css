@@ -11,6 +11,45 @@
   gap: 8px;
 }
 
+.gp-search-wrap--icon {
+  width: 42px;
+  max-width: none;
+  min-width: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  gap: 0;
+  overflow: visible;
+  z-index: 1000;
+}
+
+.gp-search-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.gp-search-toggle:hover,
+.gp-search-toggle:focus-visible {
+  border-color: #e5e7eb;
+  background: #f3f4f6;
+  color: #374151;
+  outline: none;
+}
+
+.gp-search-toggle__icon {
+  display: inline-flex;
+  line-height: 1;
+}
+
 .gp-search-input {
   width: auto;
   flex: 1 1 260px;
@@ -24,6 +63,42 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   appearance: none;
   -webkit-appearance: none;
+}
+
+.gp-search-wrap--icon .gp-search-input {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
+  flex: none;
+  width: 0;
+  min-width: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 0;
+  padding-right: 0;
+  border-width: 1px;
+  border-color: transparent;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1001;
+  transition: width 0.2s ease, min-width 0.2s ease, padding 0.2s ease, opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gp-search-wrap--icon.gp-search-wrap--open .gp-search-input {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gp-search-wrap--icon.gp-search-wrap--open .gp-search-input {
+  width: min(320px, 70vw);
+  min-width: 220px;
+  padding-left: 14px;
+  padding-right: 14px;
+  background: #fff;
+  border-color: #d1d5db;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
 }
 
 .gp-search-submit {
@@ -65,6 +140,14 @@
   overflow: hidden;
   max-height: 340px;
   overflow-y: auto;
+}
+
+.gp-search-wrap--icon .gp-search-results {
+  top: calc(50% + 28px);
+  left: auto;
+  right: calc(100% + 8px);
+  width: min(320px, 70vw);
+  z-index: 1002;
 }
 
 .gp-search-results[hidden] {
@@ -113,4 +196,15 @@
   font-size: 0.875rem;
   color: #6b7280;
   text-align: center;
+}
+
+@media (max-width: 767px) {
+  .gp-search-wrap--icon.gp-search-wrap--open .gp-search-input {
+    width: min(220px, 58vw);
+    min-width: 160px;
+  }
+
+  .gp-search-wrap--icon .gp-search-results {
+    width: min(220px, 58vw);
+  }
 }

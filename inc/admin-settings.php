@@ -564,6 +564,7 @@ function gp_child_render_settings_page(): void
     <span><?php echo esc_html(get_admin_page_title()); ?></span>
     <?php if ($theme_version !== '') : ?>
     <span class="gp-settings-version"><?php echo esc_html('v' . $theme_version); ?></span>
+    <span class="gp-settings-channel"><?php esc_html_e('Versioning repo active', 'generatepress-child'); ?></span>
     <?php endif; ?>
   </h1>
 
@@ -589,6 +590,19 @@ function gp_child_render_settings_page(): void
     border: 1px solid #c9d8ff;
     color: #1f4b99;
     font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .gp-settings-channel {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #edf7ed;
+    border: 1px solid #b8ddb8;
+    color: #136c2e;
+    font-size: 12px;
     font-weight: 600;
     line-height: 1.3;
   }

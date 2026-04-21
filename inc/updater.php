@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
 }
 
 if (! defined('GP_CHILD_UPDATE_MANIFEST_URL')) {
-    define('GP_CHILD_UPDATE_MANIFEST_URL', 'https://raw.githubusercontent.com/blueflamingo-solutions/generatepress-child/main/updates/theme.json');
+    define('GP_CHILD_UPDATE_MANIFEST_URL', 'https://raw.githubusercontent.com/blueflamingo-solutions/generatepress-child-versioning/main/theme.json');
 }
 
 if (! defined('GP_CHILD_UPDATE_CACHE_KEY')) {
@@ -88,7 +88,7 @@ function gp_child_get_update_manifest(): array
 
 function gp_child_get_local_update_manifest(): array
 {
-    $path = GP_CHILD_DIR . '/updates/theme.json';
+    $path = GP_CHILD_DIR . '/downloads/theme.json';
     if (! file_exists($path)) {
         return [];
     }

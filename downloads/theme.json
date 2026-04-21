@@ -1,0 +1,10 @@
+{
+    "theme": "theme_child_enerate_ress",
+    "version": "0.0.1",
+    "details_url": "https://github.com/blueflamingo-solutions/generatepress-child-versioning",
+    "download_url": "https://github.com/blueflamingo-solutions/generatepress-child-versioning/raw/main/theme_child_GeneratePress-0.0.1.zip",
+    "tested": "6.9",
+    "requires_php": "8.1",
+    "last_updated": "2026-04-17",
+    "release_notes": []
+}

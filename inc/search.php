@@ -76,26 +76,44 @@ function gp_child_render_search_shortcode(array $atts): string
         'limit'       => 5,
         'id'          => 'gp-search-' . wp_unique_id(),
         'mode'        => '',
+        'variant'     => 'full',
     ], $atts, 'gp_search');
 
     $settings = gp_child_get_search_settings();
-    $id    = sanitize_html_class($a['id']);
-    $types = implode(',', array_map('sanitize_key', explode(',', $a['post_types'])));
-    $mode  = in_array($a['mode'], ['live_ajax', 'results_page'], true) ? $a['mode'] : $settings['mode'];
+    $id       = sanitize_html_class($a['id']);
+    $types    = implode(',', array_map('sanitize_key', explode(',', $a['post_types'])));
+    $mode     = in_array($a['mode'], ['live_ajax', 'results_page'], true) ? $a['mode'] : $settings['mode'];
+    $variant  = in_array($a['variant'], ['full', 'icon'], true) ? $a['variant'] : 'full';
+    $label_id = $id . '-label';
     $action = $mode === 'results_page' ? gp_child_get_search_results_page_url() : home_url('/');
 
     ob_start();
     ?>
-    <form class="gp-search-wrap" id="<?php echo esc_attr($id); ?>"
+    <form class="gp-search-wrap<?php echo $variant === 'icon' ? ' gp-search-wrap--icon' : ''; ?>" id="<?php echo esc_attr($id); ?>"
          action="<?php echo esc_url($action); ?>"
          method="get"
          data-post-types="<?php echo esc_attr($types); ?>"
          data-limit="<?php echo esc_attr(intval($a['limit'])); ?>"
          data-mode="<?php echo esc_attr($mode); ?>"
+         data-variant="<?php echo esc_attr($variant); ?>"
          role="search">
-        <label class="screen-reader-text" for="<?php echo esc_attr($id . '-input'); ?>">
+        <label class="screen-reader-text" id="<?php echo esc_attr($label_id); ?>" for="<?php echo esc_attr($id . '-input'); ?>">
             <?php esc_html_e('Search', 'generatepress-child'); ?>
         </label>
+        <?php if ($variant === 'icon') : ?>
+            <button type="button"
+                    class="gp-search-toggle"
+                    aria-expanded="false"
+                    aria-controls="<?php echo esc_attr($id . '-input'); ?>"
+                    aria-labelledby="<?php echo esc_attr($label_id); ?>">
+                <span class="gp-search-toggle__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false">
+                        <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.43 1.41-1.41-4.43-4.43A6.5 6.5 0 0 0 10.5 4Zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z" fill="currentColor"/>
+                    </svg>
+                </span>
+                <span class="screen-reader-text"><?php esc_html_e('Open search', 'generatepress-child'); ?></span>
+            </button>
+        <?php endif; ?>
         <input type="search"
                name="<?php echo esc_attr($mode === 'results_page' ? 'q' : 's'); ?>"
                id="<?php echo esc_attr($id . '-input'); ?>"
@@ -104,8 +122,10 @@ function gp_child_render_search_shortcode(array $atts): string
                autocomplete="off"
                aria-haspopup="listbox"
                aria-expanded="false"
-               aria-autocomplete="list">
-        <button type="submit" class="gp-search-submit"><?php esc_html_e('Search', 'generatepress-child'); ?></button>
+               aria-autocomplete="list"<?php echo $variant === 'icon' ? ' hidden' : ''; ?>>
+        <?php if ($variant !== 'icon') : ?>
+            <button type="submit" class="gp-search-submit"><?php esc_html_e('Search', 'generatepress-child'); ?></button>
+        <?php endif; ?>
         <?php if ($mode === 'results_page') : ?>
             <input type="hidden" name="post_types" value="<?php echo esc_attr($types); ?>">
         <?php else : ?>

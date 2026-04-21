@@ -12,6 +12,7 @@
   ].join(',');
 
   var openModals = [];
+  var galleryModal = null;
 
   // ── Open ────────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,95 @@
     }
   }
 
+  function isImageUrl(url) {
+    return /\.(avif|bmp|gif|jpe?g|png|svg|webp)(\?.*)?$/i.test(url || '');
+  }
+
+  function removeImageSizeSuffix(url) {
+    if (!url) return '';
+    return url.replace(/-\d+x\d+(?=\.[a-z0-9]{3,4}(?:\?.*)?$)/i, '');
+  }
+
+  function getLargestSrcFromSrcset(srcset) {
+    if (!srcset) return '';
+
+    var bestUrl = '';
+    var bestWidth = 0;
+
+    srcset.split(',').forEach(function (candidate) {
+      var part = candidate.trim();
+      if (!part) return;
+
+      var bits = part.split(/\s+/);
+      var url = bits[0] || '';
+      var size = bits[1] || '';
+      var width = 0;
+
+      if (/^\d+w$/.test(size)) {
+        width = parseInt(size, 10) || 0;
+      }
+
+      if (width >= bestWidth) {
+        bestWidth = width;
+        bestUrl = url;
+      }
+    });
+
+    return bestUrl;
+  }
+
+  function getGalleryImageUrl(img) {
+    if (!img) return '';
+
+    var dataFull = img.getAttribute('data-full-url');
+    if (dataFull) return dataFull;
+
+    var link = img.closest('a[href]');
+    if (link) {
+      var href = link.getAttribute('href');
+      if (isImageUrl(href)) {
+        return href;
+      }
+    }
+
+    var srcsetUrl = getLargestSrcFromSrcset(img.getAttribute('srcset'));
+    if (srcsetUrl) {
+      return srcsetUrl;
+    }
+
+    var src = img.currentSrc || img.getAttribute('src') || '';
+    return removeImageSizeSuffix(src);
+  }
+
+  function ensureGalleryModal() {
+    if (galleryModal) return galleryModal;
+
+    var wrapper = document.createElement('div');
+    wrapper.id = 'gp-gallery-modal';
+    wrapper.className = 'gp-modal gp-gallery-modal';
+    wrapper.setAttribute('role', 'dialog');
+    wrapper.setAttribute('aria-modal', 'true');
+    wrapper.setAttribute('aria-hidden', 'true');
+    wrapper.setAttribute('data-close-outside', 'true');
+    wrapper.setAttribute('tabindex', '-1');
+
+    wrapper.innerHTML = [
+      '<div class="gp-modal__overlay" data-gp-modal-close></div>',
+      '<div class="gp-modal__container">',
+      '<div class="gp-modal__content">',
+      '<button class="gp-modal__close" data-gp-modal-close aria-label="Close">',
+      '<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+      '</button>',
+      '<img class="gp-gallery-modal__image" src="" alt="">',
+      '</div>',
+      '</div>'
+    ].join('');
+
+    document.body.appendChild(wrapper);
+    galleryModal = wrapper;
+    return galleryModal;
+  }
+
   // ── Focus trap ──────────────────────────────────────────────────────────────
 
   document.addEventListener('keydown', function (e) {
@@ -82,6 +172,29 @@
   // ── Delegation: open triggers ───────────────────────────────────────────────
 
   document.addEventListener('click', function (e) {
+    var galleryImg = e.target.closest('.wp-block-gallery img, .gallery img, .blocks-gallery-grid img');
+    if (
+      galleryImg &&
+      !galleryImg.closest('.wp-lightbox-container') &&
+      !galleryImg.closest('.wp-lightbox-overlay')
+    ) {
+      var galleryRoot = galleryImg.closest('.wp-block-gallery, .gallery, .blocks-gallery-grid');
+      if (galleryRoot) {
+        var imageUrl = getGalleryImageUrl(galleryImg);
+        if (imageUrl) {
+          e.preventDefault();
+          var modal = ensureGalleryModal();
+          var modalImage = modal.querySelector('.gp-gallery-modal__image');
+          if (modalImage) {
+            modalImage.src = imageUrl;
+            modalImage.alt = galleryImg.getAttribute('alt') || '';
+          }
+          openModal(modal);
+          return;
+        }
+      }
+    }
+
     // Primary trigger: data-gp-modal-open="popup-id"
     var trigger = e.target.closest('[data-gp-modal-open]');
     if (trigger) {

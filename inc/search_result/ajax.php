@@ -17,31 +17,32 @@ function load_more_search_results() {
     $all_types  = array_keys(signifi_search_post_types());
     $post_types = ($type === 'all') ? $all_types : [$type];
 
-    $query = new WP_Query([
+    $query_args = [
         'post_type'        => $post_types,
         'posts_per_page'   => $per_page,
         'paged'            => $page,
-        's'                => $search,
+        'post__not_in'     => array_filter([absint(gp_child_get_search_settings()['results_page_id'] ?? 0)]),
         'suppress_filters' => false,
-    ]);
+    ];
+
+    if ($search !== '') {
+        $query_args['s'] = $search;
+    } else {
+        $query_args['post__in'] = [0];
+    }
+
+    $query = new WP_Query($query_args);
 
     ob_start();
 
-if ($query->have_posts()) {
-    while ($query->have_posts()) {
-        $query->the_post(); ?>
-        <a href="<?php the_permalink(); ?>">
-            <article class="search-result-item">
-                <h2><?php the_title(); ?></h2>
-                <?php if (has_excerpt()) : ?>
-                    <p><?php echo wp_trim_words(get_the_excerpt(), 40); ?></p>
-                <?php endif; ?>
-            </article>
-        </a>
-    <?php }
-} else {
-    echo '<p class="search-no-results">No results found.</p>';
-}
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            echo gp_child_render_search_result_card(get_post());
+        }
+    } else {
+        echo '<p class="search-no-results">No results found.</p>';
+    }
 
     wp_reset_postdata();
 

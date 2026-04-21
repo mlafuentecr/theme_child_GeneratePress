@@ -1,7 +1,8 @@
 .logo-strip {
   overflow: hidden;
   width: 100%;
-  max-width: var(--bp-lg);
+  max-width: var(--bp-xl);
+  margin-inline: auto;
 }
 
 .logo-strip>div {

@@ -193,20 +193,72 @@ Optional attributes:
 - `inc/notes.php`: internal notes and dashboard notices
 - `inc/rest-api.php`: JSON Basic Auth runtime
 
+## Developer Onboarding
+
+This theme uses `functions.php` as a bootstrap file. Most implementation lives in modular PHP files under `inc/`, reusable front-end assets under `assets/css` and `assets/js`, and legacy or project-specific shortcodes under `shortcodes/`.
+
+High-level characteristics:
+
+- `functions.php` bootstraps constants, includes modules, and wires global theme behavior
+- most new feature work should happen in `inc/` rather than in `functions.php`
+- reusable theme styles and scripts live in `assets/`
+- search, modal, documents, leadership, counters, and news features are split into dedicated modules or shortcode folders
+- the admin settings UI lives under `Appearance > Blue Flamingo Settings`
+- several legacy option keys from older Blue Flamingo / Fireball setups are intentionally preserved for migration compatibility
+
+### Bootstrap Flow
+
+Main entry point:
+
+- `functions.php`
+
+What it does:
+
+- defines constants such as `GP_CHILD_VERSION`, `GP_CHILD_DIR`, and `GP_CHILD_URI`
+- defines brand identifiers like `GP_CHILD_BRAND_SLUG` and `GP_CHILD_BRAND`
+- loads most theme modules from `inc/`
+- includes legacy or project-specific shortcodes from `shortcodes/`
+- enqueues shared front-end libraries and project scripts
+
+### Folder Structure
+
+```text
+generatepress-child/
+├── functions.php
+├── style.css
+├── 404.php
+├── single.php
+├── screenshot.png
+├── README.md
+├── docs/
+├── inc/
+├── assets/
+├── JS/
+└── shortcodes/
+```
+
+### Key Directories
+
+- `inc/`: main functional layer of the theme
+- `assets/css/`: shared design tokens, layout, components, search, modal, pattern, and feature CSS
+- `assets/js/`: shared front-end and editor-side scripts
+- `shortcodes/`: existing project-specific shortcode implementations carried forward into the theme
+- `docs/`: internal project documentation for deployment notes, content model notes, and client-specific conventions
+
 ## Theme Update Flow
 
 This theme now includes a simple updater that reads a public manifest file from:
 
-- `updates/theme.json`
+- `downloads/theme.json`
 
 With this, you already have a working v1 manual release flow:
 
 1. Update the version in `style.css`
 2. Run `./scripts/build-theme-package.sh`
-3. Update `updates/theme.json`
+3. Review or adjust the release notes in `downloads/theme.json` if needed
 4. Push the repo
 
-WordPress then reads the manifest and shows the update in the dashboard without FTP.
+The build script creates the versioned ZIP, refreshes `downloads/theme.json`, and copies both files into `~/Documents/work/BlueFlamingo/generatepress-child-versioning` when that repo exists locally. WordPress then reads the manifest and shows the update in the dashboard without FTP.
 
 ## Development Notes
 
@@ -216,10 +268,6 @@ WordPress then reads the manifest and shows the update in the dashboard without 
   - custom admin URL
   - debug runtime controls
   - image sharpening
-
-See also:
-
-- `docs/blue-flamingo-options-parity.md`
 
 ## Requirements
 

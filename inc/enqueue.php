@@ -103,9 +103,14 @@ add_filter('wp_resource_hints', function (array $urls, string $relation_type): a
     return $urls;
 }, 10, 2);
 
-// Load variables.css in the block editor so var(--*) tokens work in patterns.
+// Load the same core styling layers in Gutenberg so editor previews match the front end.
 add_action('after_setup_theme', function (): void {
-    add_editor_style( 'assets/css/variables.css' );
+    add_editor_style([
+        'assets/css/variables.css',
+        'assets/css/components.css',
+        'assets/css/theme.css',
+        'assets/css/editor.css',
+    ]);
 });
 
 

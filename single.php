@@ -1,29 +1,38 @@
 <?php
 /**
- * Basic single template.
+ * Single post template.
+ *
+ * Keep the GeneratePress hook structure intact so Elements content templates
+ * can replace the default single-post output when their display rules match.
  */
 
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 get_header();
 ?>
 
-<main id="primary" class="site-main">
-    <?php
-    while (have_posts()) :
-        the_post();
-        ?>
-        <article <?php post_class('gp-child-card'); ?> id="post-<?php the_ID(); ?>">
-            <h1><?php the_title(); ?></h1>
-            <div class="gp-child-muted"><?php echo esc_html(get_the_date()); ?></div>
-            <div>
-                <?php the_content(); ?>
-            </div>
-        </article>
-    <?php endwhile; ?>
-</main>
+<div <?php generate_do_attr( 'content' ); ?>>
+	<main <?php generate_do_attr( 'main' ); ?>>
+		<?php
+		do_action( 'generate_before_main_content' );
+
+		if ( generate_has_default_loop() ) {
+			while ( have_posts() ) {
+				the_post();
+				generate_do_template_part( 'single' );
+			}
+		}
+
+		do_action( 'generate_after_main_content' );
+		?>
+	</main>
+</div>
 
 <?php
+do_action( 'generate_after_primary_content_area' );
+
+generate_construct_sidebars();
+
 get_footer();

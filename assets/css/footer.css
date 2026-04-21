@@ -95,6 +95,7 @@ img.footer-logo-img {
   .footer-copyright,
   .footer-nav {
     margin: auto;
+    text-align: center;
   }
 
   .footer-logo {

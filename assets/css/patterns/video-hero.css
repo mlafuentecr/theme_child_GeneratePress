@@ -127,3 +127,9 @@
     padding-inline: var(--space-6, 1.5rem);
   }
 }
+
+@media (max-width: 500px) {
+.video-hero h1{
+ font-size: 40px!important;
+}
+}
